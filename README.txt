@@ -16,6 +16,8 @@ Gratis publiceren via GitHub Pages:
    Op Android: open de site in Chrome → menu ⋮ → Install app of Toevoegen aan startscherm.
 
 Let op:
-- Gratis GitHub Pages-sites zijn openbaar. De app zelf bevat geen login en slaat checklistvinkjes lokaal op het apparaat op; ze worden niet met je GitHub-account gesynchroniseerd.
+- Gratis GitHub Pages-sites zijn openbaar. De app zelf bevat geen login en slaat checklistvinkjes, eigen daad-categorieën en deed-counter-tellingen lokaal op het apparaat op; ze worden niet met je GitHub-account gesynchroniseerd.
+- De deed counter gebruikt als eenvoudige basisweergave Qur’an 6:160 (goede daad ×10, slechte daad ×1). Elk routine-item toont zijn punten; een afgevinkt item telt die dag mee als één positieve routine-invoer ×10, terwijl een niet-afgevinkt item geen minpunten geeft. De selectie van dezelfde datum is gekoppeld aan beide pagina’s. De markering “ernstige zonde” verwijst naar de zeven vernietigende zonden in Sahih al-Bukhari 2766 en Sahih Muslim 89; er is geen extra numerieke factor bedacht. De telling is geen religieus oordeel of volledige berekening van iemands daden.
+- Eigen daden kunnen per categorie met een optionele bronvermelding worden toegevoegd. Het hoofdscherm toont de op dit apparaat geregistreerde totalen van alle dagen; wis je browsergegevens of gebruik je een ander apparaat, dan worden deze gegevens niet gesynchroniseerd.
 - Als je browsergegevens wist of een andere browser/telefoon gebruikt, kan je voortgang verdwijnen of niet meegaan.
 - Dit is een persoonlijke tracker, geen religieuze uitspraak of garantie op Jannah. Vraag een betrouwbare geleerde voor specifieke fiqh-vragen.
