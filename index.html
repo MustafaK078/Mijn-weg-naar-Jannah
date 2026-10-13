@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#173d32">
+<meta name="description" content="Een persoonlijke dagelijkse checklist voor islamitische aanbidding, karakter en groei.">
+<link rel="manifest" href="manifest.json">
+<title>Mijn Weg naar Jannah</title>
+<style>
+:root{--green:#173d32;--green2:#245646;--cream:#f6f2e8;--paper:#fffdf8;--gold:#c4a66a;--ink:#1f2c26;--muted:#6c786f;--line:#e7e2d6}
+*{box-sizing:border-box}body{margin:0;background:var(--cream);color:var(--ink);font:16px/1.45 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+header{background:var(--green);color:#fff;padding:25px 18px 22px;border-radius:0 0 24px 24px}
+.wrap{max-width:760px;margin:auto}header .eyebrow{color:#d8c99e;text-transform:uppercase;letter-spacing:.12em;font-size:11px;font-weight:700}
+h1{font-family:Georgia,serif;font-size:30px;line-height:1.1;margin:8px 0}header p{margin:8px 0 0;color:#e4ece7;font-size:14px}
+main{padding:16px 14px 40px}.datebar{display:flex;gap:10px;align-items:center;justify-content:space-between;margin:2px 0 14px}.datebar input{border:1px solid var(--line);border-radius:12px;padding:10px;background:var(--paper);font:inherit;color:var(--ink)}
+.progress{background:var(--paper);border:1px solid var(--line);border-radius:17px;padding:15px;margin-bottom:15px}.progressrow{display:flex;justify-content:space-between;align-items:center;gap:12px}.number{font-weight:800;color:var(--green);font-size:22px}.bar{height:8px;background:#e7e9e1;border-radius:99px;overflow:hidden;margin-top:10px}.bar div{height:100%;background:var(--green2);width:0;transition:width .2s}
+.note{font-size:12px;color:var(--muted);margin:9px 0 0}
+.section{background:var(--paper);border:1px solid var(--line);border-radius:16px;margin:11px 0;overflow:hidden}.sectionhead{width:100%;text-align:left;background:none;border:0;padding:15px;display:flex;align-items:center;gap:10px;color:var(--ink);font:inherit;cursor:pointer}.sectionhead .ico{font-size:20px}.sectionhead .headtxt{flex:1}.sectionhead strong{display:block;font-size:15px}.sectionhead small{display:block;color:var(--muted);font-size:12px;margin-top:2px}.count{font-size:12px;color:var(--green);font-weight:700;white-space:nowrap}.items{padding:0 14px 9px}.item{display:flex;align-items:flex-start;gap:11px;padding:12px 0;border-top:1px solid var(--line);cursor:pointer}.item input{appearance:none;flex:0 0 22px;width:22px;height:22px;border:1.7px solid #a9b3a8;border-radius:7px;margin:1px 0 0;background:white;cursor:pointer}.item input:checked{background:var(--green);border-color:var(--green)}.item input:checked:after{content:"✓";display:block;color:white;text-align:center;font-weight:800;line-height:19px}.item:has(input:checked) .label{color:#7b857c;text-decoration:line-through}.label{font-weight:650;font-size:14px;display:block}.detail{display:block;font-size:12px;color:var(--muted);margin-top:3px;font-weight:400;text-decoration:none}
+footer{text-align:center;color:var(--muted);font-size:12px;padding:8px 12px 30px}.actions{display:flex;gap:9px;margin:16px 0}.btn{border:1px solid var(--green);border-radius:12px;padding:11px 13px;font:inherit;font-size:13px;font-weight:700;cursor:pointer;flex:1}.primary{background:var(--green);color:white}.secondary{background:transparent;color:var(--green)}.quote{padding:15px;border-left:3px solid var(--gold);background:#eee8d8;border-radius:0 12px 12px 0;font-family:Georgia,serif;font-size:15px;margin:15px 0}.quote small{display:block;font-family:system-ui,sans-serif;font-size:12px;color:var(--muted);margin-top:7px}
+@media(min-width:600px){main{padding:22px 18px 45px}h1{font-size:36px}}
+</style>
+</head>
+<body>
+<header><div class="wrap"><div class="eyebrow">Dagelijkse islamitische routine</div><h1>Mijn Weg naar Jannah</h1><p>Een kleine stap, elke dag. Streef naar Allah's tevredenheid met oprechtheid, aanbidding en goed gedrag.</p></div></header>
+<main class="wrap">
+  <div class="datebar"><strong>Mijn dag</strong><input id="date" type="date" aria-label="Kies een datum"></div>
+  <div class="progress"><div class="progressrow"><div><strong>Dagelijkse voortgang</strong><div class="note" id="progressText">Begin met je checklist.</div></div><div class="number" id="progressNum">0%</div></div><div class="bar"><div id="progressBar"></div></div><p class="note">Dit is een hulpmiddel voor persoonlijke reflectie, geen maatstaf voor je waarde en geen garantie op Jannah.</p></div>
+  <div id="sections"></div>
+  <div class="quote">“Onze Heer, schenk ons het goede in deze wereld en het goede in het Hiernamaals, en bescherm ons tegen de bestraffing van het Vuur.”<small>Qur’an 2:201 · Rabbana atina fid-dunya hasanah…</small></div>
+  <div class="actions"><button class="btn primary" id="copy">Kopieer dagoverzicht</button><button class="btn secondary" id="reset">Wis deze dag</button></div>
+  <p class="note">Je voortgang wordt alleen in deze browser op dit apparaat opgeslagen. Er wordt geen account aangemaakt en niets naar een server verstuurd.</p>
+</main>
+<footer>Gebaseerd op algemene richtlijnen uit Qur’an en Sunnah. Verplichtingen en vrijwillige daden zijn apart in je intentie te houden; vraag een betrouwbare geleerde bij fiqh-vragen.</footer>
+<script>
+const groups = [
+{icon:"🌙",title:"1. Geloof & intentie",sub:"Begin met oprechtheid en tawheed.",items:[
+["Mijn intentie vernieuwen","Intentie om Allah te behagen, halal te werken en anderen goed te behandelen. (Qur’an 98:5; Bukhari 1)"],
+["Allah alleen aanbidden","Bescherm tawheed en vertrouw op Allah. (Qur’an 4:36; 112:1–4)"],
+["Dankbaar zijn","Sta stil bij Allah’s gunsten en dank Hem. (Qur’an 14:7)"]]},
+{icon:"🕌",title:"2. De vijf verplichte gebeden",sub:"De basis van je dagelijkse aanbidding.",items:[
+["Fajr gebeden","Binnen de voorgeschreven tijd."],["Dhuhr gebeden","Binnen de voorgeschreven tijd."],["Asr gebeden","Binnen de voorgeschreven tijd."],["Maghrib gebeden","Binnen de voorgeschreven tijd."],["Isha gebeden","Binnen de voorgeschreven tijd."],["Met aandacht bidden","Doe je best voor khushu’ en de juiste voorwaarden. (Qur’an 23:1–2)"]]},
+{icon:"📖",title:"3. Qur’an & dhikr",sub:"Houd je verbinding met Allah levend.",items:[
+["Qur’an gelezen","Al is het een paar verzen; probeer de betekenis te begrijpen."],["Dhikr gedaan","Bijv. SubhanAllah, Alhamdulillah, Allahu akbar en La ilaha illa Allah."],["Ochtend- en avondadhkar","Een vaste routine met authentieke smeekbeden."],["Salawat over de Profeet ﷺ","Zeg Allahumma salli ‘ala Muhammad. (Qur’an 33:56)"]]},
+{icon:"🤝",title:"4. Karakter & rechten van mensen",sub:"Je aanbidding zie je terug in je omgang.",items:[
+["Goed voor mijn ouders geweest","Met respect spreken en helpen waar mogelijk. (Qur’an 17:23–24)"],["Mijn gezin goed behandeld","Met vriendelijkheid, geduld en rechtvaardigheid. (Qur’an 4:19)"],["Mijn tong bewaakt","Geen roddel, leugens, beledigingen of laster. (Qur’an 49:11–12)"],["Eerlijk en betrouwbaar geweest","Afspraken en toevertrouwde zaken nakomen. (Qur’an 23:8)"],["Niemand bewust onrecht aangedaan","Geen bedrog, vernedering of schending van rechten."],["Een goede daad gedaan","Iemand helpen, bemoedigen of liefdadigheid geven. (Muslim 1009)"]]},
+{icon:"🛡️",title:"5. Zonden vermijden",sub:"Laat verboden zaken bewust achterwege.",items:[
+["Mijn blik en kuisheid bewaakt","Wegblijven van verboden blikken en wegen naar zina. (Qur’an 24:30–31)"],["Halal inkomen nagestreefd","Geen fraude, diefstal of onrechtmatige verdiensten."],["Grote zonden vermeden","Blijf weg van shirk en andere verboden zaken."],["Woede en afgunst beheerst","Laat emoties niet leiden tot onrecht."],["Tawbah gedaan waar nodig","Stop, heb berouw, neem je voor niet terug te keren en herstel andermans rechten. (Qur’an 39:53)"]]},
+{icon:"✨",title:"6. Extra sunnah-daden",sub:"Vrijwillige daden om dichter bij Allah te komen.",items:[
+["Sunnah-gebeden verricht","Vooral de vaste sunnah-gebeden rond de vijf gebeden."],["Witr gebeden","In de Hanafi-school is Witr wajib."],["Sadaqah gegeven","Ook kleine liefdadigheid of een vriendelijke daad."],["Du’a gedaan","Vraag om vergeving, leiding, standvastigheid en Jannatul Firdaus."],["Vrijwillig gevast indien passend","Bijv. maandag/donderdag, als je kunt."],["Tahajjud of extra nachtgebed","Optioneel; zelfs twee rak’ahs kunnen een begin zijn."]]},
+{icon:"🌅",title:"7. Avondreflectie",sub:"Sluit de dag af met berouw en hoop.",items:[
+["Mijn dag geëvalueerd","Heb ik mijn verplichtingen vervuld? Heb ik iemand gekwetst?"],["Istighfar gedaan","Vraag Allah oprecht om vergeving."],["Schade of conflict proberen te herstellen","Bied excuses aan en herstel onrecht waar nodig."],["Bedtijdadhkar gelezen","Gebruik authentieke smeekbeden van de Profeet ﷺ."],["Met goede intentie gaan slapen","Neem je voor op te staan voor Fajr en morgen verder te gaan."]]}
+];
+const dateEl=document.getElementById('date'), sectionsEl=document.getElementById('sections');
+const today=new Date(); const localDate=new Date(today.getTime()-today.getTimezoneOffset()*60000).toISOString().slice(0,10); dateEl.value=localDate;
+const keyFor=d=>'jannah-checklist-v1-'+d;
+function read(){try{return JSON.parse(localStorage.getItem(keyFor(dateEl.value))||'{}')}catch(e){return {}}}
+function save(data){localStorage.setItem(keyFor(dateEl.value),JSON.stringify(data));renderProgress()}
+function render(){
+ const data=read(); sectionsEl.innerHTML='';
+ groups.forEach((g,gi)=>{
+  const sec=document.createElement('section');sec.className='section';
+  const head=document.createElement('button');head.className='sectionhead';head.innerHTML=`<span class="ico">${g.icon}</span><span class="headtxt"><strong>${g.title}</strong><small>${g.sub}</small></span><span class="count" id="count-${gi}"></span><span aria-hidden="true">⌄</span>`;
+  const list=document.createElement('div');list.className='items';
+  g.items.forEach((it,ii)=>{
+   const id=`${gi}-${ii}`;const label=document.createElement('label');label.className='item';
+   const input=document.createElement('input');input.type='checkbox';input.checked=!!data[id];input.addEventListener('change',()=>{const now=read();now[id]=input.checked;save(now);updateCount(gi)});
+   const content=document.createElement('span');content.innerHTML=`<span class="label"></span><span class="detail"></span>`;content.querySelector('.label').textContent=it[0];content.querySelector('.detail').textContent=it[1];
+   label.append(input,content);list.append(label);
+  });
+  head.addEventListener('click',()=>{list.hidden=!list.hidden;head.lastElementChild.textContent=list.hidden?'⌄':'⌃'});
+  sec.append(head,list);sectionsEl.append(sec);updateCount(gi);
+ });
+ renderProgress();
+}
+function updateCount(gi){const data=read();const done=groups[gi].items.reduce((n,_,ii)=>n+(data[`${gi}-${ii}`]?1:0),0);const el=document.getElementById(`count-${gi}`);if(el)el.textContent=`${done}/${groups[gi].items.length}`}
+function renderProgress(){const data=read();const total=groups.reduce((n,g)=>n+g.items.length,0);const done=Object.values(data).filter(Boolean).length;const pct=Math.round(done/total*100);document.getElementById('progressNum').textContent=pct+'%';document.getElementById('progressBar').style.width=pct+'%';document.getElementById('progressText').textContent=done===0?'Begin met je checklist.':done===total?'Al je punten zijn afgevinkt. Alhamdulillah!':`${done} van ${total} punten afgevinkt.`}
+dateEl.addEventListener('change',render);
+document.getElementById('reset').addEventListener('click',()=>{if(confirm('Alle vinkjes van deze datum wissen?')){localStorage.removeItem(keyFor(dateEl.value));render()}});
+document.getElementById('copy').addEventListener('click',async()=>{const data=read();let out=`Mijn Weg naar Jannah — ${dateEl.value}\n`;groups.forEach((g,gi)=>{out+='\n'+g.title+'\n';g.items.forEach((it,ii)=>out+=`${data[`${gi}-${ii}`]?'[x]':'[ ]'} ${it[0]}\n`)});try{await navigator.clipboard.writeText(out);alert('Dagoverzicht gekopieerd.')}catch(e){prompt('Kopieer je dagoverzicht:',out)}});
+if('serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('./sw.js').catch(()=>{});
+render();
+</script>
+</body></html>
