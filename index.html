@@ -18,12 +18,18 @@ main{padding:16px 14px 40px}.datebar{display:flex;gap:10px;align-items:center;ju
 .note{font-size:12px;color:var(--muted);margin:9px 0 0}
 .section{background:var(--paper);border:1px solid var(--line);border-radius:16px;margin:11px 0;overflow:hidden}.sectionhead{width:100%;text-align:left;background:none;border:0;padding:15px;display:flex;align-items:center;gap:10px;color:var(--ink);font:inherit;cursor:pointer}.sectionhead .ico{font-size:20px}.sectionhead .headtxt{flex:1}.sectionhead strong{display:block;font-size:15px}.sectionhead small{display:block;color:var(--muted);font-size:12px;margin-top:2px}.count{font-size:12px;color:var(--green);font-weight:700;white-space:nowrap}.items{padding:0 14px 9px}.item{display:flex;align-items:flex-start;gap:11px;padding:12px 0;border-top:1px solid var(--line);cursor:pointer}.item input{appearance:none;flex:0 0 22px;width:22px;height:22px;border:1.7px solid #a9b3a8;border-radius:7px;margin:1px 0 0;background:white;cursor:pointer}.item input:checked{background:var(--green);border-color:var(--green)}.item input:checked:after{content:"✓";display:block;color:white;text-align:center;font-weight:800;line-height:19px}.item:has(input:checked) .label{color:#7b857c;text-decoration:line-through}.label{font-weight:650;font-size:14px;display:block}.detail{display:block;font-size:12px;color:var(--muted);margin-top:3px;font-weight:400;text-decoration:none}
 footer{text-align:center;color:var(--muted);font-size:12px;padding:8px 12px 30px}.actions{display:flex;gap:9px;margin:16px 0}.btn{border:1px solid var(--green);border-radius:12px;padding:11px 13px;font:inherit;font-size:13px;font-weight:700;cursor:pointer;flex:1}.primary{background:var(--green);color:white}.secondary{background:transparent;color:var(--green)}.quote{padding:15px;border-left:3px solid var(--gold);background:#eee8d8;border-radius:0 12px 12px 0;font-family:Georgia,serif;font-size:15px;margin:15px 0}.quote small{display:block;font-family:system-ui,sans-serif;font-size:12px;color:var(--muted);margin-top:7px}
+.headerbar{display:flex;align-items:center;justify-content:space-between;gap:14px}.menu-toggle{flex:0 0 auto;border:1px solid #789084;border-radius:11px;background:transparent;color:white;padding:9px 12px;font:inherit;font-size:13px;font-weight:700;cursor:pointer}.app-menu{display:grid;grid-template-columns:repeat(auto-fit,minmax(135px,1fr));gap:8px;padding-top:16px}.app-menu button,.home-card{border:1px solid var(--line);border-radius:13px;background:var(--paper);color:var(--ink);padding:12px;text-align:left;font:inherit;font-size:14px;font-weight:650;cursor:pointer}.app-menu button{background:#244a3e;border-color:#527063;color:white}.app-menu button[aria-current="page"]{background:#d8c99e;border-color:#d8c99e;color:var(--green)}[hidden]{display:none!important}.home-intro,.subject-panel{background:var(--paper);border:1px solid var(--line);border-radius:17px;padding:20px;margin:6px 0 16px}.home-intro h2,.subject-panel h2{font-family:Georgia,serif;color:var(--green);font-size:25px;margin:0 0 8px}.home-intro p{margin:0;color:var(--muted);font-size:14px}.home-intro .btn{display:inline-block;width:auto;margin-top:16px;text-decoration:none}.home-menu{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}.home-card{min-height:72px;display:flex;align-items:center;gap:10px}.home-card span:first-child{font-size:20px}.home-card:hover,.app-menu button:hover{filter:brightness(.96)}
 @media(min-width:600px){main{padding:22px 18px 45px}h1{font-size:36px}}
 </style>
 </head>
 <body>
-<header><div class="wrap"><div class="eyebrow">Dagelijkse islamitische routine</div><h1>Mijn Weg naar Jannah</h1><p>Een kleine stap, elke dag. Streef naar Allah's tevredenheid met oprechtheid, aanbidding en goed gedrag.</p></div></header>
-<main class="wrap">
+<header><div class="wrap"><div class="headerbar"><div><div class="eyebrow">Dagelijkse islamitische routine</div><h1>Mijn Weg naar Jannah</h1><p>Een kleine stap, elke dag. Streef naar Allah's tevredenheid met oprechtheid, aanbidding en goed gedrag.</p></div><button class="menu-toggle" id="menuToggle" type="button" aria-expanded="false" aria-controls="appMenu">☰ Menu</button></div><nav class="app-menu" id="appMenu" aria-label="Hoofdnavigatie" hidden></nav></div></header>
+<main class="wrap" id="homeView">
+  <section class="home-intro"><h2>Welkom op jouw weg</h2><p>Een plek om je dagelijkse routine bij te houden en stap voor stap meer te leren.</p><button class="btn primary" type="button" data-page="routine">Open de routine checklist</button></section>
+  <nav class="home-menu" id="homeMenu" aria-label="Pagina's"></nav>
+</main>
+<main class="wrap" id="routineView" hidden>
+  <h2>Routine checklist</h2>
   <div class="datebar"><strong>Mijn dag</strong><input id="date" type="date" aria-label="Kies een datum"></div>
   <div class="progress"><div class="progressrow"><div><strong>Dagelijkse voortgang</strong><div class="note" id="progressText">Begin met je checklist.</div></div><div class="number" id="progressNum">0%</div></div><div class="bar"><div id="progressBar"></div></div><p class="note">Dit is een hulpmiddel voor persoonlijke reflectie, geen maatstaf voor je waarde en geen garantie op Jannah.</p></div>
   <div id="sections"></div>
@@ -31,8 +37,20 @@ footer{text-align:center;color:var(--muted);font-size:12px;padding:8px 12px 30px
   <div class="actions"><button class="btn primary" id="copy">Kopieer dagoverzicht</button><button class="btn secondary" id="reset">Wis deze dag</button></div>
   <p class="note">Je voortgang wordt alleen in deze browser op dit apparaat opgeslagen. Er wordt geen account aangemaakt en niets naar een server verstuurd.</p>
 </main>
+<main class="wrap" id="subjectView" hidden><section class="subject-panel"><h2 id="subjectTitle"></h2></section></main>
 <footer>Gebaseerd op algemene richtlijnen uit Qur’an en Sunnah. Verplichtingen en vrijwillige daden zijn apart in je intentie te houden; vraag een betrouwbare geleerde bij fiqh-vragen.</footer>
 <script>
+const pages = [
+ {id:"home",title:"Startscherm",icon:"🏠"},
+ {id:"routine",title:"Routine checklist",icon:"✅"},
+ {id:"aqeedah",title:"Aqeedah",icon:"🌙"},
+ {id:"fiqh",title:"Fiqh",icon:"📚"},
+ {id:"quran",title:"Qur’an",icon:"📖"},
+ {id:"seerah",title:"Seerah",icon:"🕌"},
+ {id:"hadith",title:"Hadith & sunnah",icon:"📜"},
+ {id:"akhlaq",title:"Akhlaq",icon:"🤝"},
+ {id:"halal-haram",title:"Halal en Haram",icon:"⚖️"}
+];
 const groups = [
 {icon:"🌙",title:"1. Geloof & intentie",sub:"Begin met oprechtheid en tawheed.",items:[
 ["Mijn intentie vernieuwen","Intentie om Allah te behagen, halal te werken en anderen goed te behandelen. (Qur’an 98:5; Bukhari 1)"],
@@ -52,6 +70,26 @@ const groups = [
 ["Mijn dag geëvalueerd","Heb ik mijn verplichtingen vervuld? Heb ik iemand gekwetst?"],["Istighfar gedaan","Vraag Allah oprecht om vergeving."],["Schade of conflict proberen te herstellen","Bied excuses aan en herstel onrecht waar nodig."],["Bedtijdadhkar gelezen","Gebruik authentieke smeekbeden van de Profeet ﷺ."],["Met goede intentie gaan slapen","Neem je voor op te staan voor Fajr en morgen verder te gaan."]]}
 ];
 const dateEl=document.getElementById('date'), sectionsEl=document.getElementById('sections');
+const homeView=document.getElementById('homeView'), routineView=document.getElementById('routineView'), subjectView=document.getElementById('subjectView');
+const appMenu=document.getElementById('appMenu'), homeMenu=document.getElementById('homeMenu'), menuToggle=document.getElementById('menuToggle');
+function makePageButton(page,homeCard=false){
+ const button=document.createElement('button');button.type='button';button.dataset.page=page.id;
+ if(homeCard){button.className='home-card';button.innerHTML=`<span aria-hidden="true">${page.icon}</span><span>${page.title}</span>`}
+ else button.textContent=`${page.icon}  ${page.title}`;
+ return button;
+}
+pages.forEach(page=>{appMenu.append(makePageButton(page));if(page.id!=='home')homeMenu.append(makePageButton(page,true))});
+function showPage(id){
+ const page=pages.find(item=>item.id===id);
+ if(!page)return;
+ homeView.hidden=id!=='home';routineView.hidden=id!=='routine';subjectView.hidden=id==='home'||id==='routine';
+ if(subjectView.hidden===false)document.getElementById('subjectTitle').textContent=page.title;
+ appMenu.querySelectorAll('[data-page]').forEach(button=>{if(button.dataset.page===id)button.setAttribute('aria-current','page');else button.removeAttribute('aria-current')});
+ menuToggle.setAttribute('aria-expanded','false');appMenu.hidden=true;
+ window.scrollTo(0,0);
+}
+document.addEventListener('click',event=>{const button=event.target.closest('[data-page]');if(button)showPage(button.dataset.page)});
+menuToggle.addEventListener('click',()=>{const isOpen=menuToggle.getAttribute('aria-expanded')==='true';menuToggle.setAttribute('aria-expanded',String(!isOpen));appMenu.hidden=isOpen});
 const today=new Date(); const localDate=new Date(today.getTime()-today.getTimezoneOffset()*60000).toISOString().slice(0,10); dateEl.value=localDate;
 const keyFor=d=>'jannah-checklist-v1-'+d;
 function read(){try{return JSON.parse(localStorage.getItem(keyFor(dateEl.value))||'{}')}catch(e){return {}}}
@@ -79,6 +117,7 @@ dateEl.addEventListener('change',render);
 document.getElementById('reset').addEventListener('click',()=>{if(confirm('Alle vinkjes van deze datum wissen?')){localStorage.removeItem(keyFor(dateEl.value));render()}});
 document.getElementById('copy').addEventListener('click',async()=>{const data=read();let out=`Mijn Weg naar Jannah — ${dateEl.value}\n`;groups.forEach((g,gi)=>{out+='\n'+g.title+'\n';g.items.forEach((it,ii)=>out+=`${data[`${gi}-${ii}`]?'[x]':'[ ]'} ${it[0]}\n`)});try{await navigator.clipboard.writeText(out);alert('Dagoverzicht gekopieerd.')}catch(e){prompt('Kopieer je dagoverzicht:',out)}});
 if('serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('./sw.js').catch(()=>{});
+showPage('home');
 render();
 </script>
 </body></html>
