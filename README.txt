@@ -1,44 +1,44 @@
-MIJN WEG NAAR JANNAH — INSTALLATIE
+MIJN WEG NAAR JANNAH — INSTALLATIE EN LOKALE DATABASE
 
-Snel lokaal gebruiken:
-1. Pak de ZIP uit.
-2. Open de gepubliceerde HTTPS-site; direct openen van `index.html` als bestand schakelt Supabase-login en synchronisatie niet in.
-3. De app gebruikt gratis GitHub Pages voor de website en Supabase voor accounts en versleutelde synchronisatie. Stel Supabase eerst in met de stappen hieronder.
-4. Voor een app-achtige ervaring met 'Zet op beginscherm' open je de HTTPS-site op je telefoon en voeg je die toe aan het startscherm.
+De app gebruikt geen Supabase of andere backend. Gebruikersaccounts en voortgang worden opgeslagen in de lokale browseropslag van het apparaat.
 
-Gratis publiceren via GitHub Pages:
-1. Maak gratis een account op https://github.com
-2. Maak een nieuwe PUBLIC repository, bijvoorbeeld jannah-daily-guide.
-3. Upload index.html, manifest.json, sw.js en supabase-config.js naar de hoofdmap. Volg ook de Supabase-stappen hieronder; zonder Supabase-configuratie blijft de app op het inlogscherm.
-4. Ga naar Settings → Pages.
-5. Kies bij Build and deployment: Deploy from a branch, kies branch main en folder /(root), en klik Save.
-6. Wacht tot GitHub de site publiceert; open de URL die onder Pages verschijnt.
-7. Op iPhone: open de site in Safari → Deel → Zet op beginscherm.
-   Op Android: open de site in Chrome → menu ⋮ → Install app of Toevoegen aan startscherm.
+Openen:
+1. Zet alle bestanden en de map `icons` op GitHub. Schakel **Settings → Pages → Deploy from a branch** in, kies de branch met de app (meestal `main`) en de map `/(root)`, en sla op. De gratis GitHub Pages-site is openbaar; publiceer er geen privégegevens of SQL-back-ups.
+2. Wacht tot GitHub de site heeft gepubliceerd. Open de getoonde HTTPS-link op je telefoon; een PWA werkt niet vanaf `file://`.
+3. Op Android open je de site in Chrome en kies je **Installeren** of **Toevoegen aan startscherm**. Op iPhone/iPad open je de site in Safari, tik je op **Deel** en kies je **Zet op beginscherm**.
+4. De installatie maakt een startscherm-app en kan de app-shell offline openen nadat die eenmaal geladen is. Persoonlijke voortgang wordt niet met andere apparaten gesynchroniseerd.
 
-Supabase-login en beheer instellen:
-1. Maak een Supabase-project aan en schakel bij Authentication → Providers e-mail/wachtwoord in. Stel je site-URL en toegestane redirect-URL's in voor je GitHub Pages-domein en lokale ontwikkeladres.
-2. Voer beide migraties in numerieke volgorde uit in de Supabase SQL Editor: `supabase/migrations/20261014000100_private_presence.sql` en daarna `supabase/migrations/20261014000200_encrypted_private_progress.sql`.
-3. Vul de Project URL en de publieke anon/publishable key in `supabase-config.js`. Gebruik NOOIT de service-role key in dit bestand of in de browser.
-4. Deploy de Edge Function met de Supabase CLI: `supabase functions deploy admin-active-users --project-ref JOUW_PROJECT_REF`. De functie gebruikt de server-side secrets `SUPABASE_URL`, `SUPABASE_ANON_KEY` en `SUPABASE_SERVICE_ROLE_KEY`; zet die in Supabase Function Secrets, nooit in de app.
-5. Maak je account aan via de app en bevestig je e-mailadres. Zoek daarna de account-UUID in Supabase Authentication → Users en geef alleen jouw account beheerdersrechten met de SQL Editor: `insert into public.app_admins (user_id) select id from auth.users where email = 'JOUW_ADMIN_EMAIL' on conflict do nothing;`
-6. Publiceer de app via HTTPS. Test eerst dat een gewoon account de adminlijst niet kan openen en dat een admin uitsluitend e-mailadressen en aanwezigheidsstatus ziet.
+Opslag en persoonlijke back-up:
+- De app vraagt met **Bescherm lokale opslag** aan de browser om lokale gegevens niet automatisch op te ruimen. Ondersteuning verschilt per browser; dit voorkomt niet dat je gegevens verdwijnen wanneer je sitegegevens wist, de app verwijdert of van apparaat wisselt.
+- Kies **Maak persoonlijke back-up** op het beginscherm om alleen het ingelogde account en diens voortgang als SQL-bestand te downloaden. Bewaar dit bestand veilig; het bevat privé-invoer en een wachtwoordhash.
+- Na gegevensverlies open je de app, kies je op het inlogscherm **Kies SQL-back-up** en importeer je het bestand. Log daarna in met de accountgegevens uit de back-up. Importeren zet records terug met dezelfde account-ID; als er voor dezelfde datum al gegevens staan, worden die records overschreven.
+- De keuze voor Nederlands, Engels of Turks wordt lokaal op dit apparaat bewaard. Navigatie, hoofdknoppen, checklist-/daadnamen en adhkār-titels vertalen mee; bronverwijzingen, transliteraties en een deel van de uitgebreide religieuze uitleg blijven in de oorspronkelijke tekst.
 
-Account en privacy:
-- Inloggen vereist het ingestelde Supabase-project. Supabase verwerkt accountgegevens voor authenticatie en de aanwezigheidsfunctie bewaart account-ID's en laatste activiteitstijd.
-- De beheerfunctie toont alleen e-mail en online/laatst-actief status (online bij een heartbeat in de laatste 90 seconden; recent actief tot 5 minuten). De functie geeft geen checklist, deed-counter, hartreflectie of routinegegevens terug. Accounts kunnen via RLS alleen hun eigen aanwezigheidsrecord lezen of bijwerken; alleen de serverfunctie kan alle aanwezigheid controleren.
-- Checklist, eigen daden en hartreflecties worden lokaal bijgehouden en automatisch naar een privé Supabase-tabel gesynchroniseerd. De app versleutelt de volledige voortgang eerst op het apparaat met AES-256-GCM; een aparte privacy-wachtzin (minimaal 12 tekens) wordt met PBKDF2 afgeleid en wordt nooit naar Supabase verstuurd of opgeslagen. De database bewaart het account-ID en de ciphertext, willekeurige salt, IV, revisie en wijzigingstijd. Rijbeveiliging beperkt elk account tot de eigen versleutelde rij. Eigen daadtegels, routine, daden en reflecties zijn inhoudelijk versleuteld; de beheerfunctie kan deze niet ontsleutelen.
-- Gebruik dezelfde privacy-wachtzin op ieder apparaat. De privacy-wachtzin is onafhankelijk van je accountwachtwoord: wachtwoordherstel herstelt de privacy-wachtzin niet. Als je de privacy-wachtzin vergeet, kan de cloudkopie niet meer worden ontsleuteld. Bewaar hem dus veilig; er bestaat geen achterdeur of wachtwoordreset voor de versleutelde gegevens.
-- Bestaande gegevens van vóór de accountlogin kunnen op het oorspronkelijke apparaat eenmalig worden geïmporteerd en daarna versleuteld worden gesynchroniseerd.
-- Lokale browseropslag blijft beschikbaar als lokale kopie, maar is niet versleuteld tegen iemand die toegang heeft tot jouw ontgrendelde browserprofiel of apparaat. De cloudkopie is end-to-end versleuteld en blijft toegankelijk op een nieuw apparaat na inloggen en invoeren van dezelfde privacy-wachtzin.
-- De synchronisatie gebruikt revisies en een conflictcontrole zodat gelijktijdige wijzigingen niet stilzwijgend elkaars cloudkopie overschrijven. Als de verbinding uitvalt, blijven wijzigingen lokaal staan en probeert de app later opnieuw te synchroniseren.
-- GitHub Pages en Supabase bieden gratis abonnementen, maar geen onbeperkte of gegarandeerde levenslange opslag: providerlimieten kunnen veranderen en gratis projecten kunnen worden gepauzeerd. De app schrijft geen betaalde functies of upgrades voor; controleer zelf de actuele quota van de providers.
-- De opgeslagen ciphertext is voor iemand met databasebeheer zichtbaar, net als omvang en wijzigingstijd, maar zonder privacy-wachtzin niet leesbaar. Dit beschermt niet tegen kwaadaardige wijzigingen in de gepubliceerde websitecode: wie die code beheert, kan in theorie een latere appversie aanpassen om ingevoerde wachtzinnen te onderscheppen. Host daarom alleen een appbuild die je vertrouwt.
+Lokale accounts:
+- De eerste keer dat de app op een browser wordt geopend, maakt deze een lokaal beheerdersaccount aan.
+- Eerste beheerderslogin: gebruikersnaam `Admin`, wachtwoord `Admin123`.
+- Wijzig dit wachtwoord na het inloggen via **Gebruikersbeheer → Beheerderswachtwoord wijzigen**.
+- Andere gebruikers maken zelf een account aan via het inlogscherm. Gebruikersnamen zijn uniek binnen de database op dit apparaat.
+- Wachtwoorden worden als PBKDF2-SHA-256-hash met salt in de lokale database opgeslagen; het wachtwoord zelf wordt niet bewaard. De beheerder kan wachtwoorden niet terugzien.
 
-Let op:
-- De accountlijst is privacygevoelige aanwezigheidsinformatie; geef beheerdersrechten alleen aan vertrouwde accounts en deel geen service-role key.
-- De deed counter gebruikt Qur’an 6:160 alleen als eenvoudige basisweergave (goede daad ×10, slechte daad ×1); routine-items tellen als positieve invoer mee. Het daghart en cumulatieve hart op het startscherm zijn symbolische reflecties geïnspireerd door Qur’an 83:14 en Jamiʿ at-Tirmidhi 3334. Er is geen numerieke religieuze grens voor een volledig zwart hart in de app ingesteld. Animaties en totalen tonen app-invoer, niet iemands werkelijke hart, iman, aanvaarde tawbah of religieuze staat; er is geen één-op-één maat voor daden verzonnen. Tawbah en herstel kunnen per dag als reflectie worden gemarkeerd, zonder claim dat de app vergiffenis kan vaststellen.
-- Gewoontelevels tellen unieke dagen met aangevinkte routine-items of een vastgelegde tawbah-reflectie. Ze meten gewoonte-opbouw, niet geloof, spirituele rang of de uitkomst van daden. De markering “ernstige zonde” verwijst naar de zeven vernietigende zonden in Sahih al-Bukhari 2766 en Sahih Muslim 89; er is geen extra numerieke factor bedacht.
-- Het hart op het startscherm vat de geregistreerde goede stappen en misstappen van alle opgeslagen dagen samen. Het wordt niet volledig zwart: de religieuze bronnen geven geen numerieke app-drempel en de visualisatie mag geen oordeel suggereren.
-- Eigen daden kunnen per categorie met een optionele bronvermelding worden toegevoegd. De totalen zijn na synchronisatie beschikbaar op je andere apparaten.
-- Dit is een persoonlijke tracker, geen religieuze uitspraak of garantie op Jannah. Vraag een betrouwbare geleerde voor specifieke fiqh-vragen.
+Gebruikers en SQL-bestanden:
+- **Gebruikersbeheer** toont uitsluitend gebruikersnamen en rollen. De beheerder kan geen routine-, deed-counter-, checklist- of dhikr-registraties van andere accounts bekijken, exporteren of importeren.
+- De checklist, dagelijkse adhkār, deed counter en hartreflectie zijn samengebracht op de pagina **Schild van Imaan & daden**. Eerder opgeslagen checklistvinkjes blijven behouden; dagelijkse checklist- en dhikr-voltooiingen tellen mee in de deed counter.
+- De deed counter groepeert voorbeelden per onderwerp en kan zoeken op daad, categorie of bron. De dagelijkse adhkār tonen Arabische tekst, transliteratie, voorgestelde tijden, aantallen, de genoemde deugd en verwijzingen naar Qur’an of hadith. Checklist- en dhikr-afrondingen tellen al mee; registreer dezelfde actie niet opnieuw via een handmatige deed-counter-knop.
+- De app-rang is blijvend en gebaseerd op goede-dadenpunten van alle dagen samen; een nieuwe dag zet de rang niet terug. De volgende niveaus vragen steeds meer punten: de rangdrempel voor niveau *n* is `10 × n²` punten (10, 40, 90, 160, 250, 360, 490, 640, enzovoort). Elke geregistreerde goede daad, checklistafvinking of afgeronde adhkār levert 10 app-punten op; slechte registraties trekken die rang niet af. De rang is alleen een motivatiehulpmiddel, geen maatstaf voor geloof, beloning of Allah’s oordeel.
+- Info-knoppen op de gecombineerde pagina leggen uit hoe checklistpunten, daadregistraties, adhkār, rang en symbolische hartreflectie werken.
+- Het beginscherm en Schild van Imaan tonen een groeiend of verzwakkend lichtschild rond het hart. Dit is uitsluitend een app-visualisatie: de verhouding is `goede invoer / (goede invoer + 2 × misstappen + 3 × niet-afgevinkte gebeden op eerder bijgehouden dagen)`. Niet-afgevinkt betekent niet automatisch dat een gebed is gemist. De app-gewichten zijn geen religieuze maatstaf en de percentagewaarde is geen iman-score.
+- Dhikr-voltooiingen zijn per item maximaal één keer per dag af te vinken en tellen als één registratie, niet per uitgesproken woord. De genoemde deugden zijn omschrijvingen uit overleveringen; de app berekent geen exacte beloning. De overlevering over “planten van Jannah” (Jamiʿ at-Tirmidhi 3462) wordt niet omgerekend naar een vast aantal bomen.
+- De **persoonlijke SQL-back-up** bevat uitsluitend het ingelogde account en diens eigen appgegevens. Import accepteert één persoonlijk accountbestand, niet een volledige database-export.
+- Exporteer en importeer handmatig als je eigen gegevens tussen apparaten wilt overzetten. De app uploadt het bestand nergens.
+- Bewaar en deel exportbestanden zorgvuldig: ze bevatten privégegevens en wachtwoord-hashes. Wie zo'n bestand heeft, kan de daarin opgenomen activiteiten lezen en kan proberen zwakke gebruikerswachtwoorden offline te raden.
+
+Belangrijke beperkingen:
+- GitHub Pages is statische hosting; ieder apparaat/browser heeft een eigen database. Er is geen centrale lijst van alle accounts, live synchronisatie of automatische serveropslag.
+- De beheerder kan accountnamen en rollen op dit apparaat zien, maar heeft geen gebruikersinterface om persoonlijke gegevens van andere accounts te bekijken.
+- De lokale admin-login is alleen een basisbescherming voor de interface. Omdat de app volledig in de browser draait, kan iemand met toegang tot het apparaat of de websitecode deze bescherming omzeilen of browsergegevens uitlezen. Gebruik dit niet voor gegevens die sterke toegangsbeveiliging vereisen.
+- Browsergegevens wissen kan de lokale database verwijderen. Maak regelmatig een SQL-back-up en bewaar die op een veilige plek.
+- Gegevens uit oudere versies die onder een Supabase-gebruikers-ID lokaal zijn opgeslagen, worden niet automatisch aan een nieuw lokaal account gekoppeld. Bewaar de oude browsergegevens totdat je hebt gecontroleerd of je die invoer nog nodig hebt.
+- Gebruikersnamen zijn niet gegarandeerd wereldwijd uniek. Bij het importeren van twee accounts met dezelfde gebruikersnaam maar verschillende ID's moet je het conflict eerst oplossen.
+- De deed-counter ×10/×1-weergave is een vereenvoudigd app-model geïnspireerd op Qur’an 6:160. De bedoelde vier tijdvakken voor dhikr zijn deels een persoonlijke routine-indeling; voor Maghrib–‘Ishā’ wordt geen afzonderlijke vastgestelde beloning geclaimd. Het lichtschild, puntentotaal en gewoontelevels meten geen geloof, spirituele staat of Allah’s oordeel. Dit is geen religieuze uitspraak of garantie op Jannah; controleer specifieke religieuze vragen bij betrouwbare geleerden.
+- Voorbeelden van dhikr-bronnen in de app: Qur’an 3:17, 33:41–42 en 50:39; de drie Quls ochtend/avond (Sunan Abi Dawud 5082; Jamiʿ at-Tirmidhi 3575); Sayyid al-Istighfār (Sahih al-Bukhari 6306); tasbīḥ 100 keer (Sahih al-Bukhari 6405); tahlīl 100 keer (Sahih al-Bukhari 3293); de vier woorden als planten van Jannah (Jamiʿ at-Tirmidhi 3462); en istighfār (Sahih Muslim 2702). Hadith-nummering of beoordeling kan per uitgave verschillen.
