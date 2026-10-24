@@ -18,6 +18,7 @@ main{padding:16px 14px 40px}.datebar{display:flex;gap:10px;align-items:center;ju
 .progress{background:var(--paper);border:1px solid var(--line);border-radius:17px;padding:15px;margin-bottom:15px}.progressrow{display:flex;justify-content:space-between;align-items:center;gap:12px}.number{font-weight:800;color:var(--green);font-size:22px}.bar{height:8px;background:#e7e9e1;border-radius:99px;overflow:hidden;margin-top:10px}.bar div{height:100%;background:var(--green2);width:0;transition:width .2s}
 .note{font-size:12px;color:var(--muted);margin:9px 0 0}
 .info-toggle{display:inline-flex;align-items:center;justify-content:center;min-width:24px;height:24px;margin-left:5px;border:1px solid #b9ad8e;border-radius:50%;background:#f2ecdd;color:var(--green);font:inherit;font-size:12px;font-weight:800;line-height:1;cursor:pointer;vertical-align:middle}.info-toggle:focus-visible{outline:3px solid var(--gold);outline-offset:2px}.info-panel{margin:8px 0 0;padding:10px 12px;border-left:3px solid var(--gold);border-radius:0 10px 10px 0;background:#f2ecdd;color:var(--muted);font-size:12px;text-align:left}.combined-page-intro{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:8px}.combined-page-intro h2{margin:0;color:var(--green);font-family:Georgia,serif;font-size:23px}
+.rank-scores{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:8px 0}.rank-score{padding:9px;border-radius:10px;background:#f4f1e8}.rank-score small{display:block;color:var(--muted);font-size:10px}.rank-score strong{display:block;color:var(--green);font-size:17px}
 .section{background:var(--paper);border:1px solid var(--line);border-radius:16px;margin:11px 0;overflow:hidden}.sectionhead{width:100%;text-align:left;background:none;border:0;padding:15px;display:flex;align-items:center;gap:10px;color:var(--ink);font:inherit;cursor:pointer}.sectionhead .ico{font-size:20px}.sectionhead .headtxt{flex:1}.sectionhead strong{display:block;font-size:15px}.sectionhead small{display:block;color:var(--muted);font-size:12px;margin-top:2px}.count{font-size:12px;color:var(--green);font-weight:700;white-space:nowrap}.items{padding:0 14px 9px}.item{display:flex;align-items:flex-start;gap:11px;padding:12px 0;border-top:1px solid var(--line);cursor:pointer}.item input{appearance:none;flex:0 0 22px;width:22px;height:22px;border:1.7px solid #a9b3a8;border-radius:7px;margin:1px 0 0;background:white;cursor:pointer}.item input:checked{background:var(--green);border-color:var(--green)}.item input:checked:after{content:"✓";display:block;color:white;text-align:center;font-weight:800;line-height:19px}.item:has(input:checked) .label{color:#7b857c;text-decoration:line-through}.label{font-weight:650;font-size:14px;display:block}.detail{display:block;font-size:12px;color:var(--muted);margin-top:3px;font-weight:400;text-decoration:none}
 footer{text-align:center;color:var(--muted);font-size:12px;padding:8px 12px 30px}.actions{display:flex;gap:9px;margin:16px 0}.btn{border:1px solid var(--green);border-radius:12px;padding:11px 13px;font:inherit;font-size:13px;font-weight:700;cursor:pointer;flex:1}.primary{background:var(--green);color:white}.secondary{background:transparent;color:var(--green)}.quote{padding:15px;border-left:3px solid var(--gold);background:#eee8d8;border-radius:0 12px 12px 0;font-family:Georgia,serif;font-size:15px;margin:15px 0}.quote small{display:block;font-family:system-ui,sans-serif;font-size:12px;color:var(--muted);margin-top:7px}
 .headerbar{display:flex;align-items:center;justify-content:space-between;gap:14px}.header-controls{display:grid;justify-items:end;gap:8px}.language-control{display:flex;align-items:center;gap:6px;font-size:11px;color:#e4ece7}.language-control select{border:1px solid #789084;border-radius:8px;background:#244a3e;color:white;padding:6px;font:inherit}.menu-toggle{flex:0 0 auto;border:1px solid #789084;border-radius:11px;background:transparent;color:white;padding:9px 12px;font:inherit;font-size:13px;font-weight:700;cursor:pointer}.app-menu{display:grid;grid-template-columns:repeat(auto-fit,minmax(135px,1fr));gap:8px;padding-top:16px}.app-menu button,.home-card{border:1px solid var(--line);border-radius:13px;background:var(--paper);color:var(--ink);padding:12px;text-align:left;font:inherit;font-size:14px;font-weight:650;cursor:pointer}.app-menu button{background:#244a3e;border-color:#527063;color:white}.app-menu button[aria-current="page"]{background:#d8c99e;border-color:#d8c99e;color:var(--green)}[hidden]{display:none!important}.home-intro,.subject-panel{background:var(--paper);border:1px solid var(--line);border-radius:17px;padding:20px;margin:6px 0 16px}.home-intro h2,.subject-panel h2{font-family:Georgia,serif;color:var(--green);font-size:25px;margin:0 0 8px}.home-intro p{margin:0;color:var(--muted);font-size:14px}.home-intro .btn{display:inline-block;width:auto;margin-top:16px;text-decoration:none}.home-menu{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}.home-card{min-height:72px;display:flex;align-items:center;gap:10px}.home-card span:first-child{font-size:20px}.home-card:hover,.app-menu button:hover{filter:brightness(.96)}
@@ -87,9 +88,9 @@ footer{text-align:center;color:var(--muted);font-size:12px;padding:8px 12px 30px
     <div class="heart-counters"><div class="heart-counter"><strong id="homeHeartGoodActions">0</strong><small>geregistreerde goede stappen</small></div><div class="heart-counter bad"><strong id="homeHeartBadActions">0</strong><small>geregistreerde misstappen</small></div></div>
     <p class="shield-notice">Het lichtschild is een motiverende, symbolische voortgangsvisualisatie op basis van alleen jouw app-invoer: goede registraties verhogen het aandeel, een geregistreerde misstap telt hier dubbel en een niet-afgevinkt gebed op een eerdere bijgehouden dag telt hier driemaal. Deze app-verhoudingen zijn geen religieuze gewichten. “Niet afgevinkt” is geen vaststelling dat je een gebed hebt gemist. Dit is geen meting of oordeel over iman; intentie, omstandigheden en Allah’s oordeel zijn niet meetbaar.</p>
   </section>
-  <section class="level-panel" aria-label="Totale rang">
+  <section class="level-panel" aria-label="Dagelijkse rang">
     <div class="level-emblem" aria-hidden="true">✦</div>
-    <div class="level-copy"><h3 id="homeLevelName">Totale rang</h3><p id="homeLevelDescription">Je rang groeit blijvend met je totale goede-dadenpunten.</p><div class="level-track" role="progressbar" aria-label="Voortgang naar volgende rang" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div id="homeLevelBar"></div></div><div class="level-meta" id="homeLevelMeta">0 totale deedpunten</div><button class="info-toggle" type="button" data-info="rankInfo" aria-expanded="false" aria-controls="rankInfo" aria-label="Uitleg over de rang">i</button><p class="info-panel" id="rankInfo" hidden>Je rang blijft behouden en is gebaseerd op goede deedpunten van alle dagen samen. Elke volgende rang vraagt meer punten dan de vorige. Slechte daden veranderen deze rang niet. Dit is alleen een motivatiehulpmiddel, geen religieuze beoordeling.</p></div>
+    <div class="level-copy"><h3 id="homeLevelName">Dagelijkse rang</h3><p id="homeLevelDescription">Je dagelijkse rang begint elke dag opnieuw; je persoonlijke topscore blijft bewaard.</p><div class="rank-scores"><div class="rank-score"><small>Score vandaag</small><strong id="homeCurrentScore">0</strong></div><div class="rank-score"><small>Persoonlijke topscore</small><strong id="homeBestScore">0</strong></div></div><div class="level-track" role="progressbar" aria-label="Voortgang naar volgende dagelijkse rang" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div id="homeLevelBar"></div></div><div class="level-meta" id="homeLevelMeta">0 punten tot de volgende rang</div><button class="info-toggle" type="button" data-info="rankInfo" aria-expanded="false" aria-controls="rankInfo" aria-label="Uitleg over de rang">i</button><p class="info-panel" id="rankInfo" hidden>Je actuele score en rang worden elke dag opnieuw berekend. Je persoonlijke topscore is de hoogste dagsom die je hebt bereikt en blijft bewaard. De oplopende rangdrempels maken hogere rangen steeds uitdagender. Slechte daden verlagen de dagrang niet. Dit is alleen een motivatiehulpmiddel, geen religieuze beoordeling.</p></div>
   </section>
   <section class="home-deed-totals" aria-label="Totaal van alle dagen">
     <h3>Deed counter · totaal van alle dagen</h3>
@@ -164,9 +165,9 @@ footer{text-align:center;color:var(--muted);font-size:12px;padding:8px 12px 30px
   </section>
   <div class="shield-summary"><strong>Schild van Imaan · dagreflectie</strong><span id="dailyShieldPercent">0%</span></div><div class="shield-meter" role="progressbar" aria-label="Symbolische shield-voortgang van deze dag" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div id="dailyShieldBar"></div></div>
   <p class="note" id="dailyShieldNotice">De dagreflectie is alleen gebaseerd op ingevulde registraties: een app-misstap telt dubbel en niet-afgevinkte gebeden van een eerdere bijgehouden dag driemaal. Dit zijn geen religieuze gewichten of vaststelling van je geloofstoestand.</p>
-  <section class="level-panel" aria-label="Totale rang">
+  <section class="level-panel" aria-label="Dagelijkse rang">
     <div class="level-emblem" aria-hidden="true">✦</div>
-    <div class="level-copy"><h3 id="deedLevelName">Totale rang</h3><p id="deedLevelDescription">Je rang groeit blijvend met je totale goede-dadenpunten.</p><div class="level-track" role="progressbar" aria-label="Voortgang naar volgende rang" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div id="deedLevelBar"></div></div><div class="level-meta" id="deedLevelMeta">0 totale deedpunten</div><button class="info-toggle" type="button" data-info="rankInfoDeed" aria-expanded="false" aria-controls="rankInfoDeed" aria-label="Uitleg over de rang">i</button><p class="info-panel" id="rankInfoDeed" hidden>Je rang blijft behouden en is gebaseerd op goede deedpunten van alle dagen samen. Elke volgende rang vraagt meer punten dan de vorige. Slechte daden veranderen deze rang niet. Dit is alleen een motivatiehulpmiddel, geen religieuze beoordeling.</p></div>
+    <div class="level-copy"><h3 id="deedLevelName">Dagelijkse rang</h3><p id="deedLevelDescription">Je dagelijkse rang begint elke dag opnieuw; je persoonlijke topscore blijft bewaard.</p><div class="rank-scores"><div class="rank-score"><small>Score vandaag</small><strong id="deedCurrentScore">0</strong></div><div class="rank-score"><small>Persoonlijke topscore</small><strong id="deedBestScore">0</strong></div></div><div class="level-track" role="progressbar" aria-label="Voortgang naar volgende dagelijkse rang" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div id="deedLevelBar"></div></div><div class="level-meta" id="deedLevelMeta">0 punten tot de volgende rang</div><button class="info-toggle" type="button" data-info="rankInfoDeed" aria-expanded="false" aria-controls="rankInfoDeed" aria-label="Uitleg over de rang">i</button><p class="info-panel" id="rankInfoDeed" hidden>Je actuele score en rang worden elke dag opnieuw berekend. Je persoonlijke topscore is de hoogste dagsom die je hebt bereikt en blijft bewaard. De oplopende rangdrempels maken hogere rangen steeds uitdagender. Slechte daden verlagen de dagrang niet. Dit is alleen een motivatiehulpmiddel, geen religieuze beoordeling.</p></div>
   </section>
   <p class="note" id="routineDeedContribution">Schild van Imaan: 0 afgevinkt ×10 = 0 goede-dadenpunten</p>
   <section class="deed-group">
@@ -214,25 +215,25 @@ let currentLanguage=(()=>{try{return ['nl','en','tr'].includes(localStorage.getI
 const translations={
  en:{
   "Dagelijkse aanbidding en reflectie":"Daily worship and reflection","Een kleine stap, elke dag. Streef naar Allah's tevredenheid met oprechtheid, aanbidding en goed gedrag.":"One small step every day. Seek Allah's pleasure with sincerity, worship, and good character.","Taal":"Language","☰ Menu":"☰ Menu","Uitloggen":"Sign out",
-  "Startscherm":"Home","Schild van Imaan & daden":"Shield of Imaan & deeds","Totale rang":"Lifetime rank","Daden registreren en reflecteren":"Record deeds and reflect","Samen werken aan goede daden en reflectie":"Build good deeds and reflect","Aqeedah":"Aqeedah","Fiqh":"Fiqh","Qur’an":"Qur’an","Seerah":"Seerah","Hadith & sunnah":"Hadith & Sunnah","Akhlaq":"Character","Halal en Haram":"Halal and Haram","Gebruikersbeheer":"Account management",
+  "Startscherm":"Home","Schild van Imaan & daden":"Shield of Imaan & deeds","Totale rang":"Lifetime rank","Dagelijkse rang":"Daily rank","Score vandaag":"Today's score","Persoonlijke topscore":"Personal best","punten tot de volgende rang":"points to the next rank","Daden registreren en reflecteren":"Record deeds and reflect","Samen werken aan goede daden en reflectie":"Build good deeds and reflect","Aqeedah":"Aqeedah","Fiqh":"Fiqh","Qur’an":"Qur’an","Seerah":"Seerah","Hadith & sunnah":"Hadith & Sunnah","Akhlaq":"Character","Halal en Haram":"Halal and Haram","Gebruikersbeheer":"Account management",
   "Inloggen":"Sign in","Log lokaal in om je routine en persoonlijke registraties op dit apparaat te openen.":"Sign in locally to open your routine and personal records on this device.","Gebruikersnaam":"Username","Wachtwoord":"Password","Account aanmaken":"Create account","Nog geen account? Account aanmaken":"No account yet? Create one","Al een account? Inloggen":"Already have an account? Sign in",
   "Gebruikers en voortgang worden lokaal in deze browser opgeslagen. Deel een exportbestand handmatig als je gebruikersgegevens wilt overzetten.":"Accounts and progress are stored locally in this browser. Transfer your data with a personal backup.","Back-up terugzetten":"Restore a backup","Heb je eerder een persoonlijke back-up gemaakt? Importeer het SQL-bestand hier en log daarna in met het account uit die back-up.":"Have a personal backup? Import its SQL file here, then sign in with that account.","Kies SQL-back-up":"Choose SQL backup",
   "Een dagelijkse plek om Qur’an, sunnah, gebed, dhikr en goed karakter bewust ruimte te geven.":"A daily space for the Qur’an, Sunnah, prayer, dhikr, and good character.","Open Schild van Imaan & daden":"Open Shield of Imaan & deeds","Bewaar je gegevens":"Protect your data","Je voortgang staat op dit apparaat. Maak af en toe een persoonlijke back-up en bewaar die op een veilige plek, bijvoorbeeld in je eigen cloudopslag.":"Your progress is on this device. Make personal backups regularly and store them safely.","Maak persoonlijke back-up":"Create personal backup","Installeren / uitleg":"Install / help","Bescherm lokale opslag":"Protect local storage",
   "Hart en Schild van Imaan · alle dagen":"Heart and Shield of Imaan · all days","geregistreerde goede stappen":"good steps recorded","geregistreerde misstappen":"missteps recorded","Dagelijkse rang":"Daily rank","Deed counter · totaal van alle dagen":"Deed counter · all-time total","goede daden geregistreerd":"good deeds recorded","slechte daden geregistreerd":"bad deeds recorded","goede-dadenpunten · ×10":"good-deed points · ×10","slechte-dadenpunten · ×1":"bad-deed points · ×1",
   "Mijn dag":"My day","Dagelijkse voortgang":"Daily progress","Begin met je checklist.":"Start with your checklist.","Dagelijkse adhkār & dhikr":"Daily adhkār & dhikr","Goede daden":"Good deeds","Slechte daden":"Bad deeds","Zoek op daad, categorie of bron…":"Search deeds, category, or source…","Voeg een goede daad toe":"Add a good deed","Voeg een slechte daad toe":"Add a bad deed","Voeg toe":"Add","Wis handmatige daden van deze dag":"Clear manual deeds for this day","Moment:":"Time:","De genoemde deugd:":"Reported virtue:","Bron:":"Source:","Markeer afgerond":"Mark complete","✓ Afgerond vandaag · tik om ongedaan te maken":"✓ Completed today · tap to undo",
   "Gebruiker":"User","Rol":"Role","Beheerder":"Administrator","Beginnen":"Starting","Opbouwen":"Building","Regelmaat":"Consistency","Verdiepen":"Deepening","Verankeren":"Established","Standvastig":"Steadfast","Toegewijd":"Dedicated","Volhardend":"Persistent","Uitzonderlijke inzet":"Exceptional effort",
-   "Elke kleine goede stap telt. Je rang blijft opgebouwd uit je goede daden.":"Every small good deed counts. Your rank accumulates as you do good deeds.","Je hebt je eerste goede punten verzameld.":"You have earned your first good points.","Blijf ruimte maken voor goede daden.":"Keep making room for good deeds.","Je volgende rang vraagt om meer punten dan de vorige.":"The next rank takes more points than the previous one.","Je bouwt verder met geduld en oprechtheid.":"Keep building with patience and sincerity.","Houd vol; elke goede daad is waardevol.":"Keep going; every good deed matters.","Je hebt een hoge rang bereikt.":"You reached a high rank.","Deze hogere trede vraagt om veel consistente daden.":"This higher step takes many consistent deeds.","Je hebt de hoogste benoemde app-rang bereikt; verdere rangen blijven doorgroeien.":"You reached the highest named app rank; ranks continue growing."
+   "Elke kleine goede stap telt. Je dagelijkse rang begint morgen opnieuw.":"Every small good deed counts. Your daily rank starts again tomorrow.","Je hebt je eerste goede punten verzameld.":"You have earned your first good points.","Blijf ruimte maken voor goede daden.":"Keep making room for good deeds.","Je volgende rang vraagt om meer punten dan de vorige.":"The next rank takes more points than the previous one.","Je bouwt verder met geduld en oprechtheid.":"Keep building with patience and sincerity.","Houd vol; elke goede daad is waardevol.":"Keep going; every good deed matters.","Je hebt een hoge rang bereikt.":"You reached a high rank.","Deze hogere trede vraagt om veel consistente daden.":"This higher step takes many consistent deeds.","Je hebt de hoogste benoemde app-rang bereikt; verdere rangen blijven doorgroeien.":"You reached the highest named app rank; ranks continue growing."
  },
  tr:{
   "Dagelijkse aanbidding en reflectie":"Günlük ibadet ve tefekkür","Een kleine stap, elke dag. Streef naar Allah's tevredenheid met oprechtheid, aanbidding en goed gedrag.":"Her gün küçük bir adım. Samimiyet, ibadet ve güzel ahlakla Allah'ın rızasını hedefle.","Taal":"Dil","☰ Menu":"☰ Menü","Uitloggen":"Çıkış yap",
-  "Startscherm":"Ana sayfa","Schild van Imaan & daden":"İman Kalkanı ve ameller","Totale rang":"Toplam derece","Daden registreren en reflecteren":"Amelleri kaydet ve tefekkür et","Samen werken aan goede daden en reflectie":"İyi ameller ve tefekkür","Aqeedah":"Akaid","Fiqh":"Fıkıh","Qur’an":"Kur'an","Seerah":"Siyer","Hadith & sunnah":"Hadis ve sünnet","Akhlaq":"Ahlak","Halal en Haram":"Helal ve haram","Gebruikersbeheer":"Hesap yönetimi",
+  "Startscherm":"Ana sayfa","Schild van Imaan & daden":"İman Kalkanı ve ameller","Totale rang":"Toplam derece","Dagelijkse rang":"Günlük derece","Score vandaag":"Bugünün puanı","Persoonlijke topscore":"Kişisel rekor","punten tot de volgende rang":"puan sonraki dereceye","Daden registreren en reflecteren":"Amelleri kaydet ve tefekkür et","Samen werken aan goede daden en reflectie":"İyi ameller ve tefekkür","Aqeedah":"Akaid","Fiqh":"Fıkıh","Qur’an":"Kur'an","Seerah":"Siyer","Hadith & sunnah":"Hadis ve sünnet","Akhlaq":"Ahlak","Halal en Haram":"Helal ve haram","Gebruikersbeheer":"Hesap yönetimi",
   "Inloggen":"Giriş yap","Log lokaal in om je routine en persoonlijke registraties op dit apparaat te openen.":"Bu cihazdaki rutinini ve kişisel kayıtlarını açmak için yerel olarak giriş yap.","Gebruikersnaam":"Kullanıcı adı","Wachtwoord":"Şifre","Account aanmaken":"Hesap oluştur","Nog geen account? Account aanmaken":"Hesabın yok mu? Hesap oluştur","Al een account? Inloggen":"Zaten hesabın var mı? Giriş yap",
   "Gebruikers en voortgang worden lokaal in deze browser opgeslagen. Deel een exportbestand handmatig als je gebruikersgegevens wilt overzetten.":"Hesaplar ve ilerleme bu tarayıcıda yerel olarak saklanır. Verilerini kişisel yedekle aktar.","Back-up terugzetten":"Yedeği geri yükle","Heb je eerder een persoonlijke back-up gemaakt? Importeer het SQL-bestand hier en log daarna in met het account uit die back-up.":"Kişisel yedeğin var mı? SQL dosyasını buraya aktar ve yedekteki hesapla giriş yap.","Kies SQL-back-up":"SQL yedeği seç",
   "Een dagelijkse plek om Qur’an, sunnah, gebed, dhikr en goed karakter bewust ruimte te geven.":"Kur'an, sünnet, namaz, zikir ve güzel ahlaka günlük olarak yer ayır.","Open Schild van Imaan & daden":"İman Kalkanı ve amelleri aç","Bewaar je gegevens":"Verilerini koru","Je voortgang staat op dit apparaat. Maak af en toe een persoonlijke back-up en bewaar die op een veilige plek, bijvoorbeeld in je eigen cloudopslag.":"İlerlemen bu cihazda saklanır. Düzenli olarak kişisel yedek al ve güvenli yerde sakla.","Maak persoonlijke back-up":"Kişisel yedek oluştur","Installeren / uitleg":"Yükle / yardım","Bescherm lokale opslag":"Yerel depolamayı koru",
   "Hart en Schild van Imaan · alle dagen":"Kalp ve İman Kalkanı · tüm günler","geregistreerde goede stappen":"kaydedilen iyi adımlar","geregistreerde misstappen":"kaydedilen hatalar","Dagelijkse rang":"Günlük derece","Deed counter · totaal van alle dagen":"Amel sayacı · tüm zamanlar","goede daden geregistreerd":"kaydedilen iyi ameller","slechte daden geregistreerd":"kaydedilen kötü ameller","goede-dadenpunten · ×10":"iyi amel puanı · ×10","slechte-dadenpunten · ×1":"kötü amel puanı · ×1",
   "Mijn dag":"Günüm","Dagelijkse voortgang":"Günlük ilerleme","Begin met je checklist.":"Kontrol listene başla.","Dagelijkse adhkār & dhikr":"Günlük ezkâr ve zikir","Goede daden":"İyi ameller","Slechte daden":"Kötü ameller","Zoek op daad, categorie of bron…":"Amel, kategori veya kaynak ara…","Voeg een goede daad toe":"İyi amel ekle","Voeg een slechte daad toe":"Kötü amel ekle","Voeg toe":"Ekle","Wis handmatige daden van deze dag":"Bugünün manuel amellerini sil","Moment:":"Zaman:","De genoemde deugd:":"Aktarılan fazilet:","Bron:":"Kaynak:","Markeer afgerond":"Tamamlandı olarak işaretle","✓ Afgerond vandaag · tik om ongedaan te maken":"✓ Bugün tamamlandı · geri almak için dokun",
   "Gebruiker":"Kullanıcı","Rol":"Rol","Beheerder":"Yönetici","Beginnen":"Başlangıç","Opbouwen":"Gelişim","Regelmaat":"Düzen","Verdiepen":"Derinleşme","Verankeren":"Yerleşik","Standvastig":"Sebat","Toegewijd":"Adanmış","Volhardend":"Kararlı","Uitzonderlijke inzet":"Olağanüstü çaba",
-  "Elke kleine goede stap telt. Je rang blijft opgebouwd uit je goede daden.":"Her küçük iyilik önemlidir. Derecen iyi amellerinle birikir.","Je hebt je eerste goede punten verzameld.":"İlk iyi puanlarını kazandın.","Blijf ruimte maken voor goede daden.":"İyi amellere yer açmaya devam et.","Je volgende rang vraagt om meer punten dan de vorige.":"Bir sonraki derece öncekinden daha fazla puan gerektirir.","Je bouwt verder met geduld en oprechtheid.":"Sabır ve samimiyetle ilerlemeye devam et.","Houd vol; elke goede daad is waardevol.":"Devam et; her iyi amel değerlidir.","Je hebt een hoge rang bereikt.":"Yüksek bir dereceye ulaştın.","Deze hogere trede vraagt om veel consistente daden.":"Bu yüksek derece çok sayıda tutarlı amel gerektiriyor.","Je hebt de hoogste benoemde app-rang bereikt; verdere rangen blijven doorgroeien.":"Uygulamadaki en yüksek adlandırılmış dereceye ulaştın; yeni dereceler artmaya devam eder."
+  "Elke kleine goede stap telt. Je dagelijkse rang begint morgen opnieuw.":"Her küçük iyilik önemlidir. Günlük derecen yarın yeniden başlar.","Je hebt je eerste goede punten verzameld.":"İlk iyi puanlarını kazandın.","Blijf ruimte maken voor goede daden.":"İyi amellere yer açmaya devam et.","Je volgende rang vraagt om meer punten dan de vorige.":"Bir sonraki derece öncekinden daha fazla puan gerektirir.","Je bouwt verder met geduld en oprechtheid.":"Sabır ve samimiyetle ilerlemeye devam et.","Houd vol; elke goede daad is waardevol.":"Devam et; her iyi amel değerlidir.","Je hebt een hoge rang bereikt.":"Yüksek bir dereceye ulaştın.","Deze hogere trede vraagt om veel consistente daden.":"Bu yüksek derece çok sayıda tutarlı amel gerektiriyor.","Je hebt de hoogste benoemde app-rang bereikt; verdere rangen blijven doorgroeien.":"Uygulamadaki en yüksek adlandırılmış dereceye ulaştın; yeni dereceler artmaya devam eder."
  }
 };
 const contentTranslations={
@@ -394,7 +395,7 @@ const dateEl=document.getElementById('date'), sectionsEl=document.getElementById
 const homeView=document.getElementById('homeView'), routineView=document.getElementById('routineView'), deedCounterView=document.getElementById('deedCounterView'), subjectView=document.getElementById('subjectView');
 const appMenu=document.getElementById('appMenu'), homeMenu=document.getElementById('homeMenu'), menuToggle=document.getElementById('menuToggle');
 const deedDate=document.getElementById('deedDate'), deedStatus=document.getElementById('deedStatus');
-let heartAnimation='',homeShieldAnimation='',allTimeGoodPoints=0;
+let heartAnimation='',homeShieldAnimation='',currentDailyGoodPoints=0,bestDailyGoodPoints=0;
 let currentSession=null,isAdmin=false,authMode='login';
 let deferredInstallPrompt=null;
 async function refreshPersistentStorageStatus(){
@@ -529,7 +530,7 @@ function decodeSqlPayload(value){
  return JSON.parse(new TextDecoder().decode(bytes));
 }
 function userDataKeys(userId){
- return [`jannah-custom-deeds-v1-${userId}`].concat(
+ return [`jannah-custom-deeds-v1-${userId}`,`jannah-best-daily-score-v1-${userId}`].concat(
   ['checklist','deed-counter','heart-reflection'].flatMap(kind=>{
    const prefix=`jannah-${kind}-v1-${userId}-`,keys=[];
    for(let index=0;index<localStorage.length;index++){
@@ -558,7 +559,7 @@ function parseSqlExport(sql){
  return payload;
 }
 function isUserDataKey(key,userId){
- return key===`jannah-custom-deeds-v1-${userId}`||[
+ return key===`jannah-custom-deeds-v1-${userId}`||key===`jannah-best-daily-score-v1-${userId}`||[
   `jannah-checklist-v1-${userId}-`,
   `jannah-deed-counter-v1-${userId}-`,
   `jannah-heart-reflection-v1-${userId}-`
@@ -784,34 +785,51 @@ const heartStainPositions=[[68,67,8],[105,58,7],[133,83,8],[78,105,7],[111,116,9
 function renderAllTimeDeedTotals(){
  try{
   const totals={goodEvents:0,badEvents:0,notCheckedPrayers:0};
+  const goodEventsByDate=new Map();
   const allDeeds=[...getTrackedGoodDeeds().map(deed=>({...deed,kind:'good'})),...getDeeds('bad').map(deed=>({...deed,kind:'bad'}))];
   const knownIds=new Map(allDeeds.map(deed=>[deed.id,deed.kind]));
   const routineIds=new Set(groups.flatMap((group,groupIndex)=>group.items.map((_,itemIndex)=>`${groupIndex}-${itemIndex}`)));
   const prayerTrackedDates=new Set(),today=new Date().toLocaleDateString('sv-SE');
+  const deedPrefix=`jannah-deed-counter-v1-${userStorageId()}-`,checklistPrefix=`jannah-checklist-v1-${userStorageId()}-`;
+  const addGoodEvents=(date,count)=>{if(/^\d{4}-\d{2}-\d{2}$/.test(date)&&Number.isSafeInteger(count)&&count>0)goodEventsByDate.set(date,(goodEventsByDate.get(date)||0)+count)};
   for(let index=0;index<localStorage.length;index++){
    const key=localStorage.key(index);
-   if(!key||(!key.startsWith(`jannah-deed-counter-v1-${userStorageId()}-`)&&!key.startsWith(`jannah-checklist-v1-${userStorageId()}-`)))continue;
+   if(!key||(!key.startsWith(deedPrefix)&&!key.startsWith(checklistPrefix)))continue;
    const daily=JSON.parse(localStorage.getItem(key)||'{}');
    if(!daily||typeof daily!=='object'||Array.isArray(daily))continue;
    Object.entries(daily).forEach(([id,count])=>{
-    if(key.startsWith(`jannah-checklist-v1-${userStorageId()}-`)){
-      const date=key.slice(`jannah-checklist-v1-${userStorageId()}-`.length);
+    if(key.startsWith(checklistPrefix)){
+      const date=key.slice(checklistPrefix.length);
       if(date<today&&Object.keys(daily).length>0&&prayerTrackedDates.has(date)===false){
        prayerTrackedDates.add(date);
        totals.notCheckedPrayers+=Math.max(0,getPrayerCompletionSummary(daily).notChecked-getLoggedMissedPrayerCount(date));
       }
-      if(routineIds.has(id)&&count===true)totals.goodEvents++;
+      if(routineIds.has(id)&&count===true){totals.goodEvents++;addGoodEvents(date,1)}
       return;
     }
     const kind=knownIds.get(id);
-    if(kind&&Number.isSafeInteger(count)&&count>0)totals[kind==='good'?'goodEvents':'badEvents']+=count;
+    if(kind&&Number.isSafeInteger(count)&&count>0){
+     totals[kind==='good'?'goodEvents':'badEvents']+=count;
+     if(kind==='good')addGoodEvents(key.slice(deedPrefix.length),count);
+    }
    });
   }
   document.getElementById('allGoodEvents').textContent=totals.goodEvents.toLocaleString('nl-NL');
   document.getElementById('allBadEvents').textContent=totals.badEvents.toLocaleString('nl-NL');
   document.getElementById('allGoodPoints').textContent=(totals.goodEvents*10).toLocaleString('nl-NL');
   document.getElementById('allBadPoints').textContent=totals.badEvents.toLocaleString('nl-NL');
-  allTimeGoodPoints=totals.goodEvents*10;
+  currentDailyGoodPoints=(goodEventsByDate.get(today)||0)*10;
+  let storedBest=0;
+  try{
+   const storedValue=JSON.parse(localStorage.getItem(`jannah-best-daily-score-v1-${userStorageId()}`)||'0');
+   if(Number.isSafeInteger(storedValue)&&storedValue>=0)storedBest=storedValue;
+  }catch(error){console.error('De opgeslagen persoonlijke topscore kon niet worden gelezen.',error)}
+  const historyBestDailyPoints=[...goodEventsByDate.values()].reduce((maximum,count)=>Math.max(maximum,count*10),0);
+  bestDailyGoodPoints=Math.max(storedBest,historyBestDailyPoints,currentDailyGoodPoints);
+  if(bestDailyGoodPoints>storedBest){
+   try{localStorage.setItem(`jannah-best-daily-score-v1-${userStorageId()}`,JSON.stringify(bestDailyGoodPoints))}
+   catch(error){deedStatus.textContent='De persoonlijke topscore kon niet worden opgeslagen. Controleer de opslagruimte en maak een back-up.'}
+  }
   renderHomeHeart(totals.goodEvents,totals.badEvents,totals.notCheckedPrayers);
  }catch(error){
   deedStatus.textContent='Het totaal van alle dagen kon niet worden berekend.';
@@ -886,7 +904,7 @@ function renderHomeHeart(goodActions,badActions,notCheckedPrayers){
  }
  const rankNames=['Beginnen','Opbouwen','Regelmaat','Verdiepen','Verankeren','Standvastig','Toegewijd','Volhardend','Uitzonderlijke inzet'];
  const rankDescriptions=[
-  'Elke kleine goede stap telt. Je rang blijft opgebouwd uit je goede daden.',
+  'Elke kleine goede stap telt. Je dagelijkse rang begint morgen opnieuw.',
   'Je hebt je eerste goede punten verzameld.',
   'Blijf ruimte maken voor goede daden.',
   'Je volgende rang vraagt om meer punten dan de vorige.',
@@ -897,7 +915,7 @@ function renderHomeHeart(goodActions,badActions,notCheckedPrayers){
   'Je hebt de hoogste benoemde app-rang bereikt; verdere rangen blijven doorgroeien.'
  ];
  function renderGrowthLevels(){
-  const points=allTimeGoodPoints,rankIndex=Math.floor(Math.sqrt(points/10));
+  const points=currentDailyGoodPoints,rankIndex=Math.floor(Math.sqrt(points/10));
   const currentThreshold=rankIndex*rankIndex*10,nextThreshold=(rankIndex+1)*(rankIndex+1)*10;
   const rankName=index=>index<rankNames.length?translateText(rankNames[index]):`${translateText(rankNames[rankNames.length-1])} ${index+1}`;
   const currentName=rankName(rankIndex),nextName=rankName(rankIndex+1);
@@ -907,12 +925,15 @@ function renderHomeHeart(goodActions,badActions,notCheckedPrayers){
    {name:'homeLevelName',description:'homeLevelDescription',bar:'homeLevelBar',track:'homeLevelBar',meta:'homeLevelMeta'},
    {name:'deedLevelName',description:'deedLevelDescription',bar:'deedLevelBar',track:'deedLevelBar',meta:'deedLevelMeta'}
   ].forEach(ids=>{
-   document.getElementById(ids.name).textContent=`${translateText('Totale rang')}: ${currentName}`;
+   const home=ids.name==='homeLevelName';
+   document.getElementById(ids.name).textContent=`${translateText('Dagelijkse rang')}: ${currentName}`;
    document.getElementById(ids.description).textContent=translateText(description);
+   document.getElementById(home?'homeCurrentScore':'deedCurrentScore').textContent=points.toLocaleString(currentLanguage);
+   document.getElementById(home?'homeBestScore':'deedBestScore').textContent=bestDailyGoodPoints.toLocaleString(currentLanguage);
    document.getElementById(ids.bar).style.width=`${progress}%`;
    const track=document.getElementById(ids.track).parentElement;
    track.setAttribute('aria-valuenow',String(progress));
-   document.getElementById(ids.meta).textContent=currentLanguage==='en'?`${points} total deed points · ${nextThreshold-points} to ${nextName}`:currentLanguage==='tr'?`Toplam ${points} amel puanı · ${nextName} için ${nextThreshold-points} puan`:`${points} totale deedpunten · ${nextThreshold-points} tot ${nextName}`;
+   document.getElementById(ids.meta).textContent=currentLanguage==='en'?`${nextThreshold-points} points to ${nextName}`:currentLanguage==='tr'?`${nextName} derecesine ${nextThreshold-points} puan`:`${nextThreshold-points} punten tot de volgende rang (${nextName})`;
   });
  }
  document.getElementById('tawbahButton').addEventListener('click',()=>{
@@ -1058,6 +1079,7 @@ setInterval(()=>{
  const wasOnToday=dateEl.value===localDate&&deedDate.value===localDate;
  localDate=currentDate;
  if(wasOnToday){dateEl.value=localDate;deedDate.value=localDate;render();renderDeedCounter()}
+ else{renderAllTimeDeedTotals();renderGrowthLevels()}
 },60000);
 if('serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('./sw.js').catch(error=>{console.error('De offline app-shell kon niet worden geregistreerd.',error);document.getElementById('installHelp').textContent='Offline openen is nog niet beschikbaar. Controleer de HTTPS-publicatie van de app en laad de site opnieuw.'});
 initializeDeviceTools();
