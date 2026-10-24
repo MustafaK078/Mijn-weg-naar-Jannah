@@ -38,6 +38,7 @@ footer{text-align:center;color:var(--muted);font-size:12px;padding:8px 12px 30px
 .calendar-card,.combined-picker{background:var(--paper);border:1px solid var(--line);border-radius:17px;padding:16px;margin:11px 0}.calendar-card h2{margin:0;color:var(--green);font-family:Georgia,serif;font-size:20px}.calendar-clock{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:11px 0}.calendar-date{padding:10px;border-radius:11px;background:#f4f1e8}.calendar-date small,.calendar-zone{display:block;color:var(--muted);font-size:11px}.calendar-date strong{display:block;margin-top:3px;font-size:14px}.calendar-ramadan{padding:11px;border-left:3px solid var(--gold);border-radius:0 10px 10px 0;background:#f2ecdd;font-size:13px}.calendar-days{display:grid;gap:8px;margin:10px 0 0;padding:0;list-style:none}.calendar-day{padding:10px;border:1px solid var(--line);border-radius:10px;background:white}.calendar-day time{display:block;color:var(--muted);font-size:11px}.calendar-day strong{display:block;margin:2px 0;color:var(--green);font-size:13px}.calendar-day p{margin:4px 0;font-size:12px;color:var(--muted)}.calendar-note{font-size:11px;color:var(--muted);margin:9px 0 0}.combined-picker h3{margin:0 0 5px;color:var(--green);font-size:17px}.combined-picker p{margin:0;color:var(--muted);font-size:12px}.combined-picker-options{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:9px;margin-top:12px}.combined-picker-options button,.combined-back{border:1px solid var(--green);border-radius:11px;background:white;color:var(--green);padding:11px;text-align:left;font:inherit;font-size:13px;font-weight:700;cursor:pointer}.combined-picker-options button:hover,.combined-back:hover{background:#f2ecdd}.combined-back{margin:10px 0}.progress[open]{padding-bottom:15px}.progress-summary{display:flex;justify-content:space-between;align-items:center;gap:12px;cursor:pointer;list-style:none}.progress-summary::-webkit-details-marker{display:none}.progress-summary:after{content:"⌄";color:var(--green);font-weight:800}.progress[open] .progress-summary:after{content:"⌃"}.progress .progress-body{padding-top:5px}.deed-category-group{margin:8px 0;border:1px solid var(--line);border-radius:11px;background:white;overflow:hidden}.deed-category-summary{padding:11px;color:var(--green);font-size:13px;font-weight:700;cursor:pointer;list-style:none}.deed-category-summary::-webkit-details-marker{display:none}.deed-category-summary:after{content:"＋";float:right}.deed-category-group[open]>.deed-category-summary:after{content:"−"}.deed-category-content{padding:0 10px 10px}.dhikr-counter{display:flex;align-items:center;gap:8px;margin-top:10px}.dhikr-count{min-width:74px;text-align:center;color:var(--green);font-size:13px;font-weight:800}.dhikr-tap{min-width:54px;min-height:44px;border:1px solid var(--green);border-radius:11px;background:var(--green);color:white;font:inherit;font-size:15px;font-weight:800;cursor:pointer}.dhikr-tap:disabled{opacity:.55;cursor:default}.dhikr-undo{min-width:44px;min-height:44px;border:1px solid var(--line);border-radius:10px;background:var(--cream);color:var(--ink);font:inherit;font-size:15px;font-weight:700;cursor:pointer}.dhikr-progress{height:6px;margin-top:7px;border-radius:99px;background:#e7e9e1;overflow:hidden}.dhikr-progress div{height:100%;width:0;background:var(--gold);transition:width .15s}
 @media(prefers-reduced-motion:reduce){.dhikr-progress div{transition:none}}
 @media(min-width:600px){.time-grid,.adhkar-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.home-details{margin:10px 0;border:1px solid var(--line);border-radius:14px;background:var(--paper);overflow:hidden}.home-details>summary,.home-explanation>summary{padding:13px 15px;color:var(--green);font-size:14px;font-weight:700;cursor:pointer;list-style:none}.home-details>summary::-webkit-details-marker,.home-explanation>summary::-webkit-details-marker{display:none}.home-details>summary:after,.home-explanation>summary:after{content:"＋";float:right}.home-details[open]>summary:after,.home-explanation[open]>summary:after{content:"−"}.home-details>.calendar-card,.home-details>.device-tools,.home-details>.level-panel,.home-details>.home-deed-totals{margin:0;border:0;border-top:1px solid var(--line);border-radius:0}.home-details>.calendar-card{padding:14px}.home-details>.device-tools,.home-details>.home-deed-totals{padding:14px}.home-details>.level-panel{padding:14px}.home-explanation{margin-top:10px;border-top:1px solid var(--line);text-align:left}.home-explanation>summary{padding:11px 0 0;font-size:12px}.home-explanation .shield-notice{margin-top:8px}
 </style>
 </head>
 <body>
@@ -62,24 +63,6 @@ footer{text-align:center;color:var(--muted);font-size:12px;padding:8px 12px 30px
   </section>
 </main>
 <main class="wrap" id="homeView" hidden>
-  <section class="home-intro"><h2>Schild van Imaan & daden</h2><p>Een dagelijkse plek om Qur’an, sunnah, gebed, dhikr en goed karakter bewust ruimte te geven.</p><button class="btn primary" type="button" data-page="routine">Open Schild van Imaan & daden</button></section>
-  <section class="calendar-card" id="calendarCard">
-    <h2>Vandaag en islamitische dagen</h2>
-    <div class="calendar-clock"><div class="calendar-date"><small>Datum (Gregoriaans)</small><strong id="westernDate">—</strong></div><div class="calendar-date"><small>التاريخ الهجري · Hijri</small><strong id="arabicDate" lang="ar" dir="rtl">—</strong></div><div class="calendar-date"><small>Tijd op dit apparaat</small><strong id="localTime">—</strong></div><div class="calendar-date"><small>التاريخ الهجري · Hijri (Latijnse cijfers)</small><strong id="westernHijriDate">—</strong></div></div>
-    <span class="calendar-zone" id="calendarZone"></span>
-    <p class="calendar-ramadan" id="ramadanCountdown" aria-live="polite"></p>
-    <h3>Aankomende dagen · komende week</h3><ul class="calendar-days" id="islamicDays"></ul>
-    <p class="calendar-note">Kalenderdata zijn een berekening op basis van de Umm al-Qura-kalender en de tijdzone van dit apparaat. Ramadan en andere maanden kunnen lokaal een dag verschillen door maanwaarneming. Er wordt geen locatie opgevraagd.</p>
-  </section>
-  <p class="auth-message" id="appStatus" role="status" aria-live="polite"></p>
-  <section class="device-tools">
-    <h3>Bewaar je gegevens</h3>
-    <p>Je voortgang staat op dit apparaat. Maak af en toe een persoonlijke back-up en bewaar die op een veilige plek, bijvoorbeeld in je eigen cloudopslag.</p>
-    <div class="actions"><button class="btn primary" id="exportPersonalBackup" type="button">Maak persoonlijke back-up</button><button class="btn secondary" id="installApp" type="button">Installeren / uitleg</button></div>
-    <button class="btn secondary" id="requestPersistentStorage" type="button">Bescherm lokale opslag</button>
-    <p class="note" id="deviceToolsStatus" role="status" aria-live="polite">Een back-up bevat jouw account-hash en persoonlijke invoer. Deel het bestand niet; wissen van sitegegevens kan lokale gegevens verwijderen.</p>
-    <p class="note" id="installHelp">Installeren is gratis. iPhone/iPad: open deze site in Safari en kies Deel → Zet op beginscherm. Android: open de site in Chrome en kies Installeren of Toevoegen aan startscherm.</p>
-  </section>
   <section class="heart-panel" aria-label="Cumulatieve hartreflectie">
     <h3>Hart en Schild van Imaan · alle dagen</h3>
     <div class="heart-visual home-heart-visual" id="homeHeartVisual" data-warmth="0">
@@ -96,13 +79,36 @@ footer{text-align:center;color:var(--muted);font-size:12px;padding:8px 12px 30px
     <p class="heart-caption" id="homeHeartCaption">Je geregistreerde dagen verschijnen hier als een persoonlijke reflectie.</p>
     <div class="shield-summary"><strong>Schild van Imaan · app-reflectie</strong><span id="homeShieldPercent">0%</span></div><div class="shield-meter" role="progressbar" aria-label="Symbolische shield-voortgang op basis van app-invoer" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div id="homeShieldBar"></div></div>
     <div class="heart-counters"><div class="heart-counter"><strong id="homeHeartGoodActions">0</strong><small>geregistreerde goede stappen</small></div><div class="heart-counter bad"><strong id="homeHeartBadActions">0</strong><small>geregistreerde misstappen</small></div></div>
-    <p class="shield-notice">Het lichtschild is een motiverende, symbolische voortgangsvisualisatie op basis van alleen jouw app-invoer: goede registraties verhogen het aandeel, een geregistreerde misstap telt hier dubbel en een niet-afgevinkt gebed op een eerdere bijgehouden dag telt hier driemaal. Deze app-verhoudingen zijn geen religieuze gewichten. “Niet afgevinkt” is geen vaststelling dat je een gebed hebt gemist. Dit is geen meting of oordeel over iman; intentie, omstandigheden en Allah’s oordeel zijn niet meetbaar.</p>
+    <details class="home-explanation"><summary>Over deze reflectie</summary><p class="shield-notice">Het lichtschild is een motiverende, symbolische voortgangsvisualisatie op basis van alleen jouw app-invoer: goede registraties verhogen het aandeel, een geregistreerde misstap telt hier dubbel en een niet-afgevinkt gebed op een eerdere bijgehouden dag telt hier driemaal. Deze app-verhoudingen zijn geen religieuze gewichten. “Niet afgevinkt” is geen vaststelling dat je een gebed hebt gemist. Dit is geen meting of oordeel over iman; intentie, omstandigheden en Allah’s oordeel zijn niet meetbaar.</p></details>
   </section>
-  <section class="level-panel" aria-label="Dagelijkse rang">
+  <section class="home-intro"><h2>Schild van Imaan & daden</h2><p>Qur’an, sunnah, gebed, dhikr en goed karakter — stap voor stap.</p><button class="btn primary" type="button" data-page="routine">Open dagelijkse routine</button></section>
+  <section class="calendar-card time-recommendation" aria-live="polite" aria-atomic="true">
+    <h2>Aanbeveling voor dit moment</h2>
+    <h3 id="timeRecommendationTitle"></h3>
+    <p id="timeRecommendationText"></p>
+    <p class="calendar-note" id="timeRecommendationDhikr"></p>
+    <p class="calendar-note">Gebaseerd op de lokale klok; stem adhkār af op je eigen gebedstijden. Dit is een vrijblijvende herinnering.</p>
+    <button class="btn primary" type="button" data-open-adhkar>Open dagelijkse adhkār</button>
+  </section>
+  <details class="home-details">
+   <summary>Vandaag en islamitische dagen</summary>
+   <section class="calendar-card" id="calendarCard">
+    <h2>Vandaag en islamitische dagen</h2>
+    <div class="calendar-clock"><div class="calendar-date"><small>Datum (Gregoriaans)</small><strong id="westernDate">—</strong></div><div class="calendar-date"><small>التاريخ الهجري · Hijri</small><strong id="arabicDate" lang="ar" dir="rtl">—</strong></div><div class="calendar-date"><small>Tijd op dit apparaat</small><strong id="localTime">—</strong></div><div class="calendar-date"><small>التاريخ الهجري · Hijri (Latijnse cijfers)</small><strong id="westernHijriDate">—</strong></div></div>
+    <span class="calendar-zone" id="calendarZone"></span>
+    <p class="calendar-ramadan" id="ramadanCountdown" aria-live="polite"></p>
+    <h3>Aankomende dagen · komende week</h3><ul class="calendar-days" id="islamicDays"></ul>
+    <p class="calendar-note">Kalenderdata zijn een berekening op basis van de Umm al-Qura-kalender en de tijdzone van dit apparaat. Ramadan en andere maanden kunnen lokaal een dag verschillen door maanwaarneming. Er wordt geen locatie opgevraagd.</p>
+   </section>
+  </details>
+  <p class="auth-message" id="appStatus" role="status" aria-live="polite"></p>
+  <details class="home-details">
+   <summary>Mijn score en daden</summary>
+   <section class="level-panel" aria-label="Dagelijkse rang">
     <div class="level-emblem" aria-hidden="true">✦</div>
     <div class="level-copy"><h3 id="homeLevelName">Dagelijkse rang</h3><p id="homeLevelDescription">Je dagelijkse rang begint elke dag opnieuw; je persoonlijke topscore blijft bewaard.</p><div class="rank-scores"><div class="rank-score"><small>Score vandaag</small><strong id="homeCurrentScore">0</strong></div><div class="rank-score"><small>Persoonlijke topscore</small><strong id="homeBestScore">0</strong></div></div><div class="level-track" role="progressbar" aria-label="Voortgang naar volgende dagelijkse rang" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div id="homeLevelBar"></div></div><div class="level-meta" id="homeLevelMeta">0 punten tot de volgende rang</div><button class="info-toggle" type="button" data-info="rankInfo" aria-expanded="false" aria-controls="rankInfo" aria-label="Uitleg over de rang">i</button><p class="info-panel" id="rankInfo" hidden>Je actuele score en rang worden elke dag opnieuw berekend. Je persoonlijke topscore is de hoogste dagsom die je hebt bereikt en blijft bewaard. De oplopende rangdrempels maken hogere rangen steeds uitdagender. Slechte daden verlagen de dagrang niet. Dit is alleen een motivatiehulpmiddel, geen religieuze beoordeling.</p></div>
-  </section>
-  <section class="home-deed-totals" aria-label="Totaal van alle dagen">
+   </section>
+   <section class="home-deed-totals" aria-label="Totaal van alle dagen">
     <h3>Deed counter · totaal van alle dagen</h3>
     <div class="home-deed-grid">
       <div class="home-deed-stat"><strong id="allGoodEvents">0</strong><small>goede daden geregistreerd</small></div>
@@ -111,7 +117,19 @@ footer{text-align:center;color:var(--muted);font-size:12px;padding:8px 12px 30px
       <div class="home-deed-stat"><strong id="allBadPoints">0</strong><small>slechte-dadenpunten · ×1</small></div>
     </div>
     <p class="note">Gebaseerd op registraties in deze lokale database. De ×10/×1-waarden zijn een vereenvoudigd app-model geïnspireerd op Qur’an 6:160, geen berekening van Allah’s oordeel; intentie, berouw en omstandigheden zijn niet meetbaar.</p>
-  </section>
+   </section>
+  </details>
+  <details class="home-details">
+   <summary>Back-up en installatie</summary>
+   <section class="device-tools">
+    <h3>Bewaar je gegevens</h3>
+    <p>Je voortgang staat op dit apparaat. Maak af en toe een persoonlijke back-up en bewaar die op een veilige plek, bijvoorbeeld in je eigen cloudopslag.</p>
+    <div class="actions"><button class="btn primary" id="exportPersonalBackup" type="button">Maak persoonlijke back-up</button><button class="btn secondary" id="installApp" type="button">Installeren / uitleg</button></div>
+    <button class="btn secondary" id="requestPersistentStorage" type="button">Bescherm lokale opslag</button>
+    <p class="note" id="deviceToolsStatus" role="status" aria-live="polite">Een back-up bevat jouw account-hash en persoonlijke invoer. Deel het bestand niet; wissen van sitegegevens kan lokale gegevens verwijderen.</p>
+    <p class="note" id="installHelp">Installeren is gratis. iPhone/iPad: open deze site in Safari en kies Deel → Zet op beginscherm. Android: open de site in Chrome en kies Installeren of Toevoegen aan startscherm.</p>
+   </section>
+  </details>
   <section class="admin-panel" id="adminPanel" hidden>
     <h2>Gebruikersbeheer</h2><p>Beheeraccounts kunnen gebruikersnamen en rollen zien, maar niet de persoonlijke daden, checklist of dhikr-registraties van gebruikers.</p>
     <section class="admin-panel"><h3>Beheerderswachtwoord wijzigen</h3><form id="changeAdminPasswordForm" class="auth-fields"><label>Huidig wachtwoord<input name="currentPassword" type="password" autocomplete="current-password" required></label><label>Nieuw wachtwoord<input name="newPassword" type="password" minlength="8" autocomplete="new-password" required></label><button class="auth-submit" type="submit">Wachtwoord wijzigen</button></form><p class="auth-message" id="passwordChangeStatus" role="status" aria-live="polite"></p></section>
@@ -300,6 +318,45 @@ Object.assign(translations.tr,{
  "Gebruikers en voortgang worden lokaal in deze browser opgeslagen. Na inloggen blijft dit apparaat ingelogd tot je uitlogt. Deel een exportbestand handmatig als je gegevens wilt overzetten.":"Hesaplar ve ilerleme bu tarayıcıda yerel olarak saklanır. Giriş yaptıktan sonra çıkış yapana kadar bu cihazda oturumun açık kalır. Verilerini aktarmak için yedeği elle paylaş.","Kalenderdata zijn een berekening op basis van de Umm al-Qura-kalender en de tijdzone van dit apparaat. Ramadan en andere maanden kunnen lokaal een dag verschillen door maanwaarneming. Er wordt geen locatie opgevraagd.":"Takvim tarihleri Umm al-Qura takvimine ve bu cihazın saat dilimine göre hesaplanır. Ay gözlemine bağlı olarak Ramazan ve diğer aylar yerel olarak bir gün farklı olabilir. Konum istenmez.",
  "Sunnah-gebeden verricht (oude algemene registratie)":"Sünnet namazları kılındı (eski genel kayıt)","Fajr-sunnah gebeden":"Sabah sünnet namazı","Dhuhr-sunnah gebeden":"Öğle sünnet namazı","ʿAsr-vrijwillig gebed":"İkindi nafile namazı","Maghrib-sunnah gebeden":"Akşam sünnet namazı","ʿIshā’-sunnah gebeden":"Yatsı sünnet namazı",
  "Bestaande algemene vinkjes blijven bewaard. Gebruik voortaan ook de losse gebedsvinkjes hieronder.":"Mevcut genel işaretler korunur. Bundan sonra aşağıdaki ayrı namaz kutularını da kullanabilirsin.","De twee sunnah-rakʿahs vóór Fajr. (Sahih al-Bukhari 1169)":"Fecr farzından önce iki sünnet rekâtı. (Sahih al-Bukhari 1169)","Vaste sunnah vóór en na Dhuhr; raadpleeg je madhhab voor de gebruikelijke aantallen. (Sahih Muslim 728)":"Öğle namazından önce ve sonra düzenli sünnet; alışılmış rekât sayısı için mezhebine danış. (Sahih Muslim 728)", "Vier vrijwillige rakaʿahs vóór ʿAsr als je wilt; dit is geen vaste rawātib-sunnah na het verplichte gebed. (Jamiʿ at-Tirmidhi 430)":"İstersen ikindiden önce dört nafile rekât kıl; farz namazdan sonra sabit bir rawâtib sünneti değildir. (Jamiʿ at-Tirmidhi 430)","Vaste sunnah na Maghrib. (Sahih Muslim 728)":"Akşam namazından sonra düzenli sünnet. (Sahih Muslim 728)","Vaste sunnah na ʿIshā’. (Sahih Muslim 728)":"Yatsı namazından sonra düzenli sünnet. (Sahih Muslim 728)"
+});
+Object.assign(translations.en,{
+ "Aanbeveling voor dit moment":"A reminder for this time",
+ "Open dagelijkse adhkār":"Open daily adhkār",
+ "Tijdstip · vroege uren":"Early hours · if you are awake",
+ "Tijdstip · ochtend":"Morning · morning adhkār",
+ "Tijdstip · overdag":"Daytime · dhikr in small moments",
+ "Tijdstip · namiddag":"Afternoon · evening adhkār",
+ "Tijdstip · avond":"Evening · evening adhkār",
+ "Tijdstip · nacht":"Night · gentle remembrance",
+ "Als je nog wakker bent, neem rustig tijd voor istighfār. De Qur’an prijst wie vóór de dageraad om vergeving vragen. Dit is vrijwillig; je hoeft hiervoor niet wakker te blijven.":"If you are still awake, take a quiet moment for istighfār. The Qur’an praises those who seek forgiveness before dawn. This is voluntary; you do not need to stay awake for it.",
+ "Na Fajr kun je de ochtendadhkār lezen: Sayyid al-Istighfār, de drie Quls en de beschermingsduʿā’. Als Fajr nog niet is aangebroken, lees ze daarna.":"After Fajr, you can read the morning adhkār: Sayyid al-Istighfār, the three Quls, and the protection duʿā’. If Fajr has not yet begun, read them afterward.",
+ "Verspreid dhikr over je dag: SubḥānAllāhi wa-biḥamdihī of tahlīl. Je kunt ook rustig istighfār zeggen; houd aantallen haalbaar.":"Spread dhikr through your day: SubḥānAllāhi wa-biḥamdihī or tahlīl. You can also say istighfār calmly; keep counts manageable.",
+ "De avondadhkār passen in de namiddag of avond. Neem ook een moment voor istighfār en stem de timing af op je lokale gebedstijden.":"The evening adhkār fit in the afternoon or evening. Also take a moment for istighfār and follow your local prayer times.",
+ "Als je de avondadhkār nog niet hebt gelezen, is dit een passend moment: Sayyid al-Istighfār, de drie Quls en de beschermingsduʿā’.":"If you have not read the evening adhkār yet, this is a suitable time: Sayyid al-Istighfār, the three Quls, and the protection duʿā’.",
+ "Neem een rustig moment voor Qur’an of dhikr. Als je wakker bent vóór Fajr, kun je ook istighfār doen; rust is eveneens belangrijk.":"Take a quiet moment for Qur’an or dhikr. If you are awake before Fajr, you can also make istighfār; rest is important too.",
+ "Aanbevolen: istighfār vóór de dageraad · Qur’an 3:17, 51:18; dagelijks istighfār · Sahih Muslim 2702.":"Suggested: istighfār before dawn · Qur’an 3:17, 51:18; daily istighfār · Sahih Muslim 2702.",
+ "Aanbevolen adhkār: Sayyid al-Istighfār · Sahih al-Bukhari 6306; drie Quls · Sunan Abi Dawud 5082; beschermingsduʿā’ · Sunan Abi Dawud 5088.":"Suggested adhkār: Sayyid al-Istighfār · Sahih al-Bukhari 6306; the three Quls · Sunan Abi Dawud 5082; protection duʿā’ · Sunan Abi Dawud 5088.",
+ "Aanbevolen dhikr: SubḥānAllāhi wa-biḥamdihī · Sahih al-Bukhari 6405; tahlīl · Sahih al-Bukhari 3293; istighfār · Sahih Muslim 2702.":"Suggested dhikr: SubḥānAllāhi wa-biḥamdihī · Sahih al-Bukhari 6405; tahlīl · Sahih al-Bukhari 3293; istighfār · Sahih Muslim 2702.",
+ "Aanbevolen adhkār: Sayyid al-Istighfār · Sahih al-Bukhari 6306; drie Quls · Sunan Abi Dawud 5082; beschermingsduʿā’ · Sunan Abi Dawud 5088.":"Suggested adhkār: Sayyid al-Istighfār · Sahih al-Bukhari 6306; the three Quls · Sunan Abi Dawud 5082; protection duʿā’ · Sunan Abi Dawud 5088."
+});
+Object.assign(translations.tr,{
+ "Aanbeveling voor dit moment":"Bu an için hatırlatma",
+ "Open dagelijkse adhkār":"Günlük ezkârı aç",
+ "Tijdstip · vroege uren":"Erken saatler · uyanıksan",
+ "Tijdstip · ochtend":"Sabah · sabah ezkârı",
+ "Tijdstip · overdag":"Gündüz · gün içinde zikir",
+ "Tijdstip · namiddag":"Öğleden sonra · akşam ezkârı",
+ "Tijdstip · avond":"Akşam · akşam ezkârı",
+ "Tijdstip · nacht":"Gece · sakin zikir",
+ "Als je nog wakker bent, neem rustig tijd voor istighfār. De Qur’an prijst wie vóór de dageraad om vergeving vragen. Dit is vrijwillig; je hoeft hiervoor niet wakker te blijven.":"Hâlâ uyanıksan sakin bir şekilde istiğfar edebilirsin. Kur'an, seher vaktinde bağışlanma dileyenleri över. Bu nafiledir; bunun için uyanık kalman gerekmez.",
+ "Na Fajr kun je de ochtendadhkār lezen: Sayyid al-Istighfār, de drie Quls en de beschermingsduʿā’. Als Fajr nog niet is aangebroken, lees ze daarna.":"Fecr namazından sonra sabah ezkârını okuyabilirsin: Seyyidü'l-İstiğfar, üç Kul ve korunma duası. Fecr vakti henüz girmediyse bunları sonrasında oku.",
+ "Verspreid dhikr over je dag: SubḥānAllāhi wa-biḥamdihī of tahlīl. Je kunt ook rustig istighfār zeggen; houd aantallen haalbaar.":"Zikri gün içine yay: SubḥānAllāhi wa-biḥamdihī veya tehlil söyle. Sakin bir şekilde istiğfar da edebilirsin; sayıları makul tut.",
+ "De avondadhkār passen in de namiddag of avond. Neem ook een moment voor istighfār en stem de timing af op je lokale gebedstijden.":"Akşam ezkârı öğleden sonra veya akşam okunabilir. İstiğfar için de zaman ayır ve vakti yerel namaz saatlerine göre belirle.",
+ "Als je de avondadhkār nog niet hebt gelezen, is dit een passend moment: Sayyid al-Istighfār, de drie Quls en de beschermingsduʿā’.":"Akşam ezkârını henüz okumadıysan şimdi uygun bir zaman: Seyyidü'l-İstiğfar, üç Kul ve korunma duası.",
+ "Neem een rustig moment voor Qur’an of dhikr. Als je wakker bent vóór Fajr, kun je ook istighfār doen; rust is eveneens belangrijk.":"Kur'an veya zikir için sakin bir an ayır. Fecrden önce uyanıksan istiğfar da edebilirsin; dinlenmek de önemlidir.",
+ "Aanbevolen: istighfār vóór de dageraad · Qur’an 3:17, 51:18; dagelijks istighfār · Sahih Muslim 2702.":"Öneri: seher vaktinde istiğfar · Kur'an 3:17, 51:18; günlük istiğfar · Sahih Muslim 2702.",
+ "Aanbevolen adhkār: Sayyid al-Istighfār · Sahih al-Bukhari 6306; drie Quls · Sunan Abi Dawud 5082; beschermingsduʿā’ · Sunan Abi Dawud 5088.":"Önerilen ezkâr: Seyyidü'l-İstiğfar · Sahih al-Bukhari 6306; üç Kul · Sunan Abi Dawud 5082; korunma duası · Sunan Abi Dawud 5088.",
+ "Aanbevolen dhikr: SubḥānAllāhi wa-biḥamdihī · Sahih al-Bukhari 6405; tahlīl · Sahih al-Bukhari 3293; istighfār · Sahih Muslim 2702.":"Önerilen zikir: SubḥānAllāhi wa-biḥamdihī · Sahih al-Bukhari 6405; tehlil · Sahih al-Bukhari 3293; istiğfar · Sahih Muslim 2702."
 });
 function translateText(value){
  const source=value.trim(),translationsForLanguage=translations[currentLanguage]||{};
@@ -521,6 +578,8 @@ function renderCombinedSection(){
  document.querySelectorAll('[data-combined-section]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.combinedSection===selectedCombinedSection)));
 }
 document.addEventListener('click',event=>{
+ const openAdhkarButton=event.target.closest('[data-open-adhkar]');
+ if(openAdhkarButton){showPage('routine');selectedCombinedSection='adhkar';renderCombinedSection();window.scrollTo(0,0);return}
  const sectionButton=event.target.closest('[data-combined-section]');
  if(sectionButton){selectedCombinedSection=sectionButton.dataset.combinedSection;if(selectedCombinedSection==='deeds')document.getElementById('deedSearch').value='';renderCombinedSection();if(selectedCombinedSection==='deeds')renderDeedCounter();window.scrollTo(0,0);return}
  if(event.target.closest('[data-combined-back]')){selectedCombinedSection=null;openDeedCategories.clear();document.getElementById('deedSearch').value='';document.querySelector('#progressSection .progress').open=false;renderCombinedSection();window.scrollTo(0,0)}
@@ -556,6 +615,7 @@ function hijriCalendarParts(date){
  return result;
 }
 function renderIslamicCalendar(){
+ renderTimeRecommendation();
  const list=document.getElementById('islamicDays');
  try{
   const timeZone=Intl.DateTimeFormat().resolvedOptions().timeZone||'UTC',now=new Date(),today=localDateAtOffset(0),westernLocale=calendarLocales[currentLanguage]||'nl-NL';
@@ -625,6 +685,38 @@ function renderIslamicCalendar(){
   const item=document.createElement('li');item.className='calendar-day';item.textContent=translateText('De kalender is niet beschikbaar in deze browser. Controleer de datum- en kalenderinstellingen.');list.append(item);
   document.getElementById('ramadanCountdown').textContent=translateText('De Ramadan-datum kon niet worden berekend.');
  }
+}
+function renderTimeRecommendation(){
+ const hour=new Date().getHours();
+ let title,text,sources;
+ if(hour<4){
+  title='Tijdstip · vroege uren';
+  text='Als je nog wakker bent, neem rustig tijd voor istighfār. De Qur’an prijst wie vóór de dageraad om vergeving vragen. Dit is vrijwillig; je hoeft hiervoor niet wakker te blijven.';
+  sources='Aanbevolen: istighfār vóór de dageraad · Qur’an 3:17, 51:18; dagelijks istighfār · Sahih Muslim 2702.';
+ }else if(hour<11){
+  title='Tijdstip · ochtend';
+  text='Na Fajr kun je de ochtendadhkār lezen: Sayyid al-Istighfār, de drie Quls en de beschermingsduʿā’. Als Fajr nog niet is aangebroken, lees ze daarna.';
+  sources='Aanbevolen adhkār: Sayyid al-Istighfār · Sahih al-Bukhari 6306; drie Quls · Sunan Abi Dawud 5082; beschermingsduʿā’ · Sunan Abi Dawud 5088.';
+ }else if(hour<15){
+  title='Tijdstip · overdag';
+  text='Verspreid dhikr over je dag: SubḥānAllāhi wa-biḥamdihī of tahlīl. Je kunt ook rustig istighfār zeggen; houd aantallen haalbaar.';
+  sources='Aanbevolen dhikr: SubḥānAllāhi wa-biḥamdihī · Sahih al-Bukhari 6405; tahlīl · Sahih al-Bukhari 3293; istighfār · Sahih Muslim 2702.';
+ }else if(hour<18){
+  title='Tijdstip · namiddag';
+  text='De avondadhkār passen in de namiddag of avond. Neem ook een moment voor istighfār en stem de timing af op je lokale gebedstijden.';
+  sources='Aanbevolen adhkār: Sayyid al-Istighfār · Sahih al-Bukhari 6306; drie Quls · Sunan Abi Dawud 5082; beschermingsduʿā’ · Sunan Abi Dawud 5088.';
+ }else if(hour<22){
+  title='Tijdstip · avond';
+  text='Als je de avondadhkār nog niet hebt gelezen, is dit een passend moment: Sayyid al-Istighfār, de drie Quls en de beschermingsduʿā’.';
+  sources='Aanbevolen adhkār: Sayyid al-Istighfār · Sahih al-Bukhari 6306; drie Quls · Sunan Abi Dawud 5082; beschermingsduʿā’ · Sunan Abi Dawud 5088.';
+ }else{
+  title='Tijdstip · nacht';
+  text='Neem een rustig moment voor Qur’an of dhikr. Als je wakker bent vóór Fajr, kun je ook istighfār doen; rust is eveneens belangrijk.';
+  sources='Aanbevolen: istighfār vóór de dageraad · Qur’an 3:17, 51:18; dagelijks istighfār · Sahih Muslim 2702.';
+ }
+ document.getElementById('timeRecommendationTitle').textContent=translateText(title);
+ document.getElementById('timeRecommendationText').textContent=translateText(text);
+ document.getElementById('timeRecommendationDhikr').textContent=translateText(sources);
 }
 const userStorageId=()=>currentSession?.user?.id||'guest';
 const keyFor=d=>`jannah-checklist-v1-${userStorageId()}-${d}`;
