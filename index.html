@@ -1232,7 +1232,16 @@ function updateZoomAvailability(){
  if(!viewport)return;
  const allowZoom=!routineView.hidden&&selectedCombinedSection==='istighfar';
  viewport.content=`width=device-width, initial-scale=1, ${allowZoom?'maximum-scale=5, user-scalable=yes':'maximum-scale=1, user-scalable=no'}, viewport-fit=cover`;
+ document.body.style.touchAction=allowZoom?'auto':'pan-x pan-y';
 }
+function preventPageZoom(event){
+ const allowZoom=!routineView.hidden&&selectedCombinedSection==='istighfar';
+ if(!allowZoom)event.preventDefault();
+}
+['gesturestart','gesturechange','gestureend'].forEach(type=>document.addEventListener(type,preventPageZoom,{capture:true,passive:false}));
+['touchstart','touchmove'].forEach(type=>document.addEventListener(type,event=>{
+ if(event.touches.length>1)preventPageZoom(event);
+ },{capture:true,passive:false}));
 document.addEventListener('click',event=>{
  const openAdhkarButton=event.target.closest('[data-open-adhkar]');
  if(openAdhkarButton){showPage('routine');selectedCombinedSection='adhkar';renderCombinedSection();window.scrollTo(0,0);return}
