@@ -11,10 +11,10 @@
 <style>
 :root{--green:#173d32;--green2:#245646;--cream:#f6f2e8;--paper:#fffdf8;--gold:#c4a66a;--ink:#1f2c26;--muted:#6c786f;--line:#e7e2d6}
 *{box-sizing:border-box}body{margin:0;background:var(--cream);color:var(--ink);font:16px/1.45 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
-header{background:var(--green);color:#fff;padding:25px 18px 22px;border-radius:0 0 24px 24px}
+header{background:var(--green);color:#fff;padding:calc(25px + env(safe-area-inset-top)) max(18px,env(safe-area-inset-right)) 22px max(18px,env(safe-area-inset-left));border-radius:0 0 24px 24px}
 .wrap{max-width:760px;margin:auto}header .eyebrow{color:#d8c99e;text-transform:uppercase;letter-spacing:.12em;font-size:11px;font-weight:700}
 h1{font-family:Georgia,serif;font-size:30px;line-height:1.1;margin:8px 0}header p{margin:8px 0 0;color:#e4ece7;font-size:14px}
-main{padding:16px 14px 40px}.datebar{display:flex;gap:10px;align-items:center;justify-content:space-between;margin:2px 0 14px}.datebar input{border:1px solid var(--line);border-radius:12px;padding:10px;background:var(--paper);font:inherit;color:var(--ink)}
+main{padding:16px max(14px,env(safe-area-inset-right)) calc(40px + env(safe-area-inset-bottom)) max(14px,env(safe-area-inset-left))}.datebar{display:flex;gap:10px;align-items:center;justify-content:space-between;margin:2px 0 14px}.datebar input{border:1px solid var(--line);border-radius:12px;padding:10px;background:var(--paper);font:inherit;color:var(--ink)}
 .progress{background:var(--paper);border:1px solid var(--line);border-radius:17px;padding:15px;margin-bottom:15px}.progressrow{display:flex;justify-content:space-between;align-items:center;gap:12px}.number{font-weight:800;color:var(--green);font-size:22px}.bar{height:8px;background:#e7e9e1;border-radius:99px;overflow:hidden;margin-top:10px}.bar div{height:100%;background:var(--green2);width:0;transition:width .2s}
 .note{font-size:12px;color:var(--muted);margin:9px 0 0}
 .info-toggle{display:inline-flex;align-items:center;justify-content:center;min-width:24px;height:24px;margin-left:5px;border:1px solid #b9ad8e;border-radius:50%;background:#f2ecdd;color:var(--green);font:inherit;font-size:12px;font-weight:800;line-height:1;cursor:pointer;vertical-align:middle}.info-toggle:focus-visible{outline:3px solid var(--gold);outline-offset:2px}.info-panel{margin:8px 0 0;padding:10px 12px;border-left:3px solid var(--gold);border-radius:0 10px 10px 0;background:#f2ecdd;color:var(--muted);font-size:12px;text-align:left}.combined-page-intro{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:8px}.combined-page-intro h2{margin:0;color:var(--green);font-family:Georgia,serif;font-size:23px}
@@ -39,6 +39,7 @@ footer{text-align:center;color:var(--muted);font-size:12px;padding:8px 12px 30px
 .home-dashboard{display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr);gap:8px;align-items:stretch}.home-dashboard .heart-panel,.home-dashboard .calendar-details{margin:0;min-width:0;width:100%;max-width:none}.home-dashboard .heart-panel{padding:10px}.home-dashboard .heart-panel h3{font-size:15px}.home-dashboard .home-heart-visual{max-width:220px;width:100%}.home-dashboard .calendar-details>summary{font-size:13px;padding:11px 8px}.home-dashboard .calendar-details[open] .calendar-card{padding:9px}.home-dashboard .calendar-card h2{font-size:15px}.home-dashboard .calendar-clock{grid-template-columns:1fr;gap:5px;margin:7px 0}.home-dashboard .calendar-date{padding:6px}.home-dashboard .calendar-date small{font-size:9px}.home-dashboard .calendar-date strong{font-size:11px;overflow-wrap:anywhere}.home-dashboard .calendar-greeting{padding:6px;font-size:10px}.home-dashboard .calendar-greeting [lang="ar"]{font-size:16px}.home-dashboard .calendar-ramadan{padding:7px;font-size:10px}.home-dashboard .calendar-days{gap:6px}.home-dashboard .calendar-day{padding:8px}.home-dashboard .calendar-day time,.home-dashboard .calendar-day p{font-size:10px}.home-dashboard .calendar-day strong{font-size:11px}.home-widgets{display:grid;grid-template-columns:1fr;gap:10px;margin-top:10px}.home-widget{position:relative;min-width:0}.home-widget .home-widget-handle{position:absolute;right:10px;top:8px;z-index:2;min-width:40px;min-height:40px;border:1px solid var(--line);border-radius:10px;background:var(--paper);color:var(--green);font:inherit;font-size:20px;line-height:1;touch-action:none;cursor:grab}.home-widget .home-widget-handle:active{cursor:grabbing}.home-widget.is-dragging{opacity:.45}.home-widget.drop-target{outline:2px dashed var(--gold);outline-offset:2px}.home-widget .home-widget-handle:focus-visible{outline:3px solid var(--gold);outline-offset:2px}@media(min-width:680px){.home-dashboard{grid-template-columns:minmax(0,.95fr) minmax(0,1.05fr)}.home-dashboard .calendar-clock{grid-template-columns:1fr 1fr}.home-dashboard .calendar-date small{font-size:10px}.home-dashboard .calendar-date strong{font-size:12px}.home-dashboard .calendar-days{gap:7px}.home-dashboard .calendar-day{padding:10px}.home-widgets{grid-template-columns:repeat(2,minmax(0,1fr))}.home-widget.widget-wide{grid-column:1/-1}}
 .daily-quote{position:relative;overflow:hidden;margin:18px 0 8px;padding:18px;border:1px solid #e2d5b7;border-radius:16px;background:linear-gradient(145deg,#fffdf8,#f2ecdd);box-shadow:0 5px 18px rgba(23,61,50,.08)}.daily-quote:before{content:"";position:absolute;inset:0 auto 0 0;width:4px;background:linear-gradient(180deg,var(--gold),#e7d8b3)}.daily-quote-heading{display:flex;align-items:center;gap:8px;margin:0 0 5px;color:var(--green);font-family:Georgia,serif;font-size:18px}.daily-quote-heading:before{content:"✦";color:var(--gold);font-family:system-ui,sans-serif;font-size:16px}.daily-quote-subtitle{margin:0;color:var(--muted);font-size:11px}.daily-quote-type{display:inline-block;margin-top:12px;padding:4px 8px;border-radius:99px;background:#e8eee8;color:var(--green2);font-size:10px;font-weight:750}.daily-quote-arabic{margin:12px 0;direction:rtl;text-align:right;color:var(--green);font-family:"Noto Naskh Arabic","Amiri",serif;font-size:24px;line-height:1.9}.daily-quote-translation{margin:0;color:var(--ink);font-family:Georgia,serif;font-size:clamp(14px,4vw,17px);line-height:1.6;white-space:normal;overflow-wrap:normal;word-break:normal}.quote-word{display:inline-block;white-space:nowrap}.quote-letter{display:inline-block;white-space:pre;opacity:0;animation:quote-letter-in .38s ease-out forwards;animation-delay:var(--quote-delay,0ms)}@keyframes quote-letter-in{to{opacity:1;transform:translateY(0)}}.daily-quote-translation .quote-letter{transform:translateY(5px)}.daily-quote-reference{margin:12px 0 0;color:var(--muted);font-size:11px;font-weight:650}.daily-quote-progress{height:3px;margin:13px 0 10px;border-radius:99px;background:#e4dfd2;overflow:hidden}.daily-quote-progress span{display:block;width:100%;height:100%;transform:scaleX(0);transform-origin:left;background:var(--gold)}.daily-quote-progress.is-running span{animation:daily-quote-time 15s linear forwards}.daily-quote-progress.is-paused span{animation-play-state:paused}@keyframes daily-quote-time{to{transform:scaleX(1)}}.daily-quote-controls{display:flex;justify-content:space-between;align-items:center;gap:8px}.daily-quote-controls button{min-height:38px;border:1px solid var(--line);border-radius:9px;background:rgba(255,255,255,.72);color:var(--green);padding:7px 10px;font:inherit;font-size:11px;font-weight:700;cursor:pointer}.daily-quote-controls button:focus-visible{outline:3px solid var(--gold);outline-offset:2px}.daily-quote-counter{color:var(--muted);font-size:10px;font-variant-numeric:tabular-nums}.quote-archive{display:grid;gap:12px;margin-top:14px}.quote-archive-card{margin:0;padding:15px;border:1px solid var(--line);border-radius:13px;background:white}.quote-archive-card .daily-quote-arabic{margin-top:0}.quote-archive-card .daily-quote-translation{font-size:16px}@media(prefers-reduced-motion:reduce){.quote-letter{animation:none!important;opacity:1;transform:none!important}.daily-quote-progress span{animation:none!important}}
 @media(max-width:520px){.brand-home h1{font-size:23px}.headerbar{align-items:flex-start}.headerbar>div:first-child{min-width:0}.brand-home p{font-size:12px}}.calendar-note{font-size:11px;color:var(--muted);margin:9px 0 0}.combined-picker h3{margin:0 0 5px;color:var(--green);font-size:17px}.combined-picker p{margin:0;color:var(--muted);font-size:12px}.combined-picker-options{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:9px;margin-top:12px}.combined-picker-options button,.combined-back{border:1px solid var(--green);border-radius:11px;background:white;color:var(--green);padding:11px;text-align:left;font:inherit;font-size:13px;font-weight:700;cursor:pointer}.combined-picker-options button:hover,.combined-back:hover{background:#f2ecdd}.combined-back{margin:10px 0}.progress[open]{padding-bottom:15px}.progress-summary{display:flex;justify-content:space-between;align-items:center;gap:12px;cursor:pointer;list-style:none}.progress-summary::-webkit-details-marker{display:none}.progress-summary:after{content:"⌄";color:var(--green);font-weight:800}.progress[open] .progress-summary:after{content:"⌃"}.progress .progress-body{padding-top:5px}.deed-category-group{margin:8px 0;border:1px solid var(--line);border-radius:11px;background:white;overflow:hidden}.deed-category-summary{padding:11px;color:var(--green);font-size:13px;font-weight:700;cursor:pointer;list-style:none}.deed-category-summary::-webkit-details-marker{display:none}.deed-category-summary:after{content:"＋";float:right}.deed-category-group[open]>.deed-category-summary:after{content:"−"}.deed-category-content{padding:0 10px 10px}.dhikr-counter{display:flex;align-items:center;gap:8px;margin-top:10px}.dhikr-count{min-width:74px;text-align:center;color:var(--green);font-size:13px;font-weight:800}.dhikr-tap{min-width:54px;min-height:44px;border:1px solid var(--green);border-radius:11px;background:var(--green);color:white;font:inherit;font-size:15px;font-weight:800;cursor:pointer}.dhikr-tap:disabled{opacity:.55;cursor:default}.dhikr-undo{min-width:44px;min-height:44px;border:1px solid var(--line);border-radius:10px;background:var(--cream);color:var(--ink);font:inherit;font-size:15px;font-weight:700;cursor:pointer}.dhikr-progress{height:6px;margin-top:7px;border-radius:99px;background:#e7e9e1;overflow:hidden}.dhikr-progress div{height:100%;width:0;background:var(--gold);transition:width .15s}
+@media(max-width:600px){input,select,textarea{font-size:16px!important}}
 @media(prefers-reduced-motion:reduce){.calendar-days{scroll-behavior:auto;scroll-snap-type:none}}
 @media(prefers-reduced-motion:reduce){.dhikr-progress div{transition:none}}
 @media(min-width:600px){.time-grid,.adhkar-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
@@ -117,9 +118,11 @@ footer{text-align:center;color:var(--muted);font-size:12px;padding:8px 12px 30px
     <h3 id="timeRecommendationTitle"></h3>
     <p id="timeRecommendationText"></p>
     <p class="calendar-note" id="timeRecommendationDhikr"></p>
+    <ul id="timeRecommendationQuran" class="daily-plan-list" hidden></ul>
     <p class="calendar-note">Gebaseerd op de lokale klok; stem adhkār af op je eigen gebedstijden. Dit is een vrijblijvende herinnering.</p>
     <button class="btn primary" type="button" data-open-adhkar>Open dagelijkse adhkār</button>
     <button class="btn secondary" type="button" data-open-progress>Open gebedsvoortgang</button>
+    <button class="btn secondary" type="button" data-open-quran-checklist>Open Qur’an-checklist</button>
   </section></section>
   <p class="auth-message home-widget widget-wide" data-home-widget="status" id="appStatus" role="status" aria-live="polite"></p>
   <details class="home-details home-widget widget-wide" data-home-widget="score">
@@ -440,6 +443,247 @@ const contentTranslations={
  "Gebed & aanbidding":["Prayer & worship","Namaz ve ibadet"],"Qur’an & kennis":["Qur’an & knowledge","Kur’an ve ilim"],"Dhikr & Sunnah":["Dhikr & Sunnah","Zikir ve sünnet"],"Vrijgevigheid & hulp":["Generosity & helping others","Cömertlik ve yardım"],"Karakter & rechten":["Character & people’s rights","Ahlak ve kul hakları"],"Tawbah & herstel":["Repentance & making amends","Tövbe ve telafi"],"Geloof & aanbidding":["Faith & worship","İman ve ibadet"],"Schending van rechten":["Violating rights","Hak ihlali"],"Onrechtmatig inkomen":["Unlawful income","Haram kazanç"],"Taal & omgang":["Speech & conduct","Dil ve davranış"],"Kuisheid":["Chastity","İffet"],"Persoonlijke daden":["Personal actions","Kişisel davranışlar"],"Eigen invoer":["Custom entry","Özel kayıt"],"Overige":["Other","Diğer"],"ERNSTIGE ZONDE":["MAJOR SIN","BÜYÜK GÜNAH"],"EIGEN INVOER":["CUSTOM ENTRY","ÖZEL KAYIT"],"Aantal:":["Count:","Sayı:"],"Zoek in goede en slechte daden":["Search good and bad deeds","İyi ve kötü amellerde ara"]
 };
 for(const [source,localized] of Object.entries(contentTranslations)){translations.en[source]=localized[0];translations.tr[source]=localized[1]}
+const additionalContentTranslations={
+ "Intentie om Allah te behagen, halal te werken en anderen goed te behandelen. (Qur’an 98:5; Bukhari 1)":["Intend to seek Allah’s pleasure, earn lawfully, and treat others well. (Qur’an 98:5; Bukhari 1)","Allah’ın rızasını gözetmeye, helal kazanmaya ve insanlara iyi davranmaya niyet et. (Kur’an 98:5; Buhari 1)"],
+ "Bescherm tawheed en vertrouw op Allah. (Qur’an 4:36; 112:1–4)":["Uphold tawheed and place your trust in Allah. (Qur’an 4:36; 112:1–4)","Tevhidi koru ve Allah’a güven. (Kur’an 4:36; 112:1–4)"],
+ "Sta stil bij Allah’s gunsten en dank Hem. (Qur’an 14:7)":["Reflect on Allah’s blessings and thank Him. (Qur’an 14:7)","Allah’ın nimetlerini düşün ve O’na şükret. (Kur’an 14:7)"],
+ "Binnen de voorgeschreven tijd.":["Within its prescribed time.","Vaktinde."],
+ "Doe je best voor khushu’ en de juiste voorwaarden. (Qur’an 23:1–2)":["Do your best to pray with khushu’ and fulfil the required conditions. (Qur’an 23:1–2)","Huşu ile kılmaya ve gerekli şartları yerine getirmeye gayret et. (Kur’an 23:1–2)"],
+ "Al is het een paar verzen; probeer de betekenis te begrijpen.":["Even if you read only a few verses, try to understand their meaning.","Birkaç ayet bile olsa anlamaya çalışarak oku."],
+ "Bijv. SubhanAllah, Alhamdulillah, Allahu akbar en La ilaha illa Allah.":["For example: SubhanAllah, Alhamdulillah, Allahu akbar, and La ilaha illa Allah.","Örneğin: Sübhanallah, Elhamdülillah, Allahu ekber ve La ilahe illallah."],
+ "Een vaste routine met authentieke smeekbeden.":["Keep a regular routine of authentic supplications.","Sahih dualarla düzenli bir rutin oluştur."],
+ "Met respect spreken en helpen waar mogelijk. (Qur’an 17:23–24)":["Speak respectfully and help where you can. (Qur’an 17:23–24)","Saygılı konuş ve mümkün olduğunda yardım et. (Kur’an 17:23–24)"],
+ "Met vriendelijkheid, geduld en rechtvaardigheid. (Qur’an 4:19)":["Treat them with kindness, patience, and fairness. (Qur’an 4:19)","Şefkat, sabır ve adaletle davran. (Kur’an 4:19)"],
+ "Geen roddel, leugens, beledigingen of laster. (Qur’an 49:11–12)":["Avoid backbiting, lies, insults, and slander. (Qur’an 49:11–12)","Gıybetten, yalandan, hakaretten ve iftiradan sakın. (Kur’an 49:11–12)"],
+ "Afspraken en toevertrouwde zaken nakomen. (Qur’an 23:8)":["Keep your promises and fulfil trusts. (Qur’an 23:8)","Sözlerini ve emanetleri yerine getir. (Kur’an 23:8)"],
+ "Geen bedrog, vernedering of schending van rechten.":["Avoid deceit, humiliation, and violating others’ rights.","Aldatmadan, küçük düşürmekten ve hak ihlalinden kaçın."],
+ "Wegblijven van verboden blikken en wegen naar zina. (Qur’an 24:30–31)":["Avoid forbidden looks and the paths that lead to zina. (Qur’an 24:30–31)","Haram bakışlardan ve zinaya götüren yollardan sakın. (Kur’an 24:30–31)"],
+ "Geen fraude, diefstal of onrechtmatige verdiensten.":["Avoid fraud, theft, and unlawfully earned income.","Hileden, hırsızlıktan ve haram kazançtan uzak dur."],
+ "Blijf weg van shirk en andere verboden zaken.":["Keep away from shirk and other prohibited matters.","Şirkten ve diğer haramlardan uzak dur."],
+ "Laat emoties niet leiden tot onrecht.":["Do not let emotions lead you to act unjustly.","Duygularının seni haksızlığa sürüklemesine izin verme."],
+ "Stop, heb berouw, neem je voor niet terug te keren en herstel andermans rechten. (Qur’an 39:53)":["Stop, repent, resolve not to return to it, and restore people’s rights. (Qur’an 39:53)","Günahı bırak, tövbe et, dönmemeye azmet ve kul haklarını iade et. (Kur’an 39:53)"],
+ "Bestaande algemene vinkjes blijven bewaard. Gebruik voortaan ook de losse gebedsvinkjes hieronder.":["Your existing general checkmarks are preserved. You can also use the separate prayer checkboxes below.","Mevcut genel işaretlerin korunur. Aşağıdaki ayrı namaz kutularını da kullanabilirsin."],
+ "In de Hanafi-school is Witr wajib.":["Witr is wajib in the Hanafi school.","Hanefi mezhebinde vitir vaciptir."],
+ "Ook kleine liefdadigheid of een vriendelijke daad.":["Even a small act of charity or kindness counts.","Küçük bir sadaka veya iyilik de değerlidir."],
+ "Vraag om vergeving, leiding, standvastigheid en Jannatul Firdaus.":["Ask for forgiveness, guidance, steadfastness, and Jannatul Firdaus.","Bağışlanma, hidayet, sebat ve Firdevs cennetini dile."],
+ "Bijv. maandag/donderdag, als je kunt.":["For example, on Mondays or Thursdays, if you are able.","Gücün yeterse örneğin pazartesi veya perşembe."],
+ "Vrijwillig nachtgebed na ‘Ishā’ en vóór Fajr; ook twee rakaʿahs tellen als begin. (Qur’an 17:79; Sahih Muslim 1163)":["Voluntary night prayer after ‘Ishā’ and before Fajr; two rakʿahs are a good start. (Qur’an 17:79; Sahih Muslim 1163)","‘Işa’dan sonra ve Fecr’den önce nafile gece namazı; iki rekât iyi bir başlangıçtır. (Kur’an 17:79; Sahih Muslim 1163)"],
+ "De twee sunnah-rakʿahs vóór Fajr. (Sahih al-Bukhari 1169)":["The two Sunnah rakʿahs before Fajr. (Sahih al-Bukhari 1169)","Fecr’den önceki iki sünnet rekâtı. (Sahih al-Buhari 1169)"],
+ "Vaste sunnah vóór en na Dhuhr; raadpleeg je madhhab voor de gebruikelijke aantallen. (Sahih Muslim 728)":["Regular Sunnah prayers before and after Dhuhr; consult your madhhab for customary numbers. (Sahih Muslim 728)","Öğleden önce ve sonra düzenli sünnet namazları; yaygın rekât sayıları için mezhebine danış. (Sahih Muslim 728)"],
+ "Vier vrijwillige rakaʿahs vóór ʿAsr als je wilt; dit is geen vaste rawātib-sunnah na het verplichte gebed. (Jamiʿ at-Tirmidhi 430)":["You may pray four voluntary rakʿahs before ʿAsr; this is not a regular rawātib Sunnah after the obligatory prayer. (Jamiʿ at-Tirmidhi 430)","İstersen ikindiden önce dört rekât nafile kılabilirsin; bu farzdan sonra kılınan düzenli revâtib sünnetlerinden değildir. (Jamiʿ at-Tirmidhi 430)"],
+ "Vaste sunnah na Maghrib. (Sahih Muslim 728)":["Regular Sunnah prayer after Maghrib. (Sahih Muslim 728)","Akşam namazından sonra düzenli sünnet. (Sahih Muslim 728)"],
+ "Vaste sunnah na ‘Ishā’. (Sahih Muslim 728)":["Regular Sunnah prayer after ‘Ishā’. (Sahih Muslim 728)","Yatsı namazından sonra düzenli sünnet. (Sahih Muslim 728)"],
+ "Vrijwillig gebed nadat de zon is opgekomen en vóór Dhuhr; twee rakaʿahs zijn een goede start. (Sahih Muslim 720)":["A voluntary prayer after sunrise and before Dhuhr; two rakʿahs are a good start. (Sahih Muslim 720)","Güneş doğduktan sonra ve öğleden önce kılınan nafile namaz; iki rekât iyi bir başlangıçtır. (Sahih Muslim 720)"],
+ "Lees dagelijks je vaste portie, overdenk en zoek leiding. (Qur’an 35:29; 47:24)":["Read your regular portion each day, reflect, and seek guidance. (Qur’an 35:29; 47:24)","Her gün belirlediğin bölümü oku, üzerinde düşün ve hidayet ara. (Kur’an 35:29; 47:24)"],
+ "Leer zijn authentieke Sunnah en pas die met kennis toe.":["Learn the authentic Sunnah and follow it with knowledge.","Sahih sünneti öğren ve bilinçle uygula."],
+ "Houd vast aan de overgeleverde ochtend- en avondgedachten. (Qur’an 33:41–42)":["Keep to the transmitted morning and evening remembrances. (Qur’an 33:41–42)","Rivayet edilen sabah ve akşam zikirlerine devam et. (Kur’an 33:41–42)"],
+ "Zoek hulp bij Allah en handel geduldig. (Qur’an 39:10)":["Seek Allah’s help and act with patience. (Qur’an 39:10)","Allah’tan yardım dile ve sabırla hareket et. (Kur’an 39:10)"],
+ "Al is het kort: istighfār en du‘ā’. (Qur’an 3:17; 51:18)":["Even briefly, make istighfār and du‘ā’. (Qur’an 3:17; 51:18)","Kısa da olsa istiğfar ve dua et. (Kur’an 3:17; 51:18)"],
+ "Dhikr, Qur’an of stille aanbidding; doe wat haalbaar is. (Qur’an 33:41–42)":["Dhikr, Qur’an, or quiet worship—do what is manageable. (Qur’an 33:41–42)","Zikir, Kur’an veya sessiz ibadet; gücünün yettiğini yap. (Kur’an 33:41–42)"],
+ "Herinner Allah en vraag om vergeving. (Qur’an 50:39; 3:17)":["Remember Allah and ask for forgiveness. (Qur’an 50:39; 3:17)","Allah’ı an ve bağışlanma dile. (Kur’an 50:39; 3:17)"],
+ "Avondadhkar, Qur’an of reflectie; een praktische routine-indeling.":["Evening adhkār, Qur’an, or reflection; this is a practical routine suggestion.","Akşam ezkârı, Kur’an veya tefekkür; bu pratik bir rutin önerisidir."],
+ "Vraag Allah om vergeving; tijden van vóór de dageraad worden geprezen. (Qur’an 3:17; 51:18)":["Ask Allah for forgiveness; those who seek forgiveness before dawn are praised. (Qur’an 3:17; 51:18)","Allah’tan bağışlanma dile; seher vaktinde istiğfar edenler övülür. (Kur’an 3:17; 51:18)"],
+ "Met mensen dichtbij en ver weg. (Qur’an 25:63; Sahih Muslim 2594)":["Show mercy and gentleness to those near and far. (Qur’an 25:63; Sahih Muslim 2594)","Yakınındaki ve uzaktaki insanlara merhamet ve yumuşaklıkla davran. (Kur’an 25:63; Sahih Muslim 2594)"],
+ "Beantwoord onwetendheid met vrede en waardigheid. (Qur’an 25:63)":["Respond to ignorance with peace and dignity. (Qur’an 25:63)","Cahilliğe esenlik ve vakar ile karşılık ver. (Kur’an 25:63)"],
+ "Een rustige, haalbare selectie uit Qur’an en Sunnah. Gebruik de telknop voor elke herhaling; bij een vaste telling telt de kaart na voltooiing eenmaal mee als app-registratie. Een open teller volgt je herhalingen zonder religieus vast doel.":["A calm, manageable selection from the Qur’an and Sunnah. Tap once for each repetition; a fixed-count card counts once as an app entry when completed. An open counter tracks repetitions without a prescribed religious target.","Kur’an ve sünnetten sakin ve uygulanabilir bir seçki. Her tekrar için sayaca dokun; belirli sayılı bir kart tamamlandığında uygulamada bir kez kaydedilir. Açık sayaç, dini olarak belirlenmiş bir hedef olmadan tekrarları izler."],
+ "Voor Fajr / laatste deel van de nacht":["Before Fajr / last part of the night","Fecr’den önce / gecenin son kısmı"],
+ "Qiyām en rustig istighfār als je kunt. Allah noemt degenen die vóór zonsopgang om vergeving vragen. Qur’an 3:17; 51:18.":["Pray qiyām and seek forgiveness quietly if you are able. Allah praises those who seek forgiveness before dawn. Qur’an 3:17; 51:18.","Gücün yeterse kıyam namazı kıl ve sessizce istiğfar et. Allah seher vaktinde bağışlanma dileyenleri över. Kur’an 3:17; 51:18."],
+ "Een aanbevolen rustig moment voor dhikr en Qur’an. De ochtendadhkār kunnen na Fajr worden gelezen; vaste teksten en aantallen staan hieronder. Qur’an 33:41–42; Muslim 670.":["A suggested quiet time for dhikr and Qur’an. Morning adhkār may be read after Fajr; set texts and counts are below. Qur’an 33:41–42; Muslim 670.","Zikir ve Kur’an için önerilen sakin bir vakit. Sabah ezkârı Fecr’den sonra okunabilir; belirli metinler ve sayılar aşağıdadır. Kur’an 33:41–42; Muslim 670."],
+ "Voor zonsondergang / na ‘Asr":["Before sunset / after ʿAsr","Gün batımından önce / ikindiden sonra"],
+ "Lees de avondadhkār in de namiddag of avond en neem tijd voor istighfār. Qur’an noemt tasbīḥ vóór zonsondergang (50:39) en vergeving zoeken in de vroege uren (3:17).":["Read the evening adhkār in the afternoon or evening and make time for istighfār. The Qur’an mentions glorifying Allah before sunset (50:39) and seeking forgiveness in the early hours (3:17).","İkindi veya akşam vakti akşam ezkârını oku ve istiğfara zaman ayır. Kur’an gün batımından önce tesbihi (50:39) ve seher vaktinde bağışlanma dilemeyi (3:17) anar."],
+ "Tussen Maghrib en ‘Ishā’":["Between Maghrib and ‘Ishā’","Akşam ile yatsı arasında"],
+ "Een praktisch tweede moment voor de avondadhkār, Qur’an of rustige reflectie. Dit schema is een hulpmiddel; er wordt geen afzonderlijke vaste beloning voor dit tijdvak geclaimd.":["A practical second time for evening adhkār, Qur’an, or quiet reflection. This schedule is a tool; no separate prescribed reward is claimed for this time slot.","Akşam ezkârı, Kur’an veya sakin tefekkür için pratik bir ikinci vakit. Bu çizelge bir yardımcıdır; bu vakit dilimi için ayrıca belirlenmiş bir sevap iddia edilmez."],
+ "Sūrat al-Ikhlās, al-Falaq en an-Nās — elk 3 keer.":["Sūrat al-Ikhlās, al-Falaq, and an-Nās—each three times.","İhlâs, Felak ve Nâs sureleri — her biri üç kez."],
+ "Ik zoek toevlucht bij de Heer van de dagbreek en de Heer van de mensen; de soera’s bevestigen Allah’s eenheid en vragen bescherming tegen het kwaad.":["I seek refuge with the Lord of daybreak and the Lord of mankind; these surahs affirm Allah’s oneness and seek protection from evil.","Şafağın Rabbine ve insanların Rabbine sığınırım; bu sureler Allah’ın birliğini bildirir ve kötülükten korunmayı diler."],
+ "Na Fajr of in de ochtend.":["After Fajr or in the morning.","Fecr’den sonra veya sabah."],
+ "Deze recitatie wordt in de overlevering beschreven als voldoende bescherming.":["This recitation is described in the report as sufficient protection.","Bu okuyuş rivayette yeterli bir koruma olarak anlatılır."],
+ "O Allah, U bent mijn Heer. U schiep mij en ik ben Uw dienaar. Ik erken Uw gunsten en mijn zonden; vergeef mij, want niemand vergeeft zonden behalve U.":["O Allah, You are my Lord. You created me and I am Your servant. I acknowledge Your blessings and my sins; forgive me, for none forgives sins except You.","Allah’ım, Sen benim Rabbimsin. Beni yarattın ve ben Senin kulunum. Nimetlerini ve günahlarımı kabul ediyorum; beni bağışla, çünkü günahları Senden başka bağışlayan yoktur."],
+ "Eenmaal in de ochtend.":["Once in the morning.","Sabah bir kez."],
+ "De hadith noemt de beloning voor wie dit met overtuiging zegt en vóór de avond overlijdt.":["The hadith mentions a reward for whoever says this with conviction and dies before evening.","Hadis, bunu inanarak söyleyip akşam olmadan vefat eden kimse için bir mükâfattan bahseder."],
+ "In de avond, bijvoorbeeld na ‘Asr of tussen Maghrib en ‘Ishā’.":["In the evening, for example after ʿAsr or between Maghrib and ‘Ishā’.","Akşam, örneğin ikindiden sonra veya akşam ile yatsı arasında."],
+ "Dezelfde overgeleverde ochtend- en avondadhkar.":["The same transmitted morning and evening adhkār.","Aynı rivayet edilmiş sabah ve akşam ezkârı."],
+ "Eenmaal in de avond.":["Once in the evening.","Akşam bir kez."],
+ "De hadith noemt de beloning voor wie dit met overtuiging zegt en vóór de ochtend overlijdt.":["The hadith mentions a reward for whoever says this with conviction and dies before morning.","Hadis, bunu inanarak söyleyip sabah olmadan vefat eden kimse için bir mükâfattan bahseder."],
+ "In de naam van Allah, met Wiens naam niets op aarde of in de hemel schade kan doen. Hij is de Alhorende, de Alwetende.":["In the name of Allah, with whose name nothing on earth or in heaven can cause harm. He is the All-Hearing, the All-Knowing.","Yerde ve gökte hiçbir şeyin adıyla zarar veremediği Allah’ın adıyla. O, hakkıyla işitendir, hakkıyla bilendir."],
+ "Drie keer in de ochtend en drie keer in de avond.":["Three times in the morning and three times in the evening.","Sabah üç, akşam üç kez."],
+ "De overlevering noemt bescherming tegen schade met Allah’s toestemming.":["The report mentions protection from harm by Allah’s permission.","Rivayet, Allah’ın izniyle zarardan korunmaktan bahseder."],
+ "Verheven is Allah en alle lof behoort Hem toe.":["Glory be to Allah, and praise belongs to Him.","Allah noksanlıklardan münezzehtir ve hamd O’na mahsustur."],
+ "Wanneer het overdag past.":["At a suitable time during the day.","Gün içinde uygun bir vakitte."],
+ "De Profeet ﷺ noemde vergeving van zonden, zelfs als die als schuim van de zee zijn; dit is geen vrijbrief om rechten van mensen te schenden.":["The Prophet ﷺ mentioned forgiveness of sins, even if they are like the foam of the sea; this is not permission to violate people’s rights.","Peygamber ﷺ deniz köpüğü kadar olsa bile günahların bağışlanmasından söz etmiştir; bu, kul haklarını ihlal etmeye izin değildir."],
+ "Niemand heeft het recht aanbeden te worden behalve Allah alleen. Aan Hem behoren heerschappij en lof; Hij is almachtig over alles.":["None has the right to be worshipped except Allah alone. To Him belong dominion and praise, and He has power over all things.","Yalnız Allah ibadete layıktır. Mülk ve hamd O’na aittir; O her şeye kadirdir."],
+ "Eenmaal verspreid over de dag.":["Once throughout the day.","Gün içine yayılarak bir kez."],
+ "De overlevering noemt grote beloning, het wissen van zonden en bescherming tegen Shayṭān gedurende die dag.":["The report mentions a great reward, the erasure of sins, and protection from Shayṭān for that day.","Rivayet büyük bir mükâfattan, günahların silinmesinden ve o gün şeytandan korunmaktan söz eder."],
+ "Verheven is Allah; alle lof behoort Allah toe; niemand heeft het recht aanbeden te worden behalve Allah; Allah is de Grootste.":["Glory be to Allah; praise belongs to Allah; none has the right to be worshipped except Allah; Allah is the Greatest.","Allah noksanlıklardan münezzehtir; hamd Allah’a mahsustur; Allah’tan başka ibadete layık ilah yoktur; Allah en büyüktür."],
+ "Herhaal in je eigen tempo.":["Repeat at your own pace.","Kendi hızında tekrar et."],
+ "Een overlevering vergelijkt deze woorden met de beplanting van Jannah; de app kent geen vast aantal bomen per recitatie toe.":["A report compares these words to the planting of Jannah; the app does not assign a fixed number of trees to each recitation.","Bir rivayet bu sözleri cennetin bitkilerine benzetir; uygulama her tekrar için sabit bir ağaç sayısı belirlemez."],
+ "O Allah, schenk Uw zegeningen aan Muhammad.":["O Allah, send Your blessings upon Muhammad.","Allah’ım, Muhammed’e salât eyle."],
+ "Op elk passend moment; ook bij het noemen van de Profeet ﷺ.":["At any suitable time, including when the Prophet ﷺ is mentioned.","Peygamber ﷺ anıldığında da olmak üzere uygun her vakitte."],
+ "De Qur’an beveelt gelovigen om zegeningen over de Profeet te vragen. Een overlevering noemt tien zegeningen van Allah voor wie één ṣalawāt uitspreekt.":["The Qur’an instructs believers to send blessings upon the Prophet. A report mentions ten blessings from Allah for whoever sends one ṣalawāt.","Kur’an müminlere Peygamber’e salât etmelerini emreder. Bir rivayette, bir salât getirene Allah’ın on salâtı bildirilir."],
+ "Verheven is Allah, de Geweldige, en aan Hem behoort alle lof.":["Glory be to Allah, the Magnificent, and praise belongs to Him.","Azamet sahibi Allah noksanlıklardan münezzehtir ve hamd O’na mahsustur."],
+ "Ochtend en avond; zie de bronvermelding voor de voorgestelde telling.":["Morning and evening; see the source note for the suggested count.","Sabah ve akşam; önerilen sayı için kaynak açıklamasına bak."],
+ "Raadpleeg de bronvermelding voor de bijbehorende beloningsvermelding.":["See the source note for the reported virtue.","Aktarılan fazilet için kaynak açıklamasına bak."],
+ "Verheven is Allah en aan Hem behoort alle lof; verheven is Allah, de Geweldige.":["Glory be to Allah and praise belongs to Him; glory be to Allah, the Magnificent.","Allah noksanlıklardan münezzehtir ve hamd O’na mahsustur; azamet sahibi Allah noksanlıklardan münezzehtir."],
+ "Op elk passend moment; er is hier geen vast aantal voorgeschreven.":["At any suitable time; no fixed number is prescribed here.","Uygun her vakitte; burada belirlenmiş bir sayı yoktur."],
+ "Twee lichte woorden op de tong, zwaar op de weegschaal en geliefd bij de Barmhartige.":["Two light phrases on the tongue, weighty on the Scale, and beloved to the Most Merciful.","Dilde hafif, terazide ağır ve Rahmân’ın sevdiği iki söz."],
+ "Alle lof en dank behoren toe aan Allah.":["All praise and thanks belong to Allah.","Hamd ve şükür Allah’a mahsustur."],
+ "Op elk passend moment.":["At any suitable time.","Uygun her vakitte."],
+ "In een authentieke overlevering wordt al-ḥamdu lillāh beschreven als iets dat de weegschaal vult.":["An authentic report describes al-ḥamdu lillāh as filling the Scale.","Sahih bir rivayette elhamdülillahın teraziyi doldurduğu bildirilir."],
+ "Verheven is Allah en alle lof behoort toe aan Allah.":["Glory be to Allah, and praise belongs to Allah.","Allah noksanlıklardan münezzehtir ve hamd Allah’a mahsustur."],
+ "De Profeet ﷺ beschreef deze woorden als vullend wat tussen de hemelen en de aarde is.":["The Prophet ﷺ described these words as filling what is between the heavens and the earth.","Peygamber ﷺ bu sözlerin göklerle yer arasını doldurduğunu bildirmiştir."],
+ "Allah is verheven boven iedere tekortkoming.":["Allah is exalted above every imperfection.","Allah her türlü eksiklikten münezzehtir."],
+ "Allah is de Grootste.":["Allah is the Greatest.","Allah en büyüktür."],
+ "Niemand heeft het recht aanbeden te worden behalve Allah.":["None has the right to be worshipped except Allah.","Allah’tan başka ibadete layık ilah yoktur."],
+ "Taḥmīd en tahlīl":["Taḥmīd and tahlīl","Tahmid ve tehlil"],
+ "Alle lof behoort toe aan Allah; niemand heeft het recht aanbeden te worden behalve Allah.":["All praise belongs to Allah; none has the right to be worshipped except Allah.","Hamd Allah’a mahsustur; Allah’tan başka ibadete layık ilah yoktur."],
+ "De overlevering noemt Lā ilāha illa Allāh de beste dhikr en al-ḥamdu lillāh de beste smeekbede.":["The report calls Lā ilāha illa Allāh the best dhikr and al-ḥamdu lillāh the best supplication.","Rivayet, lâ ilâhe illallahı en faziletli zikir ve elhamdülillahı en faziletli dua olarak niteler."],
+ "Er is geen macht en geen kracht behalve door Allah.":["There is no power or strength except through Allah.","Güç ve kuvvet ancak Allah’ın yardımıyladır."],
+ "De Profeet ﷺ noemde dit een schat uit de schatten van het Paradijs.":["The Prophet ﷺ called this a treasure from the treasures of Paradise.","Peygamber ﷺ bunu cennet hazinelerinden bir hazine olarak nitelemiştir."],
+ "Er is geen godheid behalve Allah alleen, zonder deelgenoot. Aan Hem behoren heerschappij en lof; Hij is almachtig over alles.":["There is no deity except Allah alone, without partner. To Him belong dominion and praise; He has power over all things.","Yalnız ve ortağı olmayan Allah’tan başka ilah yoktur. Mülk ve hamd O’na aittir; O her şeye kadirdir."],
+ "De overlevering noemt een beloning vergelijkbaar met het vrijmaken van vier mensen uit de nakomelingen van Ismāʿīl.":["The report mentions a reward like freeing four people from the descendants of Ismāʿīl.","Rivayet, İsmail’in soyundan dört kişiyi özgürlüğüne kavuşturmaya denk bir mükâfattan söz eder."],
+ "Na elk verplicht gebed: SubḥānAllāh 33×, al-ḥamdu lillāh 33× en Allāhu akbar 33×. De resterende telling tot 100 kan met tahlīl worden voltooid.":["After each obligatory prayer: SubḥānAllāh 33 times, al-ḥamdu lillāh 33 times, and Allāhu akbar 33 times. Complete the count to 100 with tahlīl.","Her farz namazdan sonra: Sübhanallah 33, Elhamdülillah 33 ve Allahu ekber 33 kez. Tahlil ile sayıyı 100’e tamamlayabilirsin."],
+ "Verheven is Allah; alle lof behoort toe aan Allah; Allah is de Grootste.":["Glory be to Allah; praise belongs to Allah; Allah is the Greatest.","Allah noksanlıklardan münezzehtir; hamd Allah’a mahsustur; Allah en büyüktür."],
+ "Na elk verplicht gebed; de dagteller geeft 495 herhalingen voor de drie formules (33 × 3 × 5 gebeden).":["After each obligatory prayer; the daily counter shows 495 repetitions for the three phrases (33 × 3 × 5 prayers).","Her farz namazdan sonra; günlük sayaç üç ifade için 495 tekrar gösterir (33 × 3 × 5 namaz)."],
+ "De overlevering beschrijft het gedenken na het gebed en noemt vergeving van zonden.":["The report describes remembrance after prayer and mentions forgiveness of sins.","Rivayet namazdan sonra zikri anlatır ve günahların bağışlanmasından söz eder."],
+ "Na elk verplicht gebed: de drie formules elk 33×, gevolgd door eenmaal Lā ilāha illa Allāh waḥdahu lā sharīka lah…":["After each obligatory prayer: each of the three phrases 33 times, followed once by Lā ilāha illa Allāh waḥdahu lā sharīka lah…","Her farz namazdan sonra: üç ifadeyi 33’er kez, ardından bir kez Lâ ilâhe illallah vahdehû lâ şerîke leh…"],
+ "Verheven is Allah, alle lof behoort toe aan Allah, Allah is de Grootste. Er is geen godheid behalve Allah alleen, zonder deelgenoot; aan Hem behoren heerschappij en lof, en Hij is almachtig over alles.":["Glory be to Allah, praise belongs to Allah, Allah is the Greatest. There is no deity except Allah alone, without partner; to Him belong dominion and praise, and He has power over all things.","Allah noksanlıklardan münezzehtir, hamd Allah’a mahsustur, Allah en büyüktür. Yalnız ve ortağı olmayan Allah’tan başka ilah yoktur; mülk ve hamd O’na aittir ve O her şeye kadirdir."],
+ "Na elk verplicht gebed; 100 herhalingen per gebedscyclus, 500 per dag als alle vijf gebeden zijn bijgehouden.":["After each obligatory prayer; 100 repetitions per prayer, 500 per day if all five prayers are tracked.","Her farz namazdan sonra; namaz başına 100 tekrar, beş namazın tümü kaydedilirse günde 500."],
+ "Een overlevering beschrijft deze formule als een manier waarop zonden worden vergeven, zelfs als ze als zeeschuim zijn.":["A report describes this formula as a means for sins to be forgiven, even if they are like sea foam.","Bir rivayet bu formülü, günahlar deniz köpüğü kadar olsa bile bağışlanma vesilesi olarak anlatır."],
+ "De PDF stelt 100 keer in de ochtend en 100 keer in de avond voor.":["The attachment suggests 100 repetitions in the morning and 100 in the evening.","Ek, sabah 100 ve akşam 100 tekrar önerir."],
+ "De bijlage stelt 100 keer in de ochtend en 100 keer in de avond voor.":["The attachment suggests 100 repetitions in the morning and 100 in the evening.","Ek, sabah 100 ve akşam 100 tekrar önerir."],
+ "De PDF koppelt hier een grote beloning aan, maar noemt geen precieze hadithbron voor dit aantal. De formulering van de dhikr is mooi, maar behandel 100+100 niet als vastgestelde Sunnah zonder verificatie.":["The attachment associates a great reward with this, but gives no specific hadith source for this count. The dhikr wording is good, but do not treat 100+100 as an established Sunnah without verification.","Ek bunu büyük bir sevapla ilişkilendiriyor ancak bu sayı için belirli bir hadis kaynağı vermiyor. Zikir ifadesi güzeldir; doğrulamadan 100+100’ü sabit sünnet sayma."],
+ "De bijlage vermeldt geen specifieke hadithverwijzing voor dit aantal.":["The attachment gives no specific hadith reference for this count.","Ek bu sayı için belirli bir hadis kaynağı belirtmiyor."],
+ "De Profeet ﷺ vertelde dat hij Allah honderd keer per dag om vergeving vroeg.":["The Prophet ﷺ said that he sought Allah’s forgiveness one hundred times a day.","Peygamber ﷺ günde yüz kez Allah’tan bağışlanma dilediğini bildirmiştir."],
+ "Voor Fajr, vóór zonsondergang of verspreid over de dag.":["Before Fajr, before sunset, or throughout the day.","Fecr’den önce, gün batımından önce veya gün içine yayılarak."],
+ "De overlevering beschrijft deze formule als een manier waarop zonden worden vergeven, zelfs als ze als zeeschuim zijn.":["A report describes this formula as a means for sins to be forgiven, even if they are like sea foam.","Bir rivayet bu formülü, günahlar deniz köpüğü kadar olsa bile bağışlanma vesilesi olarak anlatır."],
+ "Drie keer in de ochtend en drie keer in de avond.":["Three times in the morning and three times in the evening.","Sabah üç, akşam üç kez."],
+ "De overlevering noemt bescherming tegen schade met Allah’s toestemming.":["The report mentions protection from harm by Allah’s permission.","Rivayet, Allah’ın izniyle zarardan korunmaktan söz eder."],
+ "Qur’an-duʿā’ op elk passend moment.":["A Qur’anic supplication for any suitable time.","Uygun her vakitte okunabilecek Kur’an duası."],
+ "Qur’an-vers om te reciteren en over na te denken.":["A Qur’anic verse to recite and reflect upon.","Okumak ve üzerinde düşünmek için bir Kur’an ayeti."],
+ "Er is geen godheid behalve U; verheven bent U. Ik was inderdaad een van de onrechtvaardigen. (There is no God but You; glory be to You. Truly, I have been one of the wrongdoers.)":["There is no deity except You; glory be to You. I was indeed among the wrongdoers. (Qur’an 21:87)","Senden başka ilah yoktur; Sen eksikliklerden münezzehsin. Gerçekten ben zalimlerden oldum. (Kur’an 21:87)"],
+ "Onze Heer, wij geloven; vergeef ons onze zonden en bescherm ons tegen de bestraffing van het Vuur. (Our Lord! We have indeed believed: forgive us our sins and save us from the agony of the Fire.)":["Our Lord, we have believed, so forgive our sins and protect us from the punishment of the Fire. (Qur’an 3:16)","Rabbimiz, iman ettik; günahlarımızı bağışla ve bizi ateş azabından koru. (Kur’an 3:16)"],
+ "Heilig is onze Heer; wij waren inderdaad onrechtvaardig. (Glory to our Lord! Verily, we have been doing wrong.)":["Glory be to our Lord; we have indeed been wrongdoers. (Qur’an 68:29)","Rabbimiz noksanlıklardan münezzehtir; gerçekten biz zalimlerden olduk. (Kur’an 68:29)"],
+ "Er is geen godheid behalve U; verheven bent U. Ik was inderdaad een van de onrechtvaardigen.":["There is no deity except You; glory be to You. I was indeed among the wrongdoers.","Senden başka ilah yoktur; Sen eksikliklerden münezzehsin. Gerçekten ben zalimlerden oldum."],
+ "Verheven bent U; ik keer berouwvol tot U terug en ik ben de eerste van de gelovigen.":["Glory be to You; I turn to You in repentance, and I am the first of the believers.","Sen eksikliklerden münezzehsin; Sana tövbe ederek döndüm ve inananların ilkiyim."],
+ "Onze Heer, schenk ons het goede in deze wereld en het goede in het Hiernamaals, en bescherm ons tegen de bestraffing van het Vuur.":["Our Lord, grant us good in this world and good in the Hereafter, and protect us from the punishment of the Fire.","Rabbimiz, bize dünyada iyilik, ahirette iyilik ver ve bizi ateş azabından koru."],
+ "Wis deze dag":["Clear this day","Bu günü temizle"],
+ "Je voortgang wordt lokaal op dit apparaat opgeslagen. Gebruik het SQL-exportbestand om gegevens handmatig over te zetten.":["Your progress is stored locally on this device. Use the SQL export file to transfer data manually.","İlerlemen bu cihazda yerel olarak saklanır. Verileri elle aktarmak için SQL dışa aktarma dosyasını kullan."],
+ "Gebaseerd op algemene richtlijnen uit Qur’an en Sunnah. Verplichtingen en vrijwillige daden zijn apart in je intentie te houden; vraag een betrouwbare geleerde bij fiqh-vragen.":["Based on general guidance from the Qur’an and Sunnah. Keep obligatory and voluntary acts distinct in your intention; ask a qualified scholar about fiqh questions.","Kur’an ve sünnetin genel ilkelerine dayanır. Farz ve nafile amelleri niyetinde ayrı tut; fıkıh sorularını ehil bir âlime danış."]
+ ,"Symbolisch hart met een schild van licht":["A symbolic heart with a shield of light","Işık kalkanıyla sembolik bir kalp"]
+ ,"Een symbolische app-visualisatie op basis van eigen invoer; geen meting van iman of spirituele toestand.":["A symbolic app visual based on your entries; it does not measure faith or spiritual state.","Kendi kayıtlarına dayalı sembolik bir uygulama görselidir; imanı veya manevi durumu ölçmez."]
+ ,"Schild van Imaan · app-reflectie":["Shield of Imaan · app reflection","İman Kalkanı · uygulama yansıması"]
+ ,"Over deze reflectie":["About this reflection","Bu yansıma hakkında"]
+ ,"Hart en Schild van Imaan van vandaag":["Today’s Heart and Shield of Imaan","Bugünün Kalbi ve İman Kalkanı"]
+ ,"De dagelijkse rang begint opnieuw; je persoonlijke topscore blijft bewaard.":["Your daily rank starts over; your personal best is kept.","Günlük derecen yeniden başlar; kişisel rekorun korunur."]
+ ,"Qur’an, sunnah, gebed, dhikr en goed karakter — stap voor stap.":["Qur’an, Sunnah, prayer, dhikr, and good character—one step at a time.","Kur’an, sünnet, namaz, zikir ve güzel ahlak—adım adım."]
+ ,"Open dagelijkse routine":["Open daily routine","Günlük rutini aç"]
+ ,"Mijn score en daden":["My score and deeds","Puanım ve amellerim"]
+ ,"Back-up en installatie":["Backup and installation","Yedekleme ve kurulum"]
+ ,"Gebaseerd op registraties in deze lokale database. De ×10/×1-waarden zijn een vereenvoudigd app-model geïnspireerd op Qur’an 6:160, geen berekening van Allah’s oordeel; intentie, berouw en omstandigheden zijn niet meetbaar.":["Based on records in this local database. The ×10/×1 values are a simplified app model inspired by Qur’an 6:160, not a calculation of Allah’s judgment; intention, repentance, and circumstances cannot be measured.","Bu yerel veritabanındaki kayıtlara dayanır. ×10/×1 değerleri Kur’an 6:160’tan esinlenen basitleştirilmiş bir uygulama modelidir; Allah’ın hükmünü hesaplamaz. Niyet, tövbe ve koşullar ölçülemez."]
+ ,"Een back-up bevat jouw account-hash en persoonlijke invoer. Deel het bestand niet; wissen van sitegegevens kan lokale gegevens verwijderen.":["A backup contains your account hash and personal entries. Do not share it; clearing site data can delete local information.","Yedek dosyası hesap özetini ve kişisel kayıtlarını içerir. Dosyayı paylaşma; site verilerini silmek yerel verileri silebilir."]
+ ,"Installeren is gratis. iPhone/iPad: open deze site in Safari en kies Deel → Zet op beginscherm. Android: open de site in Chrome en kies Installeren of Toevoegen aan startscherm.":["Installation is free. iPhone/iPad: open this site in Safari and choose Share → Add to Home Screen. Android: open it in Chrome and choose Install or Add to Home Screen.","Kurulum ücretsizdir. iPhone/iPad: siteyi Safari’de açıp Paylaş → Ana Ekrana Ekle’yi seç. Android: Chrome’da açıp Yükle veya Ana ekrana ekle’yi seç."]
+ ,"Elk afgevinkt routine-item telt ook mee als één positieve routine-invoer (×10) bij de deed counter van deze dag. Niet-afgevinkte items leveren geen minpunten op. Alleen voor persoonlijke reflectie; geen maatstaf voor je waarde of garantie op Jannah.":["Each checked routine item is also one positive routine entry (×10) in today’s deed counter. Unchecked items do not subtract points. This is for personal reflection only; it does not measure your worth or guarantee Jannah.","İşaretlenen her rutin maddesi bugünün amel sayacına bir olumlu kayıt (×10) olarak eklenir. İşaretlenmeyen maddeler puan düşürmez. Bu yalnızca kişisel tefekkür içindir; değerini ölçmez veya cenneti garanti etmez."]
+ ,"Vraag Allah oprecht om vergeving.":["Sincerely ask Allah for forgiveness.","Allah’tan içtenlikle bağışlanma dile."]
+ ,"Bied excuses aan en herstel onrecht waar nodig.":["Apologise and make amends where needed.","Özür dile ve gerekiyorsa haksızlığı telafi et."]
+ ,"Gebruik authentieke smeekbeden van de Profeet ﷺ.":["Use authentic supplications of the Prophet ﷺ.","Peygamber’in ﷺ sahih dualarını oku."]
+ ,"Neem je voor op te staan voor Fajr en morgen verder te gaan.":["Intend to rise for Fajr and continue tomorrow.","Fecr için kalkmaya ve yarın devam etmeye niyet et."]
+ ,"Dhikr, Qur’an of stille aanbidding; doe wat haalbaar is. (Qur’an 33:41–42)":["Dhikr, Qur’an, or quiet worship—do what is manageable. (Qur’an 33:41–42)","Zikir, Kur’an veya sessiz ibadet; gücünün yettiğini yap. (Kur’an 33:41–42)"]
+ ,"Avondadhkar, Qur’an of reflectie; een praktische routine-indeling.":["Evening adhkār, Qur’an, or reflection; this is a practical routine suggestion.","Akşam ezkârı, Kur’an veya tefekkür; bu pratik bir rutin önerisidir."]
+ ,"De bronvermelding voor de bijbehorende beloningsvermelding.":["See the source note for the reported virtue.","Aktarılan fazilet için kaynak açıklamasına bak."]
+ ,"Ṣalawāt over de Profeet ﷺ":["Ṣalawāt upon the Prophet ﷺ","Peygamber’e ﷺ salavat"]
+ ,"Tasbīḥ na de verplichte gebeden":["Tasbīḥ after the obligatory prayers","Farz namazlardan sonra tesbih"]
+ ,"Dhikr na het gebed tot 100":["Dhikr after prayer up to 100","Namazdan sonra 100’e kadar zikir"]
+ ,"SubḥānAllāh na het gebed":["SubḥānAllāh after prayer","Namazdan sonra Sübhanallah"]
+ ,"De Qur’an en authentieke Sunnah moedigen dhikr in de ochtend, avond en gedurende de dag aan. De vier tijdvakken hierboven zijn deels een persoonlijke routine-indeling; niet elk tijdvak heeft een eigen specifieke belofte in de aangehaalde bronnen.":["The Qur’an and authentic Sunnah encourage remembrance in the morning, evening, and throughout the day. The four time slots above are partly a personal routine; the cited sources do not assign a separate specific promise to each slot.","Kur’an ve sahih sünnet sabah, akşam ve gün boyunca zikri teşvik eder. Yukarıdaki dört vakit kısmen kişisel bir rutin düzenidir; kaynaklar her vakit için ayrı ve özel bir vaat belirtmez."]
+ ,"Sahih Muslim 597 voor adhkār na het gebed; Bijlage: dhikr-schema.pdf":["Sahih Muslim 597 for adhkār after prayer; attachment: dhikr-schema.pdf","Namaz sonrası ezkâr için Sahih Muslim 597; ek: dhikr-schema.pdf"]
+ ,"Tussen Maghrib en ‘Ishā’ bewust tijd genomen":["Set aside time between Maghrib and ‘Ishā’","Akşam ile yatsı arasında bilinçli vakit ayırdım"]
+ ,"Gebaseerd op de lokale klok; stem adhkār af op je eigen gebedstijden. Dit is een vrijblijvende herinnering.":["Based on your local clock; align adhkār with your own prayer times. This is an optional reminder.","Yerel saate dayanır; ezkârı kendi namaz vakitlerine göre ayarla. Bu isteğe bağlı bir hatırlatmadır."]
+ ,"SubḥānAllāhi wa-biḥamdihī — 100 keer.":["SubḥānAllāhi wa-biḥamdihī — 100 times.","SubḥānAllāhi wa-biḥamdihī — 100 kez."]
+ ,"Lā ilāha illa Allāh, waḥdahu lā sharīka lah, lahul-mulku wa-lahul-ḥamd, wa-huwa ʿalā kulli shay’in qadīr — 100 keer.":["Lā ilāha illa Allāh, waḥdahu lā sharīka lah, lahul-mulku wa-lahul-ḥamd, wa-huwa ʿalā kulli shay’in qadīr — 100 times.","Lā ilāha illa Allāh, waḥdahu lā sharīka lah, lahul-mulku wa-lahul-ḥamd, wa-huwa ʿalā kulli shay’in qadīr — 100 kez."]
+ ,"Astaghfirullāh wa-atūbu ilayh — streef naar 100 keer als haalbare dagelijkse gewoonte.":["Astaghfirullāh wa-atūbu ilayh — aim for 100 times as a manageable daily habit.","Astaghfirullāh wa-atūbu ilayh — sürdürülebilir bir günlük alışkanlık olarak 100 kez hedefle."]
+ ,"Bismillāhilladhī lā yaḍurru maʿa ismihī shay’un fil-arḍi wa-lā fis-samā’i wa-huwa as-samīʿul-ʿalīm — 3 keer.":["Bismillāhilladhī lā yaḍurru maʿa ismihī shay’un fil-arḍi wa-lā fis-samā’i wa-huwa as-samīʿul-ʿalīm — 3 times.","Bismillāhilladhī lā yaḍurru maʿa ismihī shay’un fil-arḍi wa-lā fis-samā’i wa-huwa as-samīʿul-ʿalīm — 3 kez."]
+ ,"Qur’an 33:41; Bijlage: dhikr-schema.pdf":["Qur’an 33:41; attachment: dhikr-schema.pdf","Kur’an 33:41; ek: dhikr-schema.pdf"]
+ ,"Sahih Muslim 223; Bijlage: dhikr-schema.pdf":["Sahih Muslim 223; attachment: dhikr-schema.pdf","Sahih Muslim 223; ek: dhikr-schema.pdf"]
+ ,"Abū Dāwūd; an-Nasāʾī; Ibn Mājah; Bijlage: dhikr-schema.pdf":["Abū Dāwūd; an-Nasāʾī; Ibn Mājah; attachment: dhikr-schema.pdf","Ebû Dâvûd; en-Nesâî; İbn Mâce; ek: dhikr-schema.pdf"]
+ ,"Aṭ-Ṭabarī; an-Nasāʾī; Bijlage: dhikr-schema.pdf":["Aṭ-Ṭabarī; an-Nasāʾī; attachment: dhikr-schema.pdf","et-Taberî; en-Nesâî; ek: dhikr-schema.pdf"]
+ ,"Ṣaḥīḥ Muslim 1:350 (nummering kan per uitgave verschillen)":["Ṣaḥīḥ Muslim 1:350 (numbering varies by edition)","Ṣaḥīḥ Muslim 1:350 (numaralandırma baskıya göre değişebilir)"]
+ ,"Ṣaḥīḥ al-Bukhārī; Ṣaḥīḥ Muslim 4:2075 (nummering kan per uitgave verschillen)":["Ṣaḥīḥ al-Bukhārī; Ṣaḥīḥ Muslim 4:2075 (numbering varies by edition)","Ṣaḥīḥ al-Bukhārī; Ṣaḥīḥ Muslim 4:2075 (numaralandırma baskıya göre değişebilir)"]
+ ,"Onze Heer, wij geloven; vergeef ons onze zonden en bescherm ons tegen de bestraffing van het Vuur.":["Our Lord, we believe; forgive our sins and protect us from the punishment of the Fire.","Rabbimiz, iman ettik; günahlarımızı bağışla ve bizi ateş azabından koru."]
+ ,"Heilig is onze Heer; wij waren inderdaad onrechtvaardig.":["Glory to our Lord! We were indeed wrongdoers.","Rabbimiz noksanlıklardan münezzehtir; gerçekten zalimlerden olduk."]
+ ,"Er is geen godheid behalve U; verheven bent U. Ik was inderdaad een van de onrechtvaardigen.":["There is no deity except You; glory be to You. I was indeed among the wrongdoers.","Senden başka ilah yoktur; Sen eksikliklerden münezzehsin. Gerçekten ben zalimlerden oldum."]
+ ,"Verheven bent U; ik keer berouwvol tot U terug en ik ben de eerste van de gelovigen.":["You are far above imperfection; I turn to You in repentance, and I am the first of the believers.","Sen her türlü eksiklikten münezzehsin; Sana tövbe ile yöneliyorum ve inananların ilkiyim."]
+ ,"Verheven bent U, o Allah, en alle lof behoort U toe. Ik getuig dat er geen godheid behalve U is; ik vraag U om vergeving en keer berouwvol tot U terug.":["Glory and praise be to You, O Allah. I testify that there is no deity but You; I seek Your forgiveness and repent to You.","Allah’ım, Sen eksikliklerden münezzehsin ve hamd Sana mahsustur. Senden başka ilah olmadığına şahitlik ederim; Senden bağışlanma diler ve Sana tövbe ederim."]
+ ,"O Allah, ik vraag U om vergeving voor mijn zonden en om Uw barmhartigheid.":["O Allah, I ask You to forgive my sins and grant me Your mercy.","Allah’ım, günahlarımı bağışlamanı ve bana merhamet etmeni diliyorum."]
+ ,"O Allah, vergeef mij al mijn fouten en zonden.":["O Allah, forgive all my mistakes and sins.","Allah’ım, bütün hatalarımı ve günahlarımı bağışla."]
+ ,"Onze Heer, bestraf ons niet als wij vergeten of fouten maken. Leg ons geen last op zoals voor degenen vóór ons. Belast ons niet boven ons vermogen. Wis onze fouten uit, vergeef ons en wees ons barmhartig. U bent onze Beschermer; help ons tegen de ongelovigen.":["Our Lord, do not hold us accountable if we forget or make a mistake. Do not place on us a burden like the one You placed on those before us, nor burden us beyond our capacity. Pardon us, forgive us, and have mercy on us. You are our Protector, so help us against those who reject faith.","Rabbimiz, unutur veya hata edersek bizi sorumlu tutma. Bizden öncekilere yüklediğin gibi bize de ağır bir yük yükleme; gücümüzün yetmediğini bize taşıtma. Bizi affet, bağışla ve bize merhamet et. Sen koruyucumuzsun; inkâr edenlere karşı bize yardım et."]
+ ,"O Allah, U bent mijn Heer; er is geen godheid behalve U. U schiep mij en ik ben Uw dienaar. Ik houd mij zo goed als ik kan aan mijn verbond en belofte. Ik zoek toevlucht bij U tegen het kwaad dat ik deed. Ik erken Uw gunsten en mijn zonden; vergeef mij, want niemand vergeeft zonden behalve U.":["O Allah, You are my Lord; there is no deity except You. You created me and I am Your servant. I uphold my covenant and promise as best I can. I seek refuge in You from the evil I have done. I acknowledge Your blessings and confess my sins, so forgive me; none forgives sins except You.","Allah’ım, Sen benim Rabbimsin; Senden başka ilah yoktur. Beni Sen yarattın ve ben Senin kulunum. Gücüm yettiğince Sana verdiğim sözde dururum. Yaptığım kötülüklerden Sana sığınırım. Bana verdiğin nimetleri kabul eder, günahlarımı itiraf ederim; beni bağışla, çünkü günahları Senden başka bağışlayan yoktur."]
+ ,"Tahlīl · tien keer per dag":["Tahlīl · ten times a day","Tehlil · günde on kez"]
+ ,"Lā ilāha illa Allāh waḥdahu lā sharīka lah… — 10 keer.":["Lā ilāha illa Allāh waḥdahu lā sharīka lah… — 10 times.","Lā ilāha illa Allāh waḥdahu lā sharīka lah… — 10 kez."]
+ ,"Tien keer per dag.":["Ten times a day.","Günde on kez."]
+ ,"Ik vraag Allah om vergeving en keer berouwvol tot Hem terug.":["I ask Allah for forgiveness and repent to Him.","Allah’tan bağışlanma diliyor ve O’na tövbe ediyorum."]
+ ,"Verheven bent U; ik keer berouwvol tot U terug en ik ben de eerste van de gelovigen. (Glory be to Thee! To Thee I turn in repentance, and I am the first to believe.)":["You are far above imperfection; I turn to You in repentance, and I am the first of the believers.","Sen her türlü eksiklikten münezzehsin; Sana tövbe ile yöneliyorum ve inananların ilkiyim."]
+ ,"O Allah, vergeef mij al mijn zonden: de kleine en grote, de eerste en laatste, de openlijke en verborgen.":["O Allah, forgive all my sins: small and great, first and last, open and hidden.","Allah’ım, küçük ve büyük, ilk ve son, açık ve gizli bütün günahlarımı bağışla."]
+ ,"O Allah, ik vraag U, de Ene, de Enige en de Onafhankelijke, Die niet verwekt en niet verwekt is en aan Wie niemand gelijk is: vergeef mij mijn zonden. U bent de Vergevensgezinde, de Barmhartige. (O Allah! I ask You, the One, the Only, the Self-Sufficient Master… forgive me my sins; surely You are the Forgiving, the Merciful.)":["O Allah, I ask You—the One, the Unique, the Self-Sufficient, who neither begets nor is begotten and has no equal—to forgive my sins. You are the Forgiving, the Merciful.","Allah’ım, bir ve tek olan, hiçbir şeye muhtaç olmayan; doğurmayan, doğurulmayan ve eşi olmayan Sensin. Senden günahlarımı bağışlamanı diliyorum. Şüphesiz Sen Bağışlayansın, Merhametlisin."]
+ ,"Astaghfirullāha wa-atūbu ilayh — 100 keer gedurende de dag.":["Astaghfirullāha wa-atūbu ilayh — 100 times during the day.","Astaghfirullāha wa-atūbu ilayh — gün boyunca 100 kez."]
+ ,"Ik vraag Allah om vergeving en keer berouwvol tot Hem terug. (I seek the forgiveness of Allah and repent to Him.)":["I seek Allah’s forgiveness and repent to Him.","Allah’tan bağışlanma diliyor ve O’na tövbe ediyorum."]
+ ,"100 keer verspreid over de dag.":["100 times throughout the day.","Gün boyunca 100 kez."]
+ ,"Verheven bent U, o Allah, en alle lof behoort U toe. Ik getuig dat er geen godheid behalve U is; ik vraag U om vergeving en keer berouwvol tot U terug. (Glory be to You, O Allah, and all praise; I testify that there is no deity but You. I seek Your forgiveness and repent to You.)":["Glory and praise be to You, O Allah. I testify that there is no deity but You; I seek Your forgiveness and repent to You.","Allah’ım, Sen eksikliklerden münezzehsin ve hamd Sana mahsustur. Senden başka ilah olmadığına şahitlik ederim; Senden bağışlanma diler ve Sana tövbe ederim."]
+ ,"Aan het einde van een bijeenkomst; de aangeleverde tekst vermeldt driemaal.":["At the end of a gathering; the supplied text says to recite it three times.","Bir meclisin sonunda; iletilen metin üç kez okunmasını belirtir."]
+ ,"O Allah, ik vraag U om vergeving voor mijn zonden en om Uw barmhartigheid. (O Allah! I ask You for forgiveness for my sins and for Your mercy.)":["O Allah, I ask You to forgive my sins and grant me Your mercy.","Allah’ım, günahlarımı bağışlamanı ve bana merhamet etmeni diliyorum."]
+ ,"O Allah, vergeef mij al mijn fouten en zonden. (O Allah! Forgive all my sins and omissions.)":["O Allah, forgive all my mistakes and sins.","Allah’ım, bütün hatalarımı ve günahlarımı bağışla."]
+ ,"Onze Heer, bestraf ons niet als wij vergeten of fouten maken. Leg ons geen last op zoals voor degenen vóór ons. Belast ons niet boven ons vermogen. Wis onze fouten uit, vergeef ons en wees ons barmhartig. U bent onze Beschermer; help ons tegen de ongelovigen. (Our Lord! Condemn us not if we forget or fall into error… Blot out our sins, grant us forgiveness, have mercy on us, and help us.)":["Our Lord, do not hold us accountable if we forget or make a mistake. Do not place on us a burden like the one You placed on those before us, nor burden us beyond our capacity. Pardon us, forgive us, and have mercy on us. You are our Protector, so help us against those who reject faith.","Rabbimiz, unutur veya hata edersek bizi sorumlu tutma. Bizden öncekilere yüklediğin gibi bize de ağır bir yük yükleme; gücümüzün yetmediğini bize taşıtma. Bizi affet, bağışla ve bize merhamet et. Sen koruyucumuzsun; inkâr edenlere karşı bize yardım et."]
+ ,"O Allah, U bent mijn Heer; er is geen godheid behalve U. U schiep mij en ik ben Uw dienaar. Ik houd mij zo goed als ik kan aan mijn verbond en belofte. Ik zoek toevlucht bij U tegen het kwaad dat ik deed. Ik erken Uw gunsten en mijn zonden; vergeef mij, want niemand vergeeft zonden behalve U. (O Allah! You are my Lord… I acknowledge Your blessings and confess my sins. Forgive me, for none forgives sins except You.)":["O Allah, You are my Lord; there is no deity except You. You created me and I am Your servant. I uphold my covenant and promise as best I can. I seek refuge in You from the evil I have done. I acknowledge Your blessings and confess my sins, so forgive me; none forgives sins except You.","Allah’ım, Sen benim Rabbimsin; Senden başka ilah yoktur. Beni Sen yarattın ve ben Senin kulunum. Gücüm yettiğince Sana verdiğim sözde dururum. Yaptığım kötülüklerden Sana sığınırım. Bana verdiğin nimetleri kabul eder, günahlarımı itiraf ederim; beni bağışla, çünkü günahları Senden başka bağışlayan yoktur."]
+ ,"In de ochtend en in de avond.":["In the morning and evening.","Sabah ve akşam."]
+ ,"De Profeet ﷺ noemde dit de beste smeekbede om vergeving; de overlevering noemt een bijzondere belofte voor wie haar met overtuiging reciteert.":["The Prophet ﷺ described this as the best supplication for forgiveness; the narration mentions a special promise for one who recites it with conviction.","Peygamber ﷺ bunu bağışlanma dilemenin en üstün duası olarak nitelendirdi; rivayet, buna inanarak okuyan kişi için özel bir müjde bildirir."]
+ ,"Zeg Allahumma salli ‘ala Muhammad. (Qur’an 33:56)":["Say: Allahumma salli ‘ala Muhammad. (Qur’an 33:56)","Allahumma salli ‘ala Muhammad de. (Kur’an 33:56)"]
+ ,"Je geregistreerde dagen verschijnen hier als een persoonlijke reflectie.":["Your recorded days appear here as a personal reflection.","Kaydettiğin günler burada kişisel bir tefekkür olarak görünür."]
+ ,"Schild van Imaan · app-reflectie":["Shield of Imaan · app reflection","İman Kalkanı · uygulama tefekkürü"]
+ ,"Schild van Imaan · dagreflectie":["Shield of Imaan · daily reflection","İman Kalkanı · günlük tefekkür"]
+ ,"Symbolische shield-voortgang van deze dag":["Symbolic shield progress for this day","Bu günün sembolik kalkan ilerlemesi"]
+ ,"Schild van Imaan":["Shield of Imaan","İman Kalkanı"]
+ ,"Hartzorg van vandaag":["Today’s heart reflection","Bugünün kalp tefekkürü"]
+ ,"Hartzorg van":["Heart reflection for","Kalp tefekkürü ·"]
+ ,"Symbolisch hart na gemarkeerde tawbah-reflectie":["Symbolic heart after recorded tawbah reflection","Tövbe tefekkürü kaydedildikten sonra sembolik kalp"]
+ ,"Symbolisch hart met geregistreerde vlekjes":["Symbolic heart with recorded marks","Kaydedilmiş izlerle sembolik kalp"]
+ ,"Symbolisch hart voor dagelijkse reflectie":["Symbolic heart for daily reflection","Günlük tefekkür için sembolik kalp"]
+ ,"Decoratieve reflectie op zelf ingevoerde daden; geen meting van je hart, geloof of spirituele toestand.":["A decorative reflection on deeds you entered; it does not measure your heart, faith, or spiritual state.","Kendi girdiğin amelleri yansıtan dekoratif bir görseldir; kalbini, imanını veya manevi durumunu ölçmez."]
+ ,"Je hebt vandaag tawbah en herstel nagestreefd. Blijf hopen en ga stap voor stap verder.":["Today you sought tawbah and made amends. Keep hope and continue one step at a time.","Bugün tövbe edip telafi etmeye çalıştın. Umudunu koru ve adım adım devam et."]
+ ,"Dit zijn alleen de daden die je vandaag zelf hebt geregistreerd. Er is altijd ruimte om terug te keren.":["These are only the deeds you recorded today. There is always room to return.","Bunlar yalnızca bugün kaydettiğin amellerdir. Her zaman yeniden yönelmek için fırsat vardır."]
+ ,"Elke dag is een nieuwe kans om zorg te dragen voor je hart.":["Every day is a new chance to care for your heart.","Her gün kalbine özen göstermek için yeni bir fırsattır."]
+ ,"De schildsterkte volgt alleen jouw ingevoerde daden; niet-afgevinkte gebeden van vandaag tellen niet als gemist.":["Shield strength reflects only the deeds you entered; unchecked prayers today are not counted as missed.","Kalkan gücü yalnızca girdiğin amelleri yansıtır; bugün işaretlenmeyen namazlar kaçırılmış sayılmaz."]
+ ,"{count} gebeden zijn niet afgevinkt op deze eerder bijgehouden dag. Dit is geen vaststelling dat een gebed is gemist; vul je registratie aan als die onvolledig is.":["{count} prayers are unchecked on this previously tracked day. This does not establish that a prayer was missed; update your entry if it is incomplete.","Daha önce takip edilen bu günde {count} namaz işaretlenmemiş. Bu, namazın kaçırıldığı anlamına gelmez; kaydın eksikse tamamla."]
+ ,"Tawbah omvat oprecht berouw; herstel ook waar nodig de rechten van anderen.":["Tawbah includes sincere repentance; also restore others’ rights where needed.","Tövbe samimi pişmanlığı içerir; gerekiyorsa başkalarının haklarını da iade et."]
+ ,"Tawbah-reflectie genoteerd":["Tawbah reflection recorded","Tövbe tefekkürü kaydedildi"]
+ ,"Ik heb tawbah gedaan en herstel nagestreefd":["I have made tawbah and sought to make amends","Tövbe ettim ve telafi etmeye çalıştım"]
+ ,"Reflectie lokaal opgeslagen. Dit is geen uitspraak over aanvaarding of vergeving.":["Reflection saved locally. This is not a judgment about acceptance or forgiveness.","Tefekkür yerel olarak kaydedildi. Bu, kabul veya bağışlanma hakkında bir hüküm değildir."]
+ ,"Goede stappen vandaag":["Good steps today","Bugünün iyi adımları"]
+ ,"Beheeraccounts kunnen gebruikersnamen en rollen zien, maar niet de persoonlijke daden, checklist of dhikr-registraties van gebruikers.":["Admin accounts can see usernames and roles, but not users’ personal deeds, checklist, or dhikr entries.","Yönetici hesapları kullanıcı adlarını ve rolleri görebilir; kullanıcıların kişisel amellerini, kontrol listesini veya zikir kayıtlarını göremez."]
+ ,"🤲 Daden registreren":["🤲 Record deeds","🤲 Amelleri kaydet"]
+ ,"📋 Voortgangslijst":["📋 Progress checklist","📋 İlerleme listesi"]
+ ,"📿 Adhkār & tasbīḥ":["📿 Adhkār & tasbīḥ","📿 Ezkâr ve tesbih"]
+ ,"🤍 Istighfār":["🤍 Istighfār","🤍 İstiğfar"]
+ ,"goede stappen vandaag":["good steps today","bugünün iyi adımları"]
+ ,"“Onze Heer, schenk ons het goede in deze wereld en het goede in het Hiernamaals, en bescherm ons tegen de bestraffing van het Vuur.”":["“Our Lord, grant us good in this world and good in the Hereafter, and protect us from the punishment of the Fire.”","“Rabbimiz, bize dünyada iyilik, ahirette iyilik ver ve bizi ateş azabından koru.”"]
+ ,"Eigen goede daad toevoegen":["Add a custom good deed","Özel iyi amel ekle"]
+ ,"+ Goede daad toevoegen":["+ Add good deed","+ İyi amel ekle"]
+ ,"Eigen slechte daad toevoegen":["Add a custom misstep","Özel hata ekle"]
+ ,"+ Slechte daad toevoegen":["+ Add misstep","+ Hata ekle"]
+ ,"Naam van de daad":["Deed name","Amel adı"]
+ ,"Bron (optioneel)":["Source (optional)","Kaynak (isteğe bağlı)"]
+ ,"Bijvoorbeeld: zieke bezocht":["For example: visited someone ill","Örnek: hastayı ziyaret ettim"]
+ ,"Bijvoorbeeld: Qur’an 9:60":["For example: Qur’an 9:60","Örnek: Kur’an 9:60"]
+ ,"Schild van Imaan:":["Shield of Imaan:","İman Kalkanı:"]
+ ,"Symbolische shield-voortgang op basis van app-invoer":["Symbolic shield progress based on app entries","Uygulama kayıtlarına dayalı sembolik kalkan ilerlemesi"]
+ ,"geregistreerde goede stappen":["recorded good steps","kaydedilen iyi adımlar"]
+ ,"geregistreerde misstappen vandaag":["recorded missteps today","bugün kaydedilen hatalar"]
+ ,"Over deze reflectie":["About this reflection","Bu tefekkür hakkında"]
+ ,"Nog geen daden geregistreerd. Dit schild is een app-symbool, geen uitspraak over je iman.":["No deeds recorded yet. This shield is an app symbol, not a judgment about your iman.","Henüz amel kaydedilmedi. Bu kalkan uygulama simgesidir; iman hakkında bir hüküm değildir."]
+ ,"{good} goede stappen, {bad} geregistreerde misstappen en {missed} niet-afgevinkte gebeden op bijgehouden dagen.":["{good} good steps, {bad} recorded missteps, and {missed} unchecked prayers on tracked days.","{good} iyi adım, {bad} kaydedilmiş hata ve takip edilen günlerde {missed} işaretlenmemiş namaz."]
+ ,"{good} goede stappen, {bad} geregistreerde misstap en {missed} niet-afgevinkte gebeden op bijgehouden dagen.":["{good} good steps, {bad} recorded misstep, and {missed} unchecked prayers on tracked days.","{good} iyi adım, {bad} kaydedilmiş hata ve takip edilen günlerde {missed} işaretlenmemiş namaz."]
+ ,"Afgerond vandaag · tik om ongedaan te maken":["Completed today · tap to undo","Bugün tamamlandı · geri almak için dokun"]
+ ,"Markeer afgerond":["Mark as complete","Tamamlandı olarak işaretle"]
+ ,"Het lichtschild is een motiverende, symbolische voortgangsvisualisatie op basis van alleen jouw app-invoer: goede registraties verhogen het aandeel, een geregistreerde misstap telt hier dubbel en een niet-afgevinkt gebed op een eerdere bijgehouden dag telt hier driemaal. Deze app-verhoudingen zijn geen religieuze gewichten. “Niet afgevinkt” is geen vaststelling dat je een gebed hebt gemist. Dit is geen meting of oordeel over iman; intentie, omstandigheden en Allah’s oordeel zijn niet meetbaar.":["The light shield is a motivational, symbolic progress visualization based only on your app entries: good entries increase the share, a recorded misstep counts double here, and an unchecked prayer on a previously tracked day counts three times. These app ratios are not religious measures. “Unchecked” does not mean a prayer was missed. This does not measure or judge iman; intention, circumstances, and Allah’s judgment cannot be measured.","Işık kalkanı yalnızca uygulama kayıtlarına dayanan, motive edici ve sembolik bir ilerleme göstergesidir: iyi kayıtlar oranı artırır, kaydedilen bir hata burada iki kat, önceki takip edilmiş bir gündeki işaretlenmemiş namaz ise üç kat sayılır. Bu uygulama oranları dini ölçüler değildir. “İşaretlenmemiş” olması namazın kaçırıldığı anlamına gelmez. Bu, imanı ölçmez veya yargılamaz; niyet, koşullar ve Allah’ın hükmü ölçülemez."]
+};
+for(const [source,localized] of Object.entries(additionalContentTranslations)){translations.en[source]=localized[0];translations.tr[source]=localized[1]}
 Object.assign(translations.en,{
  "Je rang groeit blijvend met je totale goede-dadenpunten.":"Your rank grows permanently with your total good-deed points.",
  "Op deze ene pagina kun je je checklist en adhkār bijhouden, goede daden toevoegen, misstappen registreren en je hartreflectie bekijken. Alles blijft lokaal op dit apparaat. Afvink- en dhikr-invoer telt automatisch mee; registreer dezelfde daad niet nogmaals.":"On this one page, track your checklist and adhkār, add good deeds, record missteps, and reflect. Everything stays on this device. Checklist and dhikr entries count automatically; do not add the same deed again.",
@@ -571,12 +815,54 @@ Object.assign(translations.tr,{
  "Nachtgebed · Qur’an 17:79; Sahih Muslim 1163. Istighfār vóór de dageraad · Qur’an 3:17, 51:18.":"Gece namazı · Kur’an 17:79; Sahih Muslim 1163. Seher vaktinde istiğfar · Kur’an 3:17, 51:18.",
  "Ochtendadhkār: Sayyid al-Istighfār · Sahih al-Bukhari 6306; drie Quls · Sunan Abi Dawud 5082. Duha-gebed · Sahih Muslim 720. Volg voor de gebedstijd je lokale tijden.":"Sabah ezkârı: Seyyidü’l-İstiğfar · Sahih al-Bukhari 6306; üç Kul · Sunan Abi Dawud 5082. Duha namazı · Sahih Muslim 720. Namaz vakti için yerel saatleri takip et."
 });
+Object.assign(translations.en,{
+ "Tijdstip · overdag":"Time · daytime",
+ "Tijdstip · namiddag":"Time · afternoon",
+ "Tijdstip · avond":"Time · evening",
+ "Surah al-Mulk gelezen · vóór het slapen":"Read Surah al-Mulk · before sleep",
+ "Een aanbevolen avondrecitatie; de Profeet ﷺ reciteerde deze soera vóór het slapen. (Jamiʿ at-Tirmidhi 2892)":"An optional evening recitation; a report says the Prophet ﷺ recited this surah before sleeping. (Jamiʿ at-Tirmidhi 2892)",
+ "Surah al-Kahf gelezen · vrijdag":"Read Surah al-Kahf · Friday",
+ "Een overlevering noemt licht tussen twee vrijdagen voor wie deze soera op vrijdag reciteert. De beoordeling van de overlevering verschilt; zie al-Bayhaqi, al-Sunan al-Kubra en al-Albani, Sahih al-Jamiʿ 6470.":"A narration mentions light between two Fridays for whoever recites this surah on Friday. Scholars differ on its grading; see al-Bayhaqi, al-Sunan al-Kubra, and al-Albani, Sahih al-Jamiʿ 6470.",
+ "Laatste twee verzen van al-Baqarah gelezen · ’s nachts":"Read the last two verses of al-Baqarah · at night",
+ "Een authentieke overlevering zegt dat wie ze ’s nachts reciteert, daarmee voldoende heeft. (Sahih al-Bukhari 5009; Sahih Muslim 808)":"An authentic narration says that whoever recites them at night, they will suffice them. (Sahih al-Bukhari 5009; Sahih Muslim 808)",
+ "Vandaag is vrijdag. Je kunt Surah al-Kahf lezen; een overlevering noemt licht tussen twee vrijdagen. Over de authenticiteit van deze overlevering verschillen geleerden.":"Today is Friday. You may read Surah al-Kahf; a narration mentions light between two Fridays. Scholars differ about the authenticity of this narration.",
+ "Voor het slapen kun je Surah al-Mulk lezen. Een overlevering vermeldt dat de Profeet ﷺ al-Mulk en as-Sajdah reciteerde voordat hij ging slapen; dit is een aanbevolen herinnering, geen verplichting.":"Before sleep, you may read Surah al-Mulk. A narration says the Prophet ﷺ recited al-Mulk and as-Sajdah before sleeping; this is an optional reminder, not an obligation.",
+ "Lees eventueel de laatste twee verzen van Surah al-Baqarah in de nacht. Een authentieke overlevering zegt dat ze degene die ze reciteert die nacht voldoende zijn.":"You may also read the last two verses of Surah al-Baqarah at night. An authentic narration says they will suffice whoever recites them that night.",
+ "al-Kahf op vrijdag · al-Bayhaqi, al-Sunan al-Kubra; al-Albani, Sahih al-Jamiʿ 6470 (grading differs)":"al-Kahf on Friday · al-Bayhaqi, al-Sunan al-Kubra; al-Albani, Sahih al-Jamiʿ 6470 (grading differs)",
+ "al-Mulk vóór het slapen · Jamiʿ at-Tirmidhi 2892":"al-Mulk before sleep · Jamiʿ at-Tirmidhi 2892",
+ "de laatste twee verzen van al-Baqarah · Sahih al-Bukhari 5009; Sahih Muslim 808":"the last two verses of al-Baqarah · Sahih al-Bukhari 5009; Sahih Muslim 808",
+ "Open Qur’an-checklist":"Open Qur’an checklist"
+});
+Object.assign(translations.tr,{
+ "Tijdstip · overdag":"Zaman · gündüz",
+ "Tijdstip · namiddag":"Zaman · öğleden sonra",
+ "Tijdstip · avond":"Zaman · akşam",
+ "Surah al-Mulk gelezen · vóór het slapen":"Yatmadan önce Mülk suresini oku",
+ "Een aanbevolen avondrecitatie; de Profeet ﷺ reciteerde deze soera vóór het slapen. (Jamiʿ at-Tirmidhi 2892)":"İsteğe bağlı bir akşam tilaveti; bir rivayete göre Peygamber ﷺ uyumadan önce bu sureyi okurdu. (Jamiʿ at-Tirmidhi 2892)",
+ "Surah al-Kahf gelezen · vrijdag":"Cuma günü Kehf suresini oku",
+ "Een overlevering noemt licht tussen twee vrijdagen voor wie deze soera op vrijdag reciteert. De beoordeling van de overlevering verschilt; zie al-Bayhaqi, al-Sunan al-Kubra en al-Albani, Sahih al-Jamiʿ 6470.":"Bir rivayet, cuma günü bu sureyi okuyan kişi için iki cuma arasında bir nurdan bahseder. Rivayetin sıhhati hakkında âlimler farklı değerlendirmelerde bulunmuştur; al-Bayhaqi, al-Sunan al-Kubra ve al-Albani, Sahih al-Jamiʿ 6470'e bakınız.",
+ "Laatste twee verzen van al-Baqarah gelezen · ’s nachts":"Gece Bakara suresinin son iki ayetini oku",
+ "Een authentieke overlevering zegt dat wie ze ’s nachts reciteert, daarmee voldoende heeft. (Sahih al-Bukhari 5009; Sahih Muslim 808)":"Sahih bir rivayete göre gece bu ayetleri okuyan kişiye yeterli olurlar. (Sahih al-Bukhari 5009; Sahih Muslim 808)",
+ "Vandaag is vrijdag. Je kunt Surah al-Kahf lezen; een overlevering noemt licht tussen twee vrijdagen. Over de authenticiteit van deze overlevering verschillen geleerden.":"Bugün cuma. Kehf suresini okuyabilirsin; bir rivayet iki cuma arasında nurdan bahseder. Âlimler bu rivayetin sıhhati konusunda farklı görüştedir.",
+ "Voor het slapen kun je Surah al-Mulk lezen. Een overlevering vermeldt dat de Profeet ﷺ al-Mulk en as-Sajdah reciteerde voordat hij ging slapen; dit is een aanbevolen herinnering, geen verplichting.":"Uyumadan önce Mülk suresini okuyabilirsin. Bir rivayete göre Peygamber ﷺ uyumadan önce Mülk ve Secde surelerini okurdu; bu isteğe bağlı bir hatırlatmadır, farz değildir.",
+ "Lees eventueel de laatste twee verzen van Surah al-Baqarah in de nacht. Een authentieke overlevering zegt dat ze degene die ze reciteert die nacht voldoende zijn.":"Gece Bakara suresinin son iki ayetini okuyabilirsin. Sahih bir rivayete göre bu ayetler, onları o gece okuyan kişiye yeterli olurlar.",
+ "al-Kahf op vrijdag · al-Bayhaqi, al-Sunan al-Kubra; al-Albani, Sahih al-Jamiʿ 6470 (grading differs)":"Cuma günü Kehf · al-Bayhaqi, al-Sunan al-Kubra; al-Albani, Sahih al-Jamiʿ 6470 (rivayetin sıhhati ihtilaflıdır)",
+ "al-Mulk vóór het slapen · Jamiʿ at-Tirmidhi 2892":"Uyumadan önce Mülk · Jamiʿ at-Tirmidhi 2892",
+ "de laatste twee verzen van al-Baqarah · Sahih al-Bukhari 5009; Sahih Muslim 808":"Bakara suresinin son iki ayeti · Sahih al-Bukhari 5009; Sahih Muslim 808",
+ "Open Qur’an-checklist":"Kur’an kontrol listesini aç"
+});
+const reverseTranslations={en:new Map(),tr:new Map()};
+for(const language of ['en','tr']){
+ Object.entries(translations[language]).forEach(([source,translated])=>{
+  if(!reverseTranslations[language].has(translated))reverseTranslations[language].set(translated,source);
+ });
+}
 function translateText(value){
  const source=value.trim(),translationsForLanguage=translations[currentLanguage]||{};
  let translated=Object.prototype.hasOwnProperty.call(translationsForLanguage,source)?translationsForLanguage[source]:null;
  for(const language of ['en','tr']){
   if(translated!==null)break;
-  const sourceKey=Object.keys(translations[language]).find(key=>translations[language][key]===source);
+  const sourceKey=reverseTranslations[language].get(source);
   if(sourceKey)translated=currentLanguage==='nl'?sourceKey:(translationsForLanguage[sourceKey]||source);
  }
  return translated===null?value:value.replace(source,translated);
@@ -706,7 +992,10 @@ const groups = [
 {icon:"🕌",title:"2. De vijf verplichte gebeden",sub:"De basis van je dagelijkse aanbidding.",items:[
 ["Fajr gebeden","Binnen de voorgeschreven tijd."],["Dhuhr gebeden","Binnen de voorgeschreven tijd."],["Asr gebeden","Binnen de voorgeschreven tijd."],["Maghrib gebeden","Binnen de voorgeschreven tijd."],["Isha gebeden","Binnen de voorgeschreven tijd."],["Met aandacht bidden","Doe je best voor khushu’ en de juiste voorwaarden. (Qur’an 23:1–2)"]]},
 {icon:"📖",title:"3. Qur’an & dhikr",sub:"Houd je verbinding met Allah levend.",items:[
-["Qur’an gelezen","Al is het een paar verzen; probeer de betekenis te begrijpen."],["Dhikr gedaan","Bijv. SubhanAllah, Alhamdulillah, Allahu akbar en La ilaha illa Allah."],["Ochtend- en avondadhkar","Een vaste routine met authentieke smeekbeden."],["Salawat over de Profeet ﷺ","Zeg Allahumma salli ‘ala Muhammad. (Qur’an 33:56)"]]},
+["Qur’an gelezen","Al is het een paar verzen; probeer de betekenis te begrijpen."],["Dhikr gedaan","Bijv. SubhanAllah, Alhamdulillah, Allahu akbar en La ilaha illa Allah."],["Ochtend- en avondadhkar","Een vaste routine met authentieke smeekbeden."],["Salawat over de Profeet ﷺ","Zeg Allahumma salli ‘ala Muhammad. (Qur’an 33:56)"],
+["Surah al-Mulk gelezen · vóór het slapen","Een aanbevolen avondrecitatie; de Profeet ﷺ reciteerde deze soera vóór het slapen. (Jamiʿ at-Tirmidhi 2892)"],
+["Surah al-Kahf gelezen · vrijdag","Een overlevering noemt licht tussen twee vrijdagen voor wie deze soera op vrijdag reciteert. De beoordeling van de overlevering verschilt; zie al-Bayhaqi, al-Sunan al-Kubra en al-Albani, Sahih al-Jamiʿ 6470."],
+["Laatste twee verzen van al-Baqarah gelezen · ’s nachts","Een authentieke overlevering zegt dat wie ze ’s nachts reciteert, daarmee voldoende heeft. (Sahih al-Bukhari 5009; Sahih Muslim 808)"]]},
 {icon:"🤝",title:"4. Karakter & rechten van mensen",sub:"Je aanbidding zie je terug in je omgang.",items:[
 ["Goed voor mijn ouders geweest","Met respect spreken en helpen waar mogelijk. (Qur’an 17:23–24)"],["Mijn gezin goed behandeld","Met vriendelijkheid, geduld en rechtvaardigheid. (Qur’an 4:19)"],["Mijn tong bewaakt","Geen roddel, leugens, beledigingen of laster. (Qur’an 49:11–12)"],["Eerlijk en betrouwbaar geweest","Afspraken en toevertrouwde zaken nakomen. (Qur’an 23:8)"],["Niemand bewust onrecht aangedaan","Geen bedrog, vernedering of schending van rechten."],["Een goede daad gedaan","Iemand helpen, bemoedigen of liefdadigheid geven. (Muslim 1009)"]]},
 {icon:"🛡️",title:"5. Zonden vermijden",sub:"Laat verboden zaken bewust achterwege.",items:[
@@ -788,6 +1077,7 @@ const adhkarMeanings={
 dailyAdhkar.forEach(item=>{
  if(!item.category)item.category=item.id.includes("istighfar100")?"Istighfār":item.title.includes("ochtend")?"Ochtendadhkār":item.title.includes("avond")?"Avondadhkār":"Dhikr overdag";
  if(!item.meaning)item.meaning=adhkarMeanings[item.id]||"";
+ if(item.meaning)item.meaning=item.meaning.replace(/\s+\((?:Our Lord|Glory|There is no|O Allah|I seek)[\s\S]*\)$/i,'').trim();
  if(/(?:bijlage|pdf)/i.test(item.phrase))item.phrase=item.phrase.replace(/\s*[—–-]\s*(?:de\s+)?(?:bijlage|pdf).*$/i,'').trim();
  if(/(?:bijlage|pdf)/i.test(item.time))item.time="Ochtend en avond; zie de bronvermelding voor de voorgestelde telling.";
  if(/(?:bijlage|pdf|niet geverifieerd|niet afzonderlijk verifieerbaar)/i.test(item.virtue))item.virtue="Raadpleeg de bronvermelding voor de bijbehorende beloningsvermelding.";
@@ -912,6 +1202,13 @@ document.addEventListener('click',event=>{
  if(openAdhkarButton){showPage('routine');selectedCombinedSection='adhkar';renderCombinedSection();window.scrollTo(0,0);return}
  const openProgressButton=event.target.closest('[data-open-progress]');
  if(openProgressButton){showPage('routine');selectedCombinedSection='progress';renderCombinedSection();window.scrollTo(0,0);return}
+ const openQuranChecklistButton=event.target.closest('[data-open-quran-checklist]');
+ if(openQuranChecklistButton){
+  showPage('routine');selectedCombinedSection='progress';renderCombinedSection();
+  const section=sectionsEl.children[2],head=section?.querySelector('.sectionhead'),items=section?.querySelector('.items');
+  if(section&&head&&items){if(items.hidden)head.click();section.scrollIntoView({behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'})}
+  return
+ }
  const sectionButton=event.target.closest('[data-combined-section]');
  if(sectionButton){selectedCombinedSection=sectionButton.dataset.combinedSection;if(selectedCombinedSection==='deeds')document.getElementById('deedSearch').value='';renderCombinedSection();if(selectedCombinedSection==='deeds')renderDeedCounter();window.scrollTo(0,0);return}
  if(event.target.closest('[data-combined-back]')){selectedCombinedSection=null;openDeedCategories.clear();document.getElementById('deedSearch').value='';document.querySelector('#progressSection .progress').open=false;renderCombinedSection();window.scrollTo(0,0)}
@@ -1056,8 +1353,8 @@ function renderIslamicCalendar(){
   document.querySelector('.calendar-day-controls').hidden=true;
  }
 }
-function renderTimeRecommendation(){
- const hour=new Date().getHours();
+function renderTimeRecommendation(now=new Date()){
+ const hour=now.getHours(),isFriday=now.getDay()===5;
  let title,text,sources;
  if(hour<4){
   title='Tijdstip · vroege uren';
@@ -1084,9 +1381,34 @@ function renderTimeRecommendation(){
   text='Neem een rustig moment voor Qur’an of dhikr. Als je na ‘Ishā’ nog wakker bent, kun je vrijwillig Tahajjud of qiyām al-layl bidden; rust is eveneens belangrijk.';
   sources='Nachtgebed · Qur’an 17:79; Sahih Muslim 1163. Istighfār vóór de dageraad · Qur’an 3:17, 51:18.';
  }
- document.getElementById('timeRecommendationTitle').textContent=translateText(title);
+ const quranRecommendations=[];
+ const localizedSources=translateText(sources).replace(/[.;\s]+$/,'');
+ if(isFriday)quranRecommendations.push({
+  title:'Surah al-Kahf gelezen · vrijdag',
+  text:'Vandaag is vrijdag. Je kunt Surah al-Kahf lezen; een overlevering noemt licht tussen twee vrijdagen. Over de authenticiteit van deze overlevering verschillen geleerden.',
+  source:'al-Kahf op vrijdag · al-Bayhaqi, al-Sunan al-Kubra; al-Albani, Sahih al-Jamiʿ 6470 (grading differs)'
+ });
+ if(hour>=19||hour<4)quranRecommendations.push({
+  title:'Surah al-Mulk gelezen · vóór het slapen',
+  text:'Voor het slapen kun je Surah al-Mulk lezen. Een overlevering vermeldt dat de Profeet ﷺ al-Mulk en as-Sajdah reciteerde voordat hij ging slapen; dit is een aanbevolen herinnering, geen verplichting.',
+  source:'al-Mulk vóór het slapen · Jamiʿ at-Tirmidhi 2892'
+ },{
+  title:'Laatste twee verzen van al-Baqarah gelezen · ’s nachts',
+  text:'Lees eventueel de laatste twee verzen van Surah al-Baqarah in de nacht. Een authentieke overlevering zegt dat ze degene die ze reciteert die nacht voldoende zijn.',
+  source:'de laatste twee verzen van al-Baqarah · Sahih al-Bukhari 5009; Sahih Muslim 808'
+ });
+ const recommendationList=document.getElementById('timeRecommendationQuran');
+ recommendationList.replaceChildren();
+ quranRecommendations.forEach(recommendation=>{
+  const item=document.createElement('li'),heading=document.createElement('strong'),description=document.createElement('p');
+  heading.textContent=translateText(recommendation.title);
+  description.textContent=translateText(recommendation.text);
+  item.append(heading,description);recommendationList.append(item);
+ });
+ recommendationList.hidden=quranRecommendations.length===0;
+ document.getElementById('timeRecommendationTitle').textContent=`${translateText(title)}${quranRecommendations.length?` · ${translateText('Qur’an')}`:''}`;
  document.getElementById('timeRecommendationText').textContent=translateText(text);
- document.getElementById('timeRecommendationDhikr').textContent=translateText(sources);
+ document.getElementById('timeRecommendationDhikr').textContent=[localizedSources,...quranRecommendations.map(recommendation=>translateText(recommendation.source))].filter(Boolean).join(' · ');
 }
 const userStorageId=()=>currentSession?.user?.id||'guest';
 const homeWidgetOrderKey=()=>`jannah-home-widget-order-v2-${userStorageId()}`;
@@ -1351,9 +1673,9 @@ function renderDhikrCards(container,items){
   categoryItems.forEach(item=>{
   const card=document.createElement('article');card.className='adhkar-card';
   const heading=document.createElement('strong');heading.textContent=translateText(item.title);
-  const phrase=document.createElement('p');phrase.className='adhkar-phrase';phrase.textContent=item.phrase;
+  const phrase=document.createElement('p');phrase.className='adhkar-phrase';phrase.textContent=translateText(item.phrase);
   const arabic=document.createElement('p');arabic.className='adhkar-arabic';arabic.lang='ar';arabic.dir='rtl';arabic.textContent=item.arabic;
-  const metadataLine=(label,value,className='')=>{const line=document.createElement('p');line.className=className;const labelText=document.createElement('strong');labelText.textContent=translateText(label);line.append(labelText,document.createTextNode(` ${value}`));return line};
+  const metadataLine=(label,value,className='')=>{const line=document.createElement('p');line.className=className;const labelText=document.createElement('strong');labelText.textContent=translateText(label);line.append(labelText,document.createTextNode(` ${translateText(value)}`));return line};
   const meaning=metadataLine('Betekenis:',item.meaning||adhkarMeanings[item.id]||'','adhkar-meaning');
   const time=metadataLine('Moment:',item.time,'adhkar-time');
   const virtue=item.virtue?metadataLine('De genoemde deugd:',item.virtue,'adhkar-reward'):null;
@@ -1368,7 +1690,7 @@ function renderDhikrCards(container,items){
     if(item.countTarget){const bar=document.createElement('div');bar.className='dhikr-progress';bar.setAttribute('role','progressbar');bar.setAttribute('aria-valuemin','0');bar.setAttribute('aria-valuemax',String(item.countTarget));bar.setAttribute('aria-valuenow',String(count));const fill=document.createElement('div');fill.style.width=`${Math.round(count/item.countTarget*100)}%`;bar.append(fill);card.append(bar)}
    }else{
     const complete=document.createElement('button');complete.type='button';complete.className='dhikr-complete';complete.dataset.dhikrId=item.id;
-    complete.setAttribute('aria-pressed',String((counts[item.id]||0)>0));complete.textContent=counts[item.id]?'✓ Afgerond vandaag · tik om ongedaan te maken':translateText('Markeer afgerond');
+    complete.setAttribute('aria-pressed',String((counts[item.id]||0)>0));complete.textContent=counts[item.id]?`✓ ${translateText('Afgerond vandaag · tik om ongedaan te maken')}`:translateText('Markeer afgerond');
     card.append(heading,phrase,arabic,meaning,time);if(virtue)card.append(virtue);card.append(reference,complete);
    }
    grid.append(card);
@@ -1539,9 +1861,15 @@ function renderHomeHeart(goodActions,badActions,notCheckedPrayers){
  document.getElementById('homeShieldPercent').textContent=`${shieldStrength}%`;
  document.getElementById('homeShieldBar').style.width=`${shieldStrength}%`;
  document.getElementById('homeShieldBar').parentElement.setAttribute('aria-valuenow',String(shieldStrength));
- document.getElementById('homeHeartGoodActions').textContent=goodActions.toLocaleString('nl-NL');
- document.getElementById('homeHeartBadActions').textContent=badActions.toLocaleString('nl-NL');
- document.getElementById('homeHeartCaption').textContent=goodActions+badActions+notCheckedPrayers===0?'Nog geen daden geregistreerd. Dit schild is een app-symbool, geen uitspraak over je iman.':`${goodActions.toLocaleString('nl-NL')} goede stappen, ${badActions.toLocaleString('nl-NL')} geregistreerde misstappen en ${notCheckedPrayers.toLocaleString('nl-NL')} niet-afgevinkte gebeden op bijgehouden dagen.`;
+ document.getElementById('homeHeartGoodActions').textContent=goodActions.toLocaleString(currentLanguage);
+ document.getElementById('homeHeartBadActions').textContent=badActions.toLocaleString(currentLanguage);
+ const caption=goodActions+badActions+notCheckedPrayers===0
+  ?translateText('Nog geen daden geregistreerd. Dit schild is een app-symbool, geen uitspraak over je iman.')
+  :translateText(badActions===1?'{good} goede stappen, {bad} geregistreerde misstap en {missed} niet-afgevinkte gebeden op bijgehouden dagen.':'{good} goede stappen, {bad} geregistreerde misstappen en {missed} niet-afgevinkte gebeden op bijgehouden dagen.')
+   .replace('{good}',goodActions.toLocaleString(currentLanguage))
+   .replace('{bad}',badActions.toLocaleString(currentLanguage))
+   .replace('{missed}',notCheckedPrayers.toLocaleString(currentLanguage));
+ document.getElementById('homeHeartCaption').textContent=caption;
 }
  const heartStainNodes=heartStainPositions.map(([x,y,radius],index)=>{
   const stain=document.createElementNS('http://www.w3.org/2000/svg','ellipse');
@@ -1557,21 +1885,23 @@ function renderHomeHeart(goodActions,badActions,notCheckedPrayers){
   const shieldStrength=calculateShieldStrength(goodActions,badActions,notCheckedPrayers);
   const warmth=goodActions===0?0:goodActions<3?1:goodActions<7?2:goodActions<12?3:4;
   visual.dataset.warmth=String(warmth);applyShieldAppearance(visual,shieldStrength);visual.classList.toggle('has-good-deeds',goodActions>0);visual.classList.toggle('tawbah-recorded',reflectionRecorded);
-  const title=reflectionRecorded?'Symbolisch hart na gemarkeerde tawbah-reflectie':visibleStains>0?'Symbolisch hart met geregistreerde vlekjes':'Symbolisch hart voor dagelijkse reflectie';
+  const title=translateText(reflectionRecorded?'Symbolisch hart na gemarkeerde tawbah-reflectie':visibleStains>0?'Symbolisch hart met geregistreerde vlekjes':'Symbolisch hart voor dagelijkse reflectie');
   document.getElementById('heartSvgTitle').textContent=title;
-  document.getElementById('heartSvgDescription').textContent='Decoratieve reflectie op zelf ingevoerde daden; geen meting van je hart, geloof of spirituele toestand.';
-  document.getElementById('heartGoodActions').textContent=goodActions.toLocaleString('nl-NL');
-  document.getElementById('heartStainCount').textContent=badActions.toLocaleString('nl-NL');
-  document.getElementById('heartCaption').textContent=reflectionRecorded?'Je hebt vandaag tawbah en herstel nagestreefd. Blijf hopen en ga stap voor stap verder.':visibleStains>0?'Dit zijn alleen de daden die je vandaag zelf hebt geregistreerd. Er is altijd ruimte om terug te keren.':'Elke dag is een nieuwe kans om zorg te dragen voor je hart.';
-  document.getElementById('heartHeading').textContent=`Hartzorg van ${deedDate.value===localDate?'vandaag':deedDate.value}`;
+  document.getElementById('heartSvgDescription').textContent=translateText('Decoratieve reflectie op zelf ingevoerde daden; geen meting van je hart, geloof of spirituele toestand.');
+  document.getElementById('heartGoodActions').textContent=goodActions.toLocaleString(currentLanguage);
+  document.getElementById('heartStainCount').textContent=badActions.toLocaleString(currentLanguage);
+  document.getElementById('heartCaption').textContent=translateText(reflectionRecorded?'Je hebt vandaag tawbah en herstel nagestreefd. Blijf hopen en ga stap voor stap verder.':visibleStains>0?'Dit zijn alleen de daden die je vandaag zelf hebt geregistreerd. Er is altijd ruimte om terug te keren.':'Elke dag is een nieuwe kans om zorg te dragen voor je hart.');
+  document.getElementById('heartHeading').textContent=deedDate.value===localDate?translateText('Hartzorg van vandaag'):`${translateText('Hartzorg van')} ${deedDate.value}`;
   document.getElementById('dailyShieldPercent').textContent=`${shieldStrength}%`;
   document.getElementById('dailyShieldBar').style.width=`${shieldStrength}%`;
   document.getElementById('dailyShieldBar').parentElement.setAttribute('aria-valuenow',String(shieldStrength));
-  document.getElementById('dailyShieldNotice').textContent=notCheckedPrayers?`${notCheckedPrayers} gebeden zijn niet afgevinkt op deze eerder bijgehouden dag. Dit is geen vaststelling dat een gebed is gemist; vul je registratie aan als die onvolledig is.`:'De schildsterkte volgt alleen jouw ingevoerde daden; niet-afgevinkte gebeden van vandaag tellen niet als gemist.';
+  document.getElementById('dailyShieldNotice').textContent=notCheckedPrayers
+   ?translateText('{count} gebeden zijn niet afgevinkt op deze eerder bijgehouden dag. Dit is geen vaststelling dat een gebed is gemist; vul je registratie aan als die onvolledig is.').replace('{count}',notCheckedPrayers.toLocaleString(currentLanguage))
+   :translateText('De schildsterkte volgt alleen jouw ingevoerde daden; niet-afgevinkte gebeden van vandaag tellen niet als gemist.');
   const tawbahButton=document.getElementById('tawbahButton');
   tawbahButton.disabled=reflectionRecorded;
-  tawbahButton.textContent=reflectionRecorded?'Tawbah-reflectie genoteerd':'Ik heb tawbah gedaan en herstel nagestreefd';
-  tawbahStatus.textContent=reflectionRecorded?'Reflectie lokaal opgeslagen. Dit is geen uitspraak over aanvaarding of vergeving.':'Tawbah omvat oprecht berouw; herstel ook waar nodig de rechten van anderen.';
+  tawbahButton.textContent=translateText(reflectionRecorded?'Tawbah-reflectie genoteerd':'Ik heb tawbah gedaan en herstel nagestreefd');
+  tawbahStatus.textContent=translateText(reflectionRecorded?'Reflectie lokaal opgeslagen. Dit is geen uitspraak over aanvaarding of vergeving.':'Tawbah omvat oprecht berouw; herstel ook waar nodig de rechten van anderen.');
   const stainOpacity=reflectionRecorded?0.18:Math.max(0.35,0.86-warmth*0.13);
   heartStainNodes.forEach((stain,index)=>{
    stain.classList.toggle('visible',index<visibleStains);
