@@ -2,7 +2,7 @@
 <html lang="nl">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <meta name="theme-color" content="#173d32">
 <meta name="description" content="Een persoonlijke dagelijkse checklist voor islamitische aanbidding, karakter en groei.">
 <link rel="manifest" href="manifest.json">
@@ -1207,6 +1207,7 @@ function showPage(id){
  if(id==='seerah')renderSeerahNotes();
  if(id==='quotes')renderDailyQuoteArchive();
  if(isCombinedPage){selectedCombinedSection=null;openDeedCategories.clear();document.getElementById('deedSearch').value='';document.querySelector('#progressSection .progress').open=false;renderCombinedSection()}
+ updateZoomAvailability();
  appMenu.querySelectorAll('[data-page]').forEach(button=>{if(button.dataset.page===id)button.setAttribute('aria-current','page');else button.removeAttribute('aria-current')});
  if(isCombinedPage)render();
  if(id==='home'){renderIslamicCalendar();renderDailyQuote(dailyQuoteIndex,true)}
@@ -1223,6 +1224,13 @@ function renderCombinedSection(){
  document.getElementById('istighfarSection').hidden=!isCombinedPage||selectedCombinedSection!=='istighfar';
  deedCounterView.hidden=!isCombinedPage||selectedCombinedSection!=='deeds';
  document.querySelectorAll('[data-combined-section]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.combinedSection===selectedCombinedSection)));
+ updateZoomAvailability();
+}
+function updateZoomAvailability(){
+ const viewport=document.querySelector('meta[name="viewport"]');
+ if(!viewport)return;
+ const allowZoom=!routineView.hidden&&selectedCombinedSection==='istighfar';
+ viewport.content=`width=device-width, initial-scale=1, ${allowZoom?'maximum-scale=5, user-scalable=yes':'maximum-scale=1, user-scalable=no'}, viewport-fit=cover`;
 }
 document.addEventListener('click',event=>{
  const openAdhkarButton=event.target.closest('[data-open-adhkar]');

@@ -7,7 +7,7 @@ Openen:
 2. Wacht tot GitHub de site heeft gepubliceerd. Open de getoonde HTTPS-link op je telefoon; een PWA werkt niet vanaf `file://`.
 3. Op Android open je de site in Chrome en kies je **Installeren** of **Toevoegen aan startscherm**. Op iPhone/iPad open je de site in Safari, tik je op **Deel** en kies je **Zet op beginscherm**.
 4. De installatie maakt een startscherm-app en kan de app-shell offline openen nadat die eenmaal geladen is. Persoonlijke voortgang wordt niet met andere apparaten gesynchroniseerd.
-- De app gebruikt de schermbreedte van het apparaat en houdt op telefoons rekening met de veilige schermranden. Formuliervelden blijven minimaal 16 px groot zodat iPhone/iPad niet automatisch inzoomt wanneer je een veld selecteert. Handmatig inzoomen blijft beschikbaar.
+- De app gebruikt de schermbreedte van het apparaat en houdt op telefoons rekening met de veilige schermranden. Formuliervelden blijven minimaal 16 px groot zodat iPhone/iPad niet automatisch inzoomt wanneer je een veld selecteert. Handmatig inzoomen is alleen beschikbaar op het Istighfār-onderdeel; op alle andere pagina’s is zoomen uitgeschakeld.
 
 Opslag en persoonlijke back-up:
 - De app vraagt met **Bescherm lokale opslag** aan de browser om lokale gegevens niet automatisch op te ruimen. Ondersteuning verschilt per browser; dit voorkomt niet dat je gegevens verdwijnen wanneer je sitegegevens wist, de app verwijdert of van apparaat wisselt.
