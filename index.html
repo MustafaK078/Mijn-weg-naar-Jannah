@@ -172,10 +172,11 @@ footer{text-align:center;color:var(--muted);font-size:12px;padding:8px 12px 30px
     <div class="combined-picker-options"><button type="button" data-combined-section="deeds">🤲 Daden registreren</button><button type="button" data-combined-section="progress">📋 Voortgangslijst</button><button type="button" data-combined-section="adhkar">📿 Adhkār & tasbīḥ</button><button type="button" data-combined-section="istighfar">🤍 Istighfār</button></div>
   </section>
   <div class="datebar" hidden><strong>Mijn dag</strong><input id="date" type="date" aria-label="Kies een datum"></div>
-  <section id="progressSection" hidden><button class="combined-back" type="button" data-combined-back>← Terug naar onderdelen</button><details class="progress"><summary class="progress-summary"><span><strong>Dagelijkse voortgang</strong><span class="note" id="progressText">Begin met je checklist.</span></span><span class="number" id="progressNum">0%</span></summary><div class="progress-body"><div class="bar"><div id="progressBar"></div></div><p class="note">Elk afgevinkt routine-item telt ook mee als één positieve routine-invoer (×10) bij de deed counter van deze dag. Niet-afgevinkte items leveren geen minpunten op. Alleen voor persoonlijke reflectie; geen maatstaf voor je waarde of garantie op Jannah.<button class="info-toggle" type="button" data-info="routineInfo" aria-expanded="false" aria-controls="routineInfo" aria-label="Uitleg over checklistpunten">i</button></p><p class="info-panel" id="routineInfo" hidden>Elk aangevinkt item is één registratie en levert in de app 10 punten op. Een item niet aanvinken geeft geen negatieve punten. Deze telling is een hulpmiddel en meet geen intentie of goddelijke beloning.</p></div></details><div id="sections"></div><div class="quran-page-counter" id="quranPageCounter"><button class="dhikr-undo" id="quranPageUndo" type="button" aria-label="Een gelezen Qur’an-bladzijde terugzetten">−</button><span class="dhikr-count" id="quranPageCount" aria-live="polite">0</span><button class="dhikr-tap" id="quranPageAdd" type="button" aria-label="Eén gelezen Qur’an-bladzijde toevoegen">+1</button></div></section>
+  <section id="progressSection" hidden><button class="combined-back" type="button" data-combined-back>← Terug naar onderdelen</button><div class="datebar"><strong>Mijn dag</strong><input class="date-sync" type="date" aria-label="Kies een datum"></div><details class="progress"><summary class="progress-summary"><span><strong>Dagelijkse voortgang</strong><span class="note" id="progressText">Begin met je checklist.</span></span><span class="number" id="progressNum">0%</span></summary><div class="progress-body"><div class="bar"><div id="progressBar"></div></div><p class="note">Elk afgevinkt routine-item telt ook mee als één positieve routine-invoer (×10) bij de deed counter van deze dag. Niet-afgevinkte items leveren geen minpunten op. Alleen voor persoonlijke reflectie; geen maatstaf voor je waarde of garantie op Jannah.<button class="info-toggle" type="button" data-info="routineInfo" aria-expanded="false" aria-controls="routineInfo" aria-label="Uitleg over checklistpunten">i</button></p><p class="info-panel" id="routineInfo" hidden>Elk aangevinkt item is één registratie en levert in de app 10 punten op. Een item niet aanvinken geeft geen negatieve punten. Deze telling is een hulpmiddel en meet geen intentie of goddelijke beloning.</p></div></details><div id="sections"></div><div class="quran-page-counter" id="quranPageCounter"><button class="dhikr-undo" id="quranPageUndo" type="button" aria-label="Een gelezen Qur’an-bladzijde terugzetten">−</button><span class="dhikr-count" id="quranPageCount" aria-live="polite">0</span><button class="dhikr-tap" id="quranPageAdd" type="button" aria-label="Eén gelezen Qur’an-bladzijde toevoegen">+1</button></div></section>
   <section class="adhkar-panel" id="adhkarSection" hidden>
     <button class="combined-back" type="button" data-combined-back>← Terug naar onderdelen</button>
     <h3>Dagelijkse adhkār & dhikr <button class="info-toggle" type="button" data-info="dhikrInfo" aria-expanded="false" aria-controls="dhikrInfo" aria-label="Uitleg over adhkār">i</button></h3>
+    <div class="datebar"><strong>Mijn dag</strong><input class="date-sync" type="date" aria-label="Kies een datum"></div>
     <p class="note">Een rustige, haalbare selectie uit Qur’an en Sunnah. Gebruik de telknop voor elke herhaling; bij een vaste telling telt de kaart na voltooiing eenmaal mee als app-registratie. Een open teller volgt je herhalingen zonder religieus vast doel.</p>
     <p class="info-panel" id="dhikrInfo" hidden>De kaarten tonen Arabische tekst, transliteratie, betekenis, aanbevolen moment, korte uitleg en bron. Vaste tellingen tellen pas na voltooiing eenmaal mee voor de app-score. Een open teller houdt het aantal bij, maar levert maximaal één app-registratie per item per dag op, niet per herhaling.</p>
     <div class="time-grid">
@@ -191,6 +192,7 @@ footer{text-align:center;color:var(--muted);font-size:12px;padding:8px 12px 30px
   <section class="adhkar-panel" id="istighfarSection" hidden>
     <button class="combined-back" type="button" data-combined-back>← Terug naar onderdelen</button>
     <h3>Istighfār & smeekbeden om vergeving</h3>
+    <div class="datebar"><strong>Mijn dag</strong><input class="date-sync" type="date" aria-label="Kies een datum"></div>
     <p class="note">Deze selectie bevat de Qur’an-verzen en smeekbeden hieronder, met de aangeleverde transliteraties, betekenissen en bronverwijzingen. Voor smeekbeden met een onvolledige verwijzing kun je de oorspronkelijke bron openen via <strong>Bronnen</strong>.</p>
     <div class="adhkar-grid" id="istighfarCards"></div>
     <section class="adhkar-panel imam-source-panel">
@@ -234,6 +236,7 @@ footer{text-align:center;color:var(--muted);font-size:12px;padding:8px 12px 30px
     <span class="heart-help">Animaties zijn symbolisch: goede invoer laat het lichtschild gloeien en groeien; geregistreerde misstappen of eerdere, niet-afgevinkte gebeden verzwakken het. Het schild verdwijnt bij 0% van de app-voortgang; dit zegt niets over je werkelijke iman of Allah’s oordeel.</span>
     <button class="tawbah-button" id="tawbahButton" type="button">Ik heb tawbah gedaan en herstel nagestreefd</button>
     <p class="heart-caption" id="tawbahStatus" aria-live="polite">Tawbah omvat oprecht berouw; herstel ook waar nodig de rechten van anderen.</p>
+    <p class="heart-help">Vlekken op het hart op het beginscherm verdwijnen volledig na een dag met minstens 10 goede registraties (checklist, adhkār of daden) en zonder geregistreerde misstap. Een nieuwe misstap na die dag brengt een vlek terug.</p>
   </section>
   <div class="shield-summary"><strong>Schild van Imaan · dagreflectie</strong><span id="dailyShieldPercent">0%</span></div><div class="shield-meter" role="progressbar" aria-label="Symbolische shield-voortgang van deze dag" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div id="dailyShieldBar"></div></div>
   <p class="note" id="dailyShieldNotice">De dagreflectie is alleen gebaseerd op ingevulde registraties: een app-misstap telt dubbel en niet-afgevinkte gebeden van een eerdere bijgehouden dag driemaal. Dit zijn geen religieuze gewichten of vaststelling van je geloofstoestand.</p>
@@ -913,6 +916,14 @@ Object.assign(translations.tr,{
  "Wudu gedaan vóór het slapen":"Uyumadan önce abdest aldım",
  "Verricht wudu voordat je gaat slapen. Een overlevering vermeldt dat een engel bij degene blijft die in reinheid slaapt en telkens wanneer die zich ’s nachts omdraait, om vergeving voor hem vraagt. (Sahih al-Bukhari 247; Sahih Ibn Hibban 1051; al-Albani, Sahih at-Targhib 597)":"Uyumadan önce abdest al. Bir rivayete göre melek, abdestli uyuyan kişinin yanında kalır ve gece boyunca her döndüğünde onun için Allah’tan bağışlanma diler. (Sahih al-Bukhari 247; Sahih Ibn Hibban 1051; al-Albani, Sahih at-Targhib 597)"
 });
+Object.assign(translations.en,{
+ "De vlekken zijn weggewassen door een dag met voldoende goede daden en zonder misstappen.":"The stains have been washed away by a day with enough good deeds and no recorded missteps.",
+ "Vlekken op het hart op het beginscherm verdwijnen volledig na een dag met minstens 10 goede registraties (checklist, adhkār of daden) en zonder geregistreerde misstap. Een nieuwe misstap na die dag brengt een vlek terug.":"Stains on the home-screen heart disappear completely after a day with at least 10 good entries (checklist, adhkār or deeds) and no recorded misstep. A new misstep after that day brings a stain back."
+});
+Object.assign(translations.tr,{
+ "De vlekken zijn weggewassen door een dag met voldoende goede daden en zonder misstappen.":"Yeterli iyi amel ve hiç hata kaydı olmayan bir gün lekeleri tamamen sildi.",
+ "Vlekken op het hart op het beginscherm verdwijnen volledig na een dag met minstens 10 goede registraties (checklist, adhkār of daden) en zonder geregistreerde misstap. Een nieuwe misstap na die dag brengt een vlek terug.":"Ana ekrandaki kalp lekeleri, en az 10 iyi kayıt (liste, ezkâr veya amel) olan ve hata kaydı bulunmayan bir günden sonra tamamen kaybolur. O günden sonraki yeni bir hata bir leke geri getirir."
+});
 const reverseTranslations={en:new Map(),tr:new Map()};
 for(const language of ['en','tr']){
  Object.entries(translations[language]).forEach(([source,translated])=>{
@@ -1314,7 +1325,7 @@ document.addEventListener('click',event=>{
 menuToggle.addEventListener('click',()=>{const isOpen=menuToggle.getAttribute('aria-expanded')==='true';menuToggle.setAttribute('aria-expanded',String(!isOpen));appMenu.hidden=isOpen});
 function getLocalDate(){const now=new Date();return new Date(now.getTime()-now.getTimezoneOffset()*60000).toISOString().slice(0,10)}
 let localDate=getLocalDate();dateEl.value=localDate;
-deedDate.value=localDate;
+deedDate.value=localDate;document.querySelectorAll('.date-sync').forEach(input=>{input.value=localDate});
 const calendarLocales={nl:'nl-NL',en:'en-GB',tr:'tr-TR'};
 function localDateAtOffset(offset){
  const date=new Date();date.setHours(12,0,0,0);date.setDate(date.getDate()+offset);
@@ -1963,9 +1974,11 @@ document.addEventListener('click',event=>{
  const button=event.target.closest('.deed-add,.deed-remove');
  if(button)changeDeedCount(button.dataset.kind,button.dataset.deedId,button.classList.contains('deed-add')?1:-1);
 });
+function syncDateInputs(value){document.querySelectorAll('.date-sync').forEach(input=>{input.value=value})}
 function syncSelectedDate(source){
  const selectedDate=source.value;
  dateEl.value=selectedDate;deedDate.value=selectedDate;
+ syncDateInputs(selectedDate);
  render();renderDeedCounter();
 }
 function adjustQuranPageCount(delta){
@@ -1980,6 +1993,7 @@ document.getElementById('quranPageAdd').addEventListener('click',()=>adjustQuran
 document.getElementById('quranPageUndo').addEventListener('click',()=>adjustQuranPageCount(-1));
 dateEl.addEventListener('change',()=>syncSelectedDate(dateEl));
 deedDate.addEventListener('change',()=>syncSelectedDate(deedDate));
+document.querySelectorAll('.date-sync').forEach(input=>input.addEventListener('change',()=>{if(input.value)syncSelectedDate(input)}));
 document.getElementById('deedSearch').addEventListener('input',()=>{renderDeedCards('good');renderDeedCards('bad')});
 function getPrayerCompletionSummary(checklistData){
  const prayerCount=groups[1].items.slice(0,5).reduce((count,_,index)=>count+(checklistData[`1-${index}`]===true?1:0),0);
@@ -2000,6 +2014,7 @@ function applyShieldAppearance(visual,strength){
  visual.style.setProperty('--shield-scale',String(0.68+(strength/100)*0.4));
  visual.dataset.shield=strength>=75?'1':strength>=45?'2':strength>0?'3':'0';
 }
+const CLEAN_DAY_MIN_GOOD=10;
 const heartStainPositions=[[68,67,8],[105,58,7],[133,83,8],[78,105,7],[111,116,9],[143,113,6],[96,85,5]];
 function renderAllTimeDeedTotals(){
  try{
@@ -2055,7 +2070,10 @@ function renderAllTimeDeedTotals(){
    try{localStorage.setItem(`jannah-best-daily-score-v2-${userStorageId()}`,JSON.stringify(bestDailyRankPoints))}
    catch(error){deedStatus.textContent='De persoonlijke topscore kon niet worden opgeslagen. Controleer de opslagruimte en maak een back-up.'}
   }
-  renderHomeHeart(totals.goodEvents,totals.badEvents,totals.notCheckedPrayers);
+  const cleanDates=[...goodEventsByDate.keys()].filter(date=>goodEventsByDate.get(date)>=CLEAN_DAY_MIN_GOOD&&!badEventsByDate.get(date)).sort();
+  const lastCleanDate=cleanDates.length?cleanDates[cleanDates.length-1]:'';
+  const openStainActions=[...badEventsByDate.entries()].reduce((sum,[date,count])=>date>lastCleanDate?sum+count:sum,0);
+  renderHomeHeart(totals.goodEvents,totals.badEvents,totals.notCheckedPrayers,openStainActions);
  }catch(error){
   deedStatus.textContent='Het totaal van alle dagen kon niet worden berekend.';
  }
@@ -2066,9 +2084,9 @@ const homeHeartStainNodes=heartStainPositions.map(([x,y,radius],index)=>{
  document.getElementById('homeHeartStains').append(stain);
  return stain;
 });
-function renderHomeHeart(goodActions,badActions,notCheckedPrayers){
+function renderHomeHeart(goodActions,badActions,notCheckedPrayers,openStainActions=badActions){
  const visual=document.getElementById('homeHeartVisual');
- const visibleStains=Math.min(heartStainPositions.length,badActions);
+ const visibleStains=Math.min(heartStainPositions.length,openStainActions);
  const warmth=goodActions===0?0:goodActions<3?1:goodActions<7?2:goodActions<12?3:4;
  const shieldStrength=calculateShieldStrength(goodActions,badActions,notCheckedPrayers);
  visual.dataset.warmth=String(warmth);
@@ -2091,7 +2109,8 @@ function renderHomeHeart(goodActions,badActions,notCheckedPrayers){
    .replace('{good}',goodActions.toLocaleString(currentLanguage))
    .replace('{bad}',badActions.toLocaleString(currentLanguage))
    .replace('{missed}',notCheckedPrayers.toLocaleString(currentLanguage));
- document.getElementById('homeHeartCaption').textContent=caption;
+ const purified=badActions>0&&openStainActions===0?` ${translateText('De vlekken zijn weggewassen door een dag met voldoende goede daden en zonder misstappen.')}`:'';
+ document.getElementById('homeHeartCaption').textContent=caption+purified;
 }
  const heartStainNodes=heartStainPositions.map(([x,y,radius],index)=>{
   const stain=document.createElementNS('http://www.w3.org/2000/svg','ellipse');
@@ -2415,7 +2434,7 @@ setInterval(()=>{
  if(currentDate===localDate)return;
  const wasOnToday=dateEl.value===localDate&&deedDate.value===localDate;
  localDate=currentDate;
- if(wasOnToday){dateEl.value=localDate;deedDate.value=localDate;render();renderDeedCounter()}
+ if(wasOnToday){dateEl.value=localDate;deedDate.value=localDate;syncDateInputs(localDate);render();renderDeedCounter()}
  else{renderAllTimeDeedTotals();renderGrowthLevels()}
  if(!homeView.hidden)renderIslamicCalendar();
 },60000);
