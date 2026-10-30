@@ -50,6 +50,44 @@ footer{text-align:center;color:var(--muted);font-size:12px;padding:8px 12px 30px
 .source-pdf{display:block;width:100%;height:min(75vh,900px);min-height:520px;border:1px solid var(--line);border-radius:12px;background:white}.adhkar-source-summary{padding:12px;color:var(--green);font-weight:750;cursor:pointer}
 .home-details{margin:10px 0;border:1px solid var(--line);border-radius:14px;background:var(--paper);overflow:hidden}.home-details>summary,.home-explanation>summary{padding:13px 15px;color:var(--green);font-size:14px;font-weight:700;cursor:pointer;list-style:none}.home-details>summary::-webkit-details-marker,.home-explanation>summary::-webkit-details-marker{display:none}.home-details>summary:after,.home-explanation>summary:after{content:"＋";float:right}.home-details[open]>summary:after,.home-explanation[open]>summary:after{content:"−"}.home-details>.calendar-card,.home-details>.device-tools,.home-details>.level-panel,.home-details>.home-deed-totals{margin:0;border:0;border-top:1px solid var(--line);border-radius:0}.home-details>.calendar-card{padding:14px}.home-details>.device-tools,.home-details>.home-deed-totals{padding:14px}.home-details>.level-panel{padding:14px}.home-explanation{margin-top:10px;border-top:1px solid var(--line);text-align:left}.home-explanation>summary{padding:11px 0 0;font-size:12px}.home-explanation .shield-notice{margin-top:8px}
 </style>
+<style>
+.combined-picker-options{grid-template-columns:repeat(2,minmax(0,1fr))}
+.heart-mode-toggle{display:flex;gap:6px;margin:6px 0 8px}.heart-mode-toggle button{flex:1;min-height:36px;border:1px solid var(--green);border-radius:99px;background:white;color:var(--green);font:inherit;font-size:12px;font-weight:700;cursor:pointer}.heart-mode-toggle button[aria-pressed="true"]{background:var(--green);color:white}
+.dhikr-edit-bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:8px 0}.dhikr-edit-bar:empty{display:none}.dhikr-edit-hint{flex-basis:100%;margin:0;color:var(--muted);font-size:11px}
+.dhikr-edit-button{min-height:40px;padding:8px 12px;border:1px solid var(--green);border-radius:10px;background:white;color:var(--green);font:inherit;font-size:12px;font-weight:700;cursor:pointer}.dhikr-edit-button.danger{border-color:#8b3c34;color:#8b3c34}
+.dhikr-edit-tools{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:8px 0}.dhikr-drag-handle{min-width:44px;min-height:44px;border:1px solid var(--line);border-radius:10px;background:var(--cream);color:var(--green);font-size:20px;touch-action:none;cursor:grab}
+.adhkar-card.is-dragging,.imam-prayer.is-dragging{opacity:.5;outline:2px dashed var(--gold)}
+.is-tappable{cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manipulation;transition:border-color .2s,box-shadow .2s}.is-tappable:hover,.is-tappable:focus-visible{border-color:var(--green);box-shadow:0 3px 12px rgba(44,77,59,.12);outline:none}
+.adhkar-card.is-done,.imam-prayer.is-done{border-color:var(--green2);background:linear-gradient(145deg,#fff,#eef4ee)}
+.dhikr-status-row{margin:8px 0 0;color:var(--green);font-size:13px;font-weight:800}.dhikr-open-hint{margin:6px 0 0;color:var(--muted);font-size:11px}
+.dhikr-focus{position:fixed;inset:0;z-index:200;display:flex;justify-content:center;overflow-y:auto;overscroll-behavior:contain;background:linear-gradient(170deg,#f7f3e8,#e6efe6);opacity:0;transform:translateY(14px) scale(.985);transition:opacity .35s ease,transform .35s ease;touch-action:manipulation;-webkit-user-select:none;user-select:none}.dhikr-focus[hidden]{display:none}.dhikr-focus.open{opacity:1;transform:none}
+html.focus-open{overflow:hidden}
+.dhikr-focus-inner{position:relative;width:100%;max-width:520px;padding:64px 20px 40px;box-sizing:border-box}
+.dhikr-focus-close{position:fixed;top:14px;right:14px;min-width:44px;min-height:44px;border:1px solid var(--line);border-radius:50%;background:white;color:var(--green);font-size:18px;cursor:pointer}
+.dhikr-focus-body{display:flex;flex-direction:column;align-items:center;text-align:center;gap:12px}
+.dhikr-focus-category{margin:0;color:var(--muted);font-size:12px;letter-spacing:.06em;text-transform:uppercase}.dhikr-focus-title{margin:0;color:var(--green);font-family:Georgia,serif;font-size:22px}
+.dhikr-focus-arabic{margin:4px 0;color:var(--green);font-size:30px;line-height:2;direction:rtl}.dhikr-focus-phrase{margin:0;color:var(--ink);font-style:italic;font-size:15px;line-height:1.6;-webkit-user-select:text;user-select:text}.dhikr-focus-meaning{margin:0;color:var(--muted);font-size:13px}
+.dhikr-focus-tap{display:flex;flex-direction:column;align-items:center;justify-content:center;width:min(58vw,210px);aspect-ratio:1;margin:12px 0 4px;border:0;border-radius:50%;background:radial-gradient(circle at 35% 30%,var(--green2),var(--green));color:white;box-shadow:0 10px 28px rgba(44,77,59,.3);font:inherit;cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent;transition:transform .12s ease}.dhikr-focus-tap:active{transform:scale(.95)}
+.dhikr-focus-number{font-size:42px;font-weight:800;font-variant-numeric:tabular-nums}.dhikr-focus-tap-label{font-size:13px;opacity:.85}
+.dhikr-focus-progress{width:100%;max-width:340px;height:8px;border-radius:99px;background:#d9e2d9;overflow:hidden}.dhikr-focus-progress div{height:100%;width:0;border-radius:99px;background:linear-gradient(90deg,var(--green2),var(--gold));transition:width .25s ease}
+.dhikr-focus-count{margin:0;color:var(--green);font-size:15px;font-weight:800}.dhikr-focus-imam{max-width:100%}
+.dhikr-focus-undo{min-height:44px}
+.dhikr-editor{position:fixed;inset:0;z-index:210;display:flex;align-items:flex-start;justify-content:center;overflow-y:auto;padding:16px;background:rgba(23,40,31,.5)}.dhikr-editor[hidden]{display:none}
+.dhikr-editor-card{width:100%;max-width:520px;box-sizing:border-box;padding:18px;border-radius:16px;background:var(--paper);display:grid;gap:10px}.dhikr-editor-card h3{margin:0;color:var(--green)}.dhikr-editor-card label{display:grid;gap:4px;color:var(--muted);font-size:12px;font-weight:700}.dhikr-editor-card input,.dhikr-editor-card textarea,.dhikr-editor-card select{width:100%;box-sizing:border-box;padding:9px;border:1px solid var(--line);border-radius:9px;background:white;color:var(--ink);font:inherit;font-size:16px}
+.dhikr-editor-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.dhikr-editor-actions{display:flex;flex-wrap:wrap;gap:8px}
+.weekly-body,.todo-widget{padding:14px;border-top:1px solid var(--line)}.todo-widget{border:1px solid var(--line);border-radius:14px;background:var(--paper);padding-top:56px}.todo-widget h3{margin:0 0 4px;color:var(--green)}
+.home-widget[data-home-widget="weekly"]>summary{min-height:56px;padding-right:60px;box-sizing:border-box}
+.weekly-stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.weekly-stat{padding:10px;border-radius:11px;background:#f4f1e8}.weekly-stat small{display:block;color:var(--muted);font-size:11px}.weekly-stat strong{color:var(--green);font-size:18px}
+.weekly-chart{display:flex;gap:6px;align-items:flex-end;height:110px;margin:14px 0 6px}.weekly-day{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;height:100%}.weekly-bar{flex:1;width:100%;display:flex;align-items:flex-end;border-radius:6px;background:#e7e9e1;overflow:hidden}.weekly-bar-fill{width:100%;background:var(--green2);border-radius:6px 6px 0 0;min-height:2px}.weekly-day.is-today .weekly-bar-fill{background:var(--gold)}.weekly-score,.weekly-label{font-size:10px;color:var(--muted)}
+.weekly-section h4{margin:12px 0 4px;color:var(--green);font-size:13px}.weekly-section ul{margin:0;padding-left:18px;font-size:13px}.weekly-tips{padding:10px;border-left:3px solid var(--gold);border-radius:0 10px 10px 0;background:#f2ecdd}
+.todo-form{display:grid;grid-template-columns:1fr;gap:8px;margin:10px 0}@media(min-width:520px){.todo-form{grid-template-columns:2fr 1fr auto}}.todo-form input{padding:9px;border:1px solid var(--line);border-radius:9px;font:inherit;font-size:16px}
+.todo-group h4{margin:12px 0 4px;color:var(--green);font-size:13px}.todo-group ul,.good-deed-note-list{margin:0;padding:0;list-style:none}.todo-group li,.good-deed-note-list li{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:6px 0;border-bottom:1px solid var(--line);font-size:13px}.todo-group li label{display:flex;gap:8px;align-items:center;flex:1}.todo-group li.is-done span{text-decoration:line-through;opacity:.6}.todo-clear{margin-top:10px}
+.note-remove{min-width:36px;min-height:36px;border:1px solid var(--line);border-radius:9px;background:white;color:#8b3c34;font-size:18px;cursor:pointer}
+.good-deed-notes{margin:2px 0 10px 8px;padding:10px;border-left:3px solid var(--gold);border-radius:0 10px 10px 0;background:#f7f3e8;display:grid;gap:6px}.good-deed-notes small{color:var(--muted);font-size:11px}.good-deed-note-form{display:flex;gap:8px}.good-deed-note-form input{flex:1;min-width:0;padding:9px;border:1px solid var(--line);border-radius:9px;font:inherit;font-size:16px}
+.routine-links{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}.routine-link{min-height:34px;padding:5px 10px;border:1px solid var(--green);border-radius:99px;background:white;color:var(--green);font:inherit;font-size:12px;font-weight:700;cursor:pointer}
+.link-highlight{animation:link-flash 2.2s ease}@keyframes link-flash{0%,60%{box-shadow:0 0 0 3px var(--gold)}100%{box-shadow:0 0 0 0 transparent}}
+@media(prefers-reduced-motion:reduce){.dhikr-focus,.dhikr-focus-tap,.dhikr-focus-progress div{transition:none}.link-highlight{animation:none}}
+</style>
 </head>
 <body>
 <header><div class="wrap"><div class="headerbar"><div><a class="brand-home" id="homeLogo" href="./index.html" aria-label="Terug naar de hoofdpagina"><div class="eyebrow">Dagelijkse aanbidding en reflectie</div><h1>Mijn Weg naar Jannah</h1><p>Een kleine stap, elke dag. Streef naar Allah's tevredenheid met oprechtheid, aanbidding en goed gedrag.</p></a></div><div class="header-controls"><label class="language-control"><span id="languageLabel">Taal</span><select id="languageSelector" aria-labelledby="languageLabel"><option value="nl">Nederlands</option><option value="en">English</option><option value="tr">Türkçe</option></select></label><button class="menu-toggle" id="menuToggle" type="button" aria-expanded="false" aria-controls="appMenu" hidden>☰ Menu</button><div class="auth-actions" id="authActions" hidden><span class="auth-user" id="authUser"></span><button class="signout-button" id="signOutButton" type="button">Uitloggen</button></div></div></div><nav class="app-menu" id="appMenu" aria-label="Hoofdnavigatie" hidden></nav></div></header>
@@ -75,7 +113,8 @@ footer{text-align:center;color:var(--muted);font-size:12px;padding:8px 12px 30px
 <main class="wrap" id="homeView" hidden>
  <div class="home-widgets" id="homeWidgets">
   <section class="home-widget widget-wide" data-home-widget="heart"><section class="heart-panel" aria-label="Cumulatieve hartreflectie">
-    <h3>Hart en Schild van Imaan · alle dagen</h3>
+    <h3 id="homeHeartHeading">Hart en Schild van Imaan · vandaag</h3>
+    <div class="heart-mode-toggle" role="group" aria-label="Weergave van het hart"><button type="button" data-heart-mode="today" aria-pressed="true">Vandaag</button><button type="button" data-heart-mode="all" aria-pressed="false">Alle dagen</button></div>
     <div class="heart-visual home-heart-visual" id="homeHeartVisual" data-warmth="0">
       <svg class="heart-svg" viewBox="0 0 200 190" role="img" aria-labelledby="homeHeartSvgTitle homeHeartSvgDescription">
         <title id="homeHeartSvgTitle">Symbolisch hart met een schild van licht</title>
@@ -114,6 +153,14 @@ footer{text-align:center;color:var(--muted);font-size:12px;padding:8px 12px 30px
     <div class="daily-quote-controls"><button type="button" id="dailyQuotePause" aria-pressed="false">Pauzeren</button><span class="daily-quote-counter" id="dailyQuoteCounter"></span><button type="button" id="dailyQuoteNext">Volgende →</button></div>
    </section>
   </section>
+  <details class="home-details home-widget widget-wide" data-home-widget="weekly" id="weeklySummary"><summary>Samenvatting van de afgelopen 7 dagen</summary><div class="weekly-body" id="weeklySummaryBody"></div></details>
+  <section class="home-widget widget-wide" data-home-widget="todo"><div class="todo-widget">
+    <h3>To-do lijst</h3>
+    <p class="note">Noteer wat nog gedaan moet worden, bijvoorbeeld je Qur’an-bladzijde, gebeden om in te halen of leerdoelen.</p>
+    <form class="todo-form" id="todoForm" autocomplete="off"><input name="text" maxlength="200" placeholder="Wat moet er nog gebeuren?" aria-label="Nieuwe taak" required><input name="category" list="todoCategoryList" maxlength="40" placeholder="Categorie" aria-label="Categorie"><datalist id="todoCategoryList"></datalist><button class="btn primary" type="submit">Voeg toe</button></form>
+    <div class="todo-list" id="todoList"></div>
+    <button class="btn secondary todo-clear" id="todoClearDone" type="button" hidden>Afgevinkte taken verwijderen</button>
+  </div></section>
   <section class="home-widget widget-wide" data-home-widget="intro"><section class="home-intro"><h2>Schild van Imaan & daden</h2><p>Qur’an, sunnah, gebed, dhikr en goed karakter — stap voor stap.</p><button class="btn primary" type="button" data-page="routine">Open dagelijkse routine</button></section></section>
   <section class="home-widget" data-home-widget="recommendation"><section class="calendar-card time-recommendation" aria-live="polite" aria-atomic="true">
     <h2>Aanbeveling voor dit moment</h2>
@@ -169,7 +216,7 @@ footer{text-align:center;color:var(--muted);font-size:12px;padding:8px 12px 30px
   <p class="info-panel" id="combinedInfo" hidden>Op deze ene pagina kun je je checklist en adhkār bijhouden, goede daden toevoegen, misstappen registreren en je hartreflectie bekijken. Alles blijft lokaal op dit apparaat. Afvink- en dhikr-invoer telt automatisch mee; registreer dezelfde daad niet nogmaals.</p>
   <section class="combined-picker" id="combinedPicker">
     <h3>Waar wil je mee beginnen?</h3><p>Kies een onderdeel; bij terugkeer naar deze pagina start je weer bij deze keuze.</p>
-    <div class="combined-picker-options"><button type="button" data-combined-section="deeds">🤲 Daden registreren</button><button type="button" data-combined-section="progress">📋 Voortgangslijst</button><button type="button" data-combined-section="adhkar">📿 Adhkār & tasbīḥ</button><button type="button" data-combined-section="istighfar">🤍 Istighfār</button></div>
+    <div class="combined-picker-options"><button type="button" data-combined-section="progress">📋 Voortgangslijst</button><button type="button" data-combined-section="deeds">🤲 Daden registreren</button><button type="button" data-combined-section="adhkar">📿 Adhkār & tasbīḥ</button><button type="button" data-combined-section="istighfar">🤍 Istighfār</button></div>
   </section>
   <div class="datebar" hidden><strong>Mijn dag</strong><input id="date" type="date" aria-label="Kies een datum"></div>
   <section id="progressSection" hidden><button class="combined-back" type="button" data-combined-back>← Terug naar onderdelen</button><div class="datebar"><strong>Mijn dag</strong><input class="date-sync" type="date" aria-label="Kies een datum"></div><details class="progress"><summary class="progress-summary"><span><strong>Dagelijkse voortgang</strong><span class="note" id="progressText">Begin met je checklist.</span></span><span class="number" id="progressNum">0%</span></summary><div class="progress-body"><div class="bar"><div id="progressBar"></div></div><p class="note">Elk afgevinkt routine-item telt ook mee als één positieve routine-invoer (×10) bij de deed counter van deze dag. Niet-afgevinkte items leveren geen minpunten op. Alleen voor persoonlijke reflectie; geen maatstaf voor je waarde of garantie op Jannah.<button class="info-toggle" type="button" data-info="routineInfo" aria-expanded="false" aria-controls="routineInfo" aria-label="Uitleg over checklistpunten">i</button></p><p class="info-panel" id="routineInfo" hidden>Elk aangevinkt item is één registratie en levert in de app 10 punten op. Een item niet aanvinken geeft geen negatieve punten. Deze telling is een hulpmiddel en meet geen intentie of goddelijke beloning.</p></div></details><div id="sections"></div><div class="quran-page-counter" id="quranPageCounter"><button class="dhikr-undo" id="quranPageUndo" type="button" aria-label="Een gelezen Qur’an-bladzijde terugzetten">−</button><span class="dhikr-count" id="quranPageCount" aria-live="polite">0</span><button class="dhikr-tap" id="quranPageAdd" type="button" aria-label="Eén gelezen Qur’an-bladzijde toevoegen">+1</button></div></section>
@@ -177,7 +224,7 @@ footer{text-align:center;color:var(--muted);font-size:12px;padding:8px 12px 30px
     <button class="combined-back" type="button" data-combined-back>← Terug naar onderdelen</button>
     <h3>Dagelijkse adhkār & dhikr <button class="info-toggle" type="button" data-info="dhikrInfo" aria-expanded="false" aria-controls="dhikrInfo" aria-label="Uitleg over adhkār">i</button></h3>
     <div class="datebar"><strong>Mijn dag</strong><input class="date-sync" type="date" aria-label="Kies een datum"></div>
-    <p class="note">Een rustige, haalbare selectie uit Qur’an en Sunnah. Gebruik de telknop voor elke herhaling; bij een vaste telling telt de kaart na voltooiing eenmaal mee als app-registratie. Een open teller volgt je herhalingen zonder religieus vast doel.</p>
+    <p class="note">Tik op een kaart om die schermvullend te openen, met een grote telknop, voortgangsbalk, de Arabische tekst en de uitspraak. Elke tik op ochtend-, avond- en overdag-dhikr is één goede daad (×10); bij ‘Na het gebed’ gelden 33 of 100 tikken per goede daad. Na het doel kun je gewoon doorgaan met tellen. Met Bewerken voeg je onderdelen toe, verwijder je ze, sleep je ze naar een andere plek of pas je bronnen en aantallen aan.</p>
     <p class="info-panel" id="dhikrInfo" hidden>De kaarten tonen Arabische tekst, transliteratie, betekenis, aanbevolen moment, korte uitleg en bron. Vaste tellingen tellen pas na voltooiing eenmaal mee voor de app-score. Een open teller houdt het aantal bij, maar levert maximaal één app-registratie per item per dag op, niet per herhaling.</p>
     <div class="time-grid">
       <article class="time-card"><strong>Voor Fajr / laatste deel van de nacht</strong><p>Qiyām en rustig istighfār als je kunt. Allah noemt degenen die vóór zonsopgang om vergeving vragen. Qur’an 3:17; 51:18.</p></article>
@@ -186,6 +233,7 @@ footer{text-align:center;color:var(--muted);font-size:12px;padding:8px 12px 30px
       <article class="time-card"><strong>Tussen Maghrib en ‘Ishā’</strong><p>Een praktisch tweede moment voor de avondadhkār, Qur’an of rustige reflectie. Dit schema is een hulpmiddel; er wordt geen afzonderlijke vaste beloning voor dit tijdvak geclaimd.</p></article>
       <article class="time-card"><strong>Bedtijdadhkar</strong><p>Voor het slapengaan: 3× Surah al-Ikhlās, 4× Surah al-Fātiḥah, 10× tahlīl, 10× ḥawqalah en 10× istighfār. Gebruik de tellers hieronder om de onderdelen bij te houden. Deze specifieke combinatie en aantallen zijn aangeleverd als persoonlijke routine; de bronvermelding is niet onafhankelijk geverifieerd.</p></article>
     </div>
+    <div class="dhikr-edit-bar" id="adhkarEditBar"></div>
     <div class="adhkar-grid" id="dailyDhikr"></div>
     <p class="shield-notice">De Qur’an en authentieke Sunnah moedigen dhikr in de ochtend, avond en gedurende de dag aan. De tijdvakken hierboven zijn deels een persoonlijke routine-indeling; niet elk tijdvak of de specifieke bedtijdcombinatie heeft een eigen geverifieerde bronvermelding.</p>
   </section>
@@ -194,6 +242,7 @@ footer{text-align:center;color:var(--muted);font-size:12px;padding:8px 12px 30px
     <h3>Istighfār & smeekbeden om vergeving</h3>
     <div class="datebar"><strong>Mijn dag</strong><input class="date-sync" type="date" aria-label="Kies een datum"></div>
     <p class="note">Deze selectie bevat de Qur’an-verzen en smeekbeden hieronder, met de aangeleverde transliteraties, betekenissen en bronverwijzingen. Voor smeekbeden met een onvolledige verwijzing kun je de oorspronkelijke bron openen via <strong>Bronnen</strong>.</p>
+    <div class="dhikr-edit-bar" id="istighfarEditBar"></div>
     <div class="adhkar-grid" id="istighfarCards"></div>
     <section class="adhkar-panel imam-source-panel">
       <h3>Smeekbeden toegeschreven aan Imam al-Hasan al-Basri · 70</h3>
@@ -271,6 +320,27 @@ footer{text-align:center;color:var(--muted);font-size:12px;padding:8px 12px 30px
 </main>
 <main class="wrap" id="subjectView" hidden><section class="subject-panel"><h2 id="subjectTitle"></h2><section id="seerahNotesPage" class="seerah-notes" hidden><p class="note">Bewaar je eigen Seerah-research als persoonlijke notities. Deze gegevens blijven lokaal in je account op dit apparaat.</p><form class="seerah-note-form" id="seerahNotesForm"><label for="seerahNoteTitle">Titel<input id="seerahNoteTitle" name="title" maxlength="100" required></label><label for="seerahNoteBody">Notitie<textarea id="seerahNoteBody" name="body" maxlength="10000" required></textarea></label><label for="seerahNoteSource">Bron of link (optioneel)<input id="seerahNoteSource" name="source" maxlength="500"></label><button class="deed-custom-submit" type="submit">Notitie opslaan</button></form><p id="seerahNoteStatus" class="deed-status" role="status" aria-live="polite"></p><div id="seerahNotesList" class="seerah-notes-list"></div></section><section id="sourcesPage" hidden><p>Originele dhikr-bijlage. Raadpleeg deze bron bij een smeekbede waarvan de bronvermelding niet duidelijk is.</p><p><a class="btn secondary" href="./dhikr-schema.pdf" target="_blank" rel="noopener">Open dhikr-schema.pdf</a></p><iframe class="source-pdf" src="./dhikr-schema.pdf" title="dhikr-schema.pdf"></iframe><h3>Smeekbeden toegeschreven aan Imam al-Hasan al-Basri</h3><p><a class="btn secondary" href="./Prayers-for-Forgiveness-by-Imam-Al-hasan-al-Basri.pdf" target="_blank" rel="noopener">Open de PDF</a></p><iframe class="source-pdf" loading="lazy" src="./Prayers-for-Forgiveness-by-Imam-Al-hasan-al-Basri.pdf" title="Prayers for Forgiveness by Imam al-Hasan al-Basri"></iframe></section><section id="dailyQuotesPage" hidden><p class="note">Qur’an-verzen en hadithcitaten met Arabische tekst, vertaling in de gekozen taal en bronvermelding. Vertalingen zijn betekenisweergaven.</p><div class="quote-archive" id="quoteArchive"></div></section></section></main>
 <footer>Gebaseerd op algemene richtlijnen uit Qur’an en Sunnah. Verplichtingen en vrijwillige daden zijn apart in je intentie te houden; vraag een betrouwbare geleerde bij fiqh-vragen.</footer>
+<div class="dhikr-editor" id="dhikrEditor" hidden role="dialog" aria-modal="true" aria-labelledby="dhikrEditorTitle">
+ <form class="dhikr-editor-card" id="dhikrEditorForm" autocomplete="off">
+  <h3 id="dhikrEditorTitle">Onderdeel bewerken</h3>
+  <label>Titel<input name="title" maxlength="140" required></label>
+  <label>Uitspraak (transliteratie)<input name="phrase" maxlength="400"></label>
+  <label>Arabische tekst<textarea name="arabic" dir="rtl" lang="ar" rows="3" maxlength="4000"></textarea></label>
+  <label>Betekenis<textarea name="meaning" rows="2" maxlength="1500"></textarea></label>
+  <label>Moment<input name="time" maxlength="300"></label>
+  <label>De genoemde deugd<textarea name="virtue" rows="2" maxlength="1500"></textarea></label>
+  <label>Bron<textarea name="reference" rows="2" maxlength="600"></textarea></label>
+  <div class="dhikr-editor-row"><label>Aantal herhalingen<input name="countTarget" type="number" min="1" max="100000" inputmode="numeric" placeholder="Leeg = open teller"></label><label>Tikken per goede daad<input name="clicksPerAction" type="number" min="1" max="100000" inputmode="numeric" placeholder="1"></label></div>
+  <label>Categorie<select name="category"></select></label>
+  <div class="dhikr-editor-actions"><button type="submit" class="btn primary">Opslaan</button><button type="button" class="btn secondary" data-dhikr-editor-cancel>Annuleren</button><button type="button" class="btn secondary" id="dhikrEditorReset" hidden>Origineel herstellen</button></div>
+ </form>
+</div>
+<div class="dhikr-focus" id="dhikrFocus" hidden role="dialog" aria-modal="true" aria-labelledby="dhikrFocusTitle">
+ <div class="dhikr-focus-inner">
+  <button type="button" class="dhikr-focus-close" id="dhikrFocusClose" aria-label="Sluiten">✕</button>
+  <div class="dhikr-focus-body" id="dhikrFocusBody"></div>
+ </div>
+</div>
 <script src="./imam-hasan-arabic-sprite.js"></script>
 <script src="./imam-al-hasan-prayers.js"></script>
 <script>
@@ -924,6 +994,50 @@ Object.assign(translations.tr,{
  "De vlekken zijn weggewassen door een dag met voldoende goede daden en zonder misstappen.":"Yeterli iyi amel ve hiç hata kaydı olmayan bir gün lekeleri tamamen sildi.",
  "Vlekken op het hart op het beginscherm verdwijnen volledig na een dag met minstens 10 goede registraties (checklist, adhkār of daden) en zonder geregistreerde misstap. Een nieuwe misstap na die dag brengt een vlek terug.":"Ana ekrandaki kalp lekeleri, en az 10 iyi kayıt (liste, ezkâr veya amel) olan ve hata kaydı bulunmayan bir günden sonra tamamen kaybolur. O günden sonraki yeni bir hata bir leke geri getirir."
 });
+Object.assign(translations.en,{
+ "Vandaag":"Today","Alle dagen":"All days","Weergave van het hart":"Heart view","Hart en Schild van Imaan · vandaag":"Heart and Shield of Imaan · today","Hart en Schild van Imaan · alle dagen":"Heart and Shield of Imaan · all days","Score van deze dag":"Score of this day",
+ "Bewerken":"Edit","Verwijderen":"Delete","Klaar met bewerken":"Done editing","Nieuw onderdeel":"New item","Onderdeel bewerken":"Edit item","Verwijderde onderdelen herstellen":"Restore removed items","Sleep om de volgorde te wijzigen":"Drag to change the order","Tik om te openen":"Tap to open","Eén terug":"Undo one","Afgerond vandaag":"Completed today","Nog niet afgerond":"Not completed yet","Vul een titel in.":"Enter a title.","Vul een geheel getal van 1 of hoger in.":"Enter a whole number of 1 or higher.",
+ "Sleep het ⠿-handvat om de volgorde te wijzigen. Wijzigingen worden lokaal bewaard en meegenomen in de SQL-export.":"Drag the ⠿ handle to change the order. Changes are stored locally and included in the SQL export.",
+ "Dit onderdeel verwijderen? Je kunt het later herstellen; eerdere tellingen blijven in je totalen meetellen.":"Delete this item? You can restore it later; earlier counts stay in your totals.",
+ "Er staan hier geen onderdelen. Zet bewerken aan om er een toe te voegen.":"There are no items here. Turn on editing to add one.",
+ "Opslaan is niet gelukt. Controleer de opslagruimte en browserinstellingen.":"Saving failed. Check the storage space and browser settings.",
+ "Titel":"Title","Uitspraak (transliteratie)":"Pronunciation (transliteration)","Arabische tekst":"Arabic text","Betekenis":"Meaning","Moment":"Time","De genoemde deugd":"Stated virtue","Bron":"Source","Aantal herhalingen":"Number of repetitions","Tikken per goede daad":"Taps per good deed","Categorie":"Category","Opslaan":"Save","Annuleren":"Cancel","Origineel herstellen":"Restore original",
+ "Tik op een kaart om die schermvullend te openen, met een grote telknop, voortgangsbalk, de Arabische tekst en de uitspraak. Elke tik op ochtend-, avond- en overdag-dhikr is één goede daad (×10); bij ‘Na het gebed’ gelden 33 of 100 tikken per goede daad. Na het doel kun je gewoon doorgaan met tellen. Met Bewerken voeg je onderdelen toe, verwijder je ze, sleep je ze naar een andere plek of pas je bronnen en aantallen aan.":"Tap a card to open it full screen, with a large count button, progress bar, the Arabic text and the pronunciation. Every tap on morning, evening and daytime dhikr is one good deed (×10); for ‘After the prayer’, 33 or 100 taps count as one good deed. After reaching the goal you can simply keep counting. With Edit you can add items, delete them, drag them elsewhere or change sources and counts.",
+ "Samenvatting van de afgelopen 7 dagen":"Summary of the past 7 days","Goede daden":"Good deeds","Misstappen":"Missteps","Gemiddelde dagscore":"Average daily score","Dagen geregistreerd":"Days registered","Dagscores van de afgelopen 7 dagen":"Daily scores of the past 7 days","Beste dag":"Best day","Opvallende goede daden":"Notable good deeds","Opvallende misstappen":"Notable missteps","Wat je zelf hebt gedaan":"What you did yourself","Niets geregistreerd.":"Nothing registered.","Verbeterpunten voor morgen":"Improvement points for tomorrow",
+ "Je hebt op {n} van de 7 dagen iets geregistreerd. Een korte registratie per dag houdt je overzicht eerlijk.":"You registered something on {n} of 7 days. A short entry each day keeps your overview honest.",
+ "Er zijn {n} gebeden niet afgevinkt. Plan morgen elk gebed vooraf in en haal gemiste gebeden op tijd in.":"{n} prayers were not ticked. Plan each prayer ahead tomorrow and make up missed prayers in time.",
+ "Je meest geregistreerde misstap was “{name}” ({n}×). Bedenk vooraf hoe je die morgen vermijdt, en vraag Allah om vergeving en herstel.":"Your most registered misstep was “{name}” ({n}×). Think ahead about how to avoid it tomorrow, and ask Allah for forgiveness and repair.",
+ "Plan morgen een kort moment voor de Qur’an, al zijn het maar een paar verzen.":"Plan a short moment for the Qur’an tomorrow, even if it is just a few verses.",
+ "Probeer morgen de ochtend- en avondadhkār vast te houden; tik op een kaart in de adhkār-pagina om te beginnen.":"Try to keep up the morning and evening adhkār tomorrow; tap a card on the adhkār page to begin.",
+ "Er waren meer misstappen dan goede daden. Begin morgen met één kleine goede daad en bewaak je tong en blik.":"There were more missteps than good deeds. Start tomorrow with one small good deed and guard your tongue and gaze.",
+ "Alhamdulillah, je week ziet er sterk uit. Houd dit tempo vast en blijf oprecht in je intentie.":"Alhamdulillah, your week looks strong. Keep this pace and stay sincere in your intention.",
+ "Alleen een persoonlijke reflectie op basis van je eigen invoer; geen religieus oordeel.":"Only a personal reflection based on your own input; not a religious ruling.",
+ "To-do lijst":"To-do list","Noteer wat nog gedaan moet worden, bijvoorbeeld je Qur’an-bladzijde, gebeden om in te halen of leerdoelen.":"Note what still needs doing, for example your Qur’an page, prayers to make up or learning goals.","Wat moet er nog gebeuren?":"What still needs to be done?","Voeg toe":"Add","Afgevinkte taken verwijderen":"Delete ticked tasks","Nog geen taken. Voeg er hierboven een toe.":"No tasks yet. Add one above.","Gebeden inhalen":"Prayers to make up","Leerdoelen":"Learning goals","Overig":"Other",
+ "Wat heb je precies gedaan?":"What exactly did you do?","Bijv. buurman geholpen met boodschappen":"E.g. helped a neighbour with groceries","Noteer je goede daden; ze komen in de samenvatting van de afgelopen 7 dagen. Vink het item hierboven af om het mee te laten tellen.":"Note your good deeds; they appear in the summary of the past 7 days. Tick the item above to make it count.",
+ "Ochtendadhkār":"Morning adhkār","Avondadhkār":"Evening adhkār","Ṣalawāt over de Profeet ﷺ":"Ṣalawāt upon the Prophet ﷺ","Dhikr overdag":"Daytime dhikr","Na het gebed":"After the prayer","Bedtijdadhkar":"Bedtime adhkār","Istighfār":"Istighfār"
+});
+Object.assign(translations.tr,{
+ "Vandaag":"Bugün","Alle dagen":"Tüm günler","Weergave van het hart":"Kalp görünümü","Hart en Schild van Imaan · vandaag":"Kalp ve İman Kalkanı · bugün","Hart en Schild van Imaan · alle dagen":"Kalp ve İman Kalkanı · tüm günler","Score van deze dag":"Bu günün puanı",
+ "Bewerken":"Düzenle","Verwijderen":"Sil","Klaar met bewerken":"Düzenleme bitti","Nieuw onderdeel":"Yeni öğe","Onderdeel bewerken":"Öğeyi düzenle","Verwijderde onderdelen herstellen":"Silinen öğeleri geri yükle","Sleep om de volgorde te wijzigen":"Sırayı değiştirmek için sürükleyin","Tik om te openen":"Açmak için dokunun","Eén terug":"Bir geri al","Afgerond vandaag":"Bugün tamamlandı","Nog niet afgerond":"Henüz tamamlanmadı","Vul een titel in.":"Bir başlık girin.","Vul een geheel getal van 1 of hoger in.":"1 veya daha büyük bir tam sayı girin.",
+ "Sleep het ⠿-handvat om de volgorde te wijzigen. Wijzigingen worden lokaal bewaard en meegenomen in de SQL-export.":"Sırayı değiştirmek için ⠿ tutamacını sürükleyin. Değişiklikler yerel olarak saklanır ve SQL dışa aktarımına dahil edilir.",
+ "Dit onderdeel verwijderen? Je kunt het later herstellen; eerdere tellingen blijven in je totalen meetellen.":"Bu öğe silinsin mi? Daha sonra geri yükleyebilirsiniz; önceki sayımlar toplamlarınızda kalır.",
+ "Er staan hier geen onderdelen. Zet bewerken aan om er een toe te voegen.":"Burada öğe yok. Eklemek için düzenlemeyi açın.",
+ "Opslaan is niet gelukt. Controleer de opslagruimte en browserinstellingen.":"Kaydedilemedi. Depolama alanını ve tarayıcı ayarlarını kontrol edin.",
+ "Titel":"Başlık","Uitspraak (transliteratie)":"Okunuş (transliterasyon)","Arabische tekst":"Arapça metin","Betekenis":"Anlam","Moment":"Zaman","De genoemde deugd":"Belirtilen fazilet","Bron":"Kaynak","Aantal herhalingen":"Tekrar sayısı","Tikken per goede daad":"İyi amel başına dokunuş","Categorie":"Kategori","Opslaan":"Kaydet","Annuleren":"İptal","Origineel herstellen":"Aslını geri yükle",
+ "Tik op een kaart om die schermvullend te openen, met een grote telknop, voortgangsbalk, de Arabische tekst en de uitspraak. Elke tik op ochtend-, avond- en overdag-dhikr is één goede daad (×10); bij ‘Na het gebed’ gelden 33 of 100 tikken per goede daad. Na het doel kun je gewoon doorgaan met tellen. Met Bewerken voeg je onderdelen toe, verwijder je ze, sleep je ze naar een andere plek of pas je bronnen en aantallen aan.":"Büyük sayma düğmesi, ilerleme çubuğu, Arapça metin ve okunuşla tam ekran açmak için bir karta dokunun. Sabah, akşam ve gün içi zikirde her dokunuş bir iyi ameldir (×10); ‘Namazdan sonra’ bölümünde 33 veya 100 dokunuş bir iyi amel sayılır. Hedefe ulaştıktan sonra saymaya devam edebilirsiniz. Düzenle ile öğe ekleyebilir, silebilir, sürükleyebilir; kaynak ve sayıları değiştirebilirsiniz.",
+ "Samenvatting van de afgelopen 7 dagen":"Son 7 günün özeti","Goede daden":"İyi ameller","Misstappen":"Hatalar","Gemiddelde dagscore":"Ortalama günlük puan","Dagen geregistreerd":"Kayıtlı günler","Dagscores van de afgelopen 7 dagen":"Son 7 günün günlük puanları","Beste dag":"En iyi gün","Opvallende goede daden":"Öne çıkan iyi ameller","Opvallende misstappen":"Öne çıkan hatalar","Wat je zelf hebt gedaan":"Kendi yaptıkların","Niets geregistreerd.":"Kayıt yok.","Verbeterpunten voor morgen":"Yarın için gelişim noktaları",
+ "Je hebt op {n} van de 7 dagen iets geregistreerd. Een korte registratie per dag houdt je overzicht eerlijk.":"7 günün {n} gününde kayıt yaptınız. Her gün kısa bir kayıt, genel görünümü dürüst tutar.",
+ "Er zijn {n} gebeden niet afgevinkt. Plan morgen elk gebed vooraf in en haal gemiste gebeden op tijd in.":"{n} namaz işaretlenmedi. Yarın her namazı önceden planlayın ve kaçanları zamanında kaza edin.",
+ "Je meest geregistreerde misstap was “{name}” ({n}×). Bedenk vooraf hoe je die morgen vermijdt, en vraag Allah om vergeving en herstel.":"En çok kaydedilen hatanız “{name}” ({n}×) idi. Yarın bundan nasıl kaçınacağınızı önceden düşünün ve Allah’tan bağışlanma ve ıslah dileyin.",
+ "Plan morgen een kort moment voor de Qur’an, al zijn het maar een paar verzen.":"Yarın Kur’an için kısa bir zaman planlayın; birkaç âyet bile olsa.",
+ "Probeer morgen de ochtend- en avondadhkār vast te houden; tik op een kaart in de adhkār-pagina om te beginnen.":"Yarın sabah ve akşam zikirlerini sürdürmeye çalışın; başlamak için zikir sayfasında bir karta dokunun.",
+ "Er waren meer misstappen dan goede daden. Begin morgen met één kleine goede daad en bewaak je tong en blik.":"Hatalar iyi amellerden fazlaydı. Yarına küçük bir iyi amelle başlayın ve dilinizi ve bakışınızı koruyun.",
+ "Alhamdulillah, je week ziet er sterk uit. Houd dit tempo vast en blijf oprecht in je intentie.":"Elhamdülillah, haftanız güçlü görünüyor. Bu tempoyu koruyun ve niyetinizde samimi kalın.",
+ "Alleen een persoonlijke reflectie op basis van je eigen invoer; geen religieus oordeel.":"Yalnızca kendi girdilerinize dayanan kişisel bir değerlendirmedir; dinî hüküm değildir.",
+ "To-do lijst":"Yapılacaklar listesi","Noteer wat nog gedaan moet worden, bijvoorbeeld je Qur’an-bladzijde, gebeden om in te halen of leerdoelen.":"Yapılması gerekenleri not edin; örneğin Kur’an sayfanız, kaza namazları veya öğrenme hedefleri.","Wat moet er nog gebeuren?":"Ne yapılması gerekiyor?","Voeg toe":"Ekle","Afgevinkte taken verwijderen":"İşaretli görevleri sil","Nog geen taken. Voeg er hierboven een toe.":"Henüz görev yok. Yukarıdan ekleyin.","Gebeden inhalen":"Kaza namazları","Leerdoelen":"Öğrenme hedefleri","Overig":"Diğer",
+ "Wat heb je precies gedaan?":"Tam olarak ne yaptınız?","Bijv. buurman geholpen met boodschappen":"Örn. komşuya alışverişte yardım ettim","Noteer je goede daden; ze komen in de samenvatting van de afgelopen 7 dagen. Vink het item hierboven af om het mee te laten tellen.":"İyi amellerinizi not edin; son 7 günün özetinde görünürler. Sayılması için yukarıdaki öğeyi işaretleyin.",
+ "Ochtendadhkār":"Sabah zikirleri","Avondadhkār":"Akşam zikirleri","Ṣalawāt over de Profeet ﷺ":"Peygamber ﷺ’e salavat","Dhikr overdag":"Gün içi zikir","Na het gebed":"Namazdan sonra","Bedtijdadhkar":"Uyku zikirleri","Istighfār":"İstiğfar"
+});
 const reverseTranslations={en:new Map(),tr:new Map()};
 for(const language of ['en','tr']){
  Object.entries(translations[language]).forEach(([source,translated])=>{
@@ -1170,7 +1284,7 @@ const dateEl=document.getElementById('date'), sectionsEl=document.getElementById
 const homeView=document.getElementById('homeView'), routineView=document.getElementById('routineView'), deedCounterView=document.getElementById('deedCounterView'), subjectView=document.getElementById('subjectView');
 const appMenu=document.getElementById('appMenu'), homeMenu=document.getElementById('homeMenu'), menuToggle=document.getElementById('menuToggle');
 const deedDate=document.getElementById('deedDate'), deedStatus=document.getElementById('deedStatus');
-let heartAnimation='',homeShieldAnimation='',currentDailyRankPoints=0,bestDailyRankPoints=0,selectedCombinedSection=null;
+let heartAnimation='',homeShieldAnimation='',currentDailyRankPoints=0,selectedDailyRankPoints=0,bestDailyRankPoints=0,selectedCombinedSection=null;
 const openDeedCategories=new Set(),openDhikrCategories=new Set(['Bedtijdadhkar']);
 let currentSession=null,isAdmin=false,authMode='login';
 let deferredInstallPrompt=null;
@@ -1555,8 +1669,8 @@ function decodeSqlPayload(value){
  return JSON.parse(new TextDecoder().decode(bytes));
 }
 function userDataKeys(userId){
- return [`jannah-custom-deeds-v1-${userId}`,`jannah-seerah-notes-v1-${userId}`,`jannah-best-daily-score-v1-${userId}`,`jannah-best-daily-score-v2-${userId}`,`jannah-home-widget-order-v1-${userId}`].concat(
-  ['checklist','deed-counter','heart-reflection'].flatMap(kind=>{
+ return [`jannah-custom-deeds-v1-${userId}`,`jannah-seerah-notes-v1-${userId}`,`jannah-best-daily-score-v1-${userId}`,`jannah-best-daily-score-v2-${userId}`,`jannah-home-widget-order-v1-${userId}`,`jannah-home-widget-order-v2-${userId}`,`jannah-dhikr-custom-v1-${userId}`,`jannah-todos-v1-${userId}`].concat(
+  ['checklist','deed-counter','heart-reflection','good-deed-notes'].flatMap(kind=>{
    const prefix=`jannah-${kind}-v1-${userId}-`,keys=[];
    for(let index=0;index<localStorage.length;index++){
     const key=localStorage.key(index);if(key&&key.startsWith(prefix))keys.push(key);
@@ -1584,11 +1698,12 @@ function parseSqlExport(sql){
  return payload;
 }
 function isUserDataKey(key,userId){
- return key===`jannah-custom-deeds-v1-${userId}`||key===`jannah-seerah-notes-v1-${userId}`||key===`jannah-best-daily-score-v1-${userId}`||key===`jannah-best-daily-score-v2-${userId}`||key===`jannah-home-widget-order-v1-${userId}`||[
+ return key===`jannah-custom-deeds-v1-${userId}`||key===`jannah-seerah-notes-v1-${userId}`||key===`jannah-best-daily-score-v1-${userId}`||key===`jannah-best-daily-score-v2-${userId}` ||key===`jannah-home-widget-order-v1-${userId}`||key===`jannah-home-widget-order-v2-${userId}`||key===`jannah-dhikr-custom-v1-${userId}`||key===`jannah-todos-v1-${userId}`||[
   `jannah-checklist-v1-${userId}-`,
   `jannah-deed-counter-v1-${userId}-`,
-  `jannah-heart-reflection-v1-${userId}-`
- ].some(prefix=>key.startsWith(prefix));
+   `jannah-heart-reflection-v1-${userId}-`,
+   `jannah-good-deed-notes-v1-${userId}-`
+  ].some(prefix=>key.startsWith(prefix));
 }
 function applySqlImport(payload){
  if(!Array.isArray(payload.users)||payload.users.length!==1)throw new Error('Importeren accepteert alleen een persoonlijke back-up van één account.');
@@ -1853,9 +1968,12 @@ try{
 }
 });
 function renderDailyDhikr(){
+ applyDhikrCustomizations();
  renderDhikrCards(document.getElementById('dailyDhikr'),dailyAdhkar.filter(item=>item.category!=='Istighfār'&&item.id!=='dhikr-istighfar100-v2'));
  renderDhikrCards(document.getElementById('istighfarCards'),dailyAdhkar.filter(item=>item.category==='Istighfār'&&item.id!=='dhikr-istighfar100-v2'));
  renderImamHasanSupplications();
+ renderDhikrEditBars();
+ refreshDhikrFocus();
 }
 function renderImamHasanSupplications(){
  const counts=readDeeds(),container=document.getElementById('imamHasanPrayers'),supplications=window.imamHasanSupplications,sprite=window.imamHasanArabicSprite;
@@ -1871,13 +1989,13 @@ function renderImamHasanSupplications(){
   viewport.append(arabic);
   const text=document.createElement('p');text.className='imam-translation';text.lang='en';text.textContent=supplication.translation;
   const item=getImamHasanDeeds()[index],count=counts[item.id]||0;
-  const counter=document.createElement('div');counter.className='dhikr-counter';
-  const undo=document.createElement('button');undo.type='button';undo.className='dhikr-undo';undo.dataset.dhikrId=item.id;undo.dataset.delta='-1';undo.textContent='−';undo.disabled=count===0;undo.setAttribute('aria-label',translateText('Telling één terugzetten'));
-  const progress=document.createElement('span');progress.className='dhikr-count';progress.textContent=count.toLocaleString(currentLanguage);
-  const increment=document.createElement('button');increment.type='button';increment.className='dhikr-tap';increment.dataset.dhikrId=item.id;increment.dataset.delta='1';increment.textContent='+1';increment.setAttribute('aria-label',`${translateText('Tel één keer mee')}: ${heading.textContent}`);
-  counter.append(undo,progress,increment);
+  card.dataset.dhikrId=item.id;card.classList.add('is-tappable');card.tabIndex=0;card.setAttribute('role','button');
+  const status=document.createElement('p');status.className='dhikr-status-row';
+  const progress=document.createElement('span');progress.className='dhikr-count';progress.textContent=dhikrStatusText(item,count);status.append(progress);
   const note=document.createElement('p');note.className='dhikr-points-note';note.textContent=dhikrPointsNote(1);
-  card.append(heading,viewport,text,counter,note);container.append(card);
+  const hint=document.createElement('p');hint.className='dhikr-open-hint';hint.textContent=translateText('Tik om te openen');
+  card.classList.toggle('is-done',count>0);
+  card.append(heading,viewport,text,status,note,hint);container.append(card);
  });
 }
 function renderDhikrCards(container,items){
@@ -1888,11 +2006,21 @@ function renderDhikrCards(container,items){
  categories.forEach((categoryItems,category)=>{
   const group=document.createElement('details');group.className='deed-category-group';group.open=openDhikrCategories.has(category);
   group.addEventListener('toggle',()=>{if(group.open)openDhikrCategories.add(category);else openDhikrCategories.delete(category)});
+  group.dataset.dhikrCategory=category;
   const summary=document.createElement('summary');summary.className='deed-category-summary';summary.textContent=`${translateText(category)} · ${categoryItems.length}`;
   const content=document.createElement('div');content.className='deed-category-content';
   const grid=document.createElement('div');grid.className='adhkar-grid';
   categoryItems.forEach(item=>{
-  const card=document.createElement('article');card.className='adhkar-card';
+  const card=document.createElement('article');card.className='adhkar-card';card.dataset.dhikrId=item.id;
+  const counted=Boolean(item.countTarget||item.countMode==='unbounded'),count=counts[item.id]||0;
+  if(dhikrEditMode){
+   const tools=document.createElement('div');tools.className='dhikr-edit-tools';
+   const handle=document.createElement('button');handle.type='button';handle.className='dhikr-drag-handle';handle.textContent='⠿';handle.title=translateText('Sleep om de volgorde te wijzigen');handle.setAttribute('aria-label',`${translateText('Sleep om de volgorde te wijzigen')}: ${translateText(item.title)}`);
+   const edit=document.createElement('button');edit.type='button';edit.className='dhikr-edit-button';edit.dataset.dhikrEdit=item.id;edit.textContent=`✎ ${translateText('Bewerken')}`;
+   const remove=document.createElement('button');remove.type='button';remove.className='dhikr-edit-button danger';remove.dataset.dhikrDelete=item.id;remove.textContent=`🗑 ${translateText('Verwijderen')}`;
+   tools.append(handle,edit,remove);card.append(tools);
+  }else{card.classList.add('is-tappable');card.tabIndex=0;card.setAttribute('role','button')}
+  card.classList.toggle('is-done',counted?(item.countTarget?count>=item.countTarget:count>0):count>0);
   const heading=document.createElement('strong');heading.textContent=translateText(item.title);
   const phrase=document.createElement('p');phrase.className='adhkar-phrase';phrase.textContent=translateText(item.phrase);
   const arabic=document.createElement('p');arabic.className='adhkar-arabic';arabic.lang='ar';arabic.dir='rtl';arabic.textContent=normalizeArabicMarks(item.arabic);
@@ -1901,25 +2029,269 @@ function renderDhikrCards(container,items){
   const time=metadataLine('Moment:',item.time,'adhkar-time');
   const virtue=item.virtue?metadataLine('De genoemde deugd:',item.virtue,'adhkar-reward'):null;
   const reference=metadataLine('Bron:',item.reference,'adhkar-reference');
-   if(item.countTarget||item.countMode==='unbounded'){
-    const count=item.countTarget?Math.min(item.countTarget,counts[item.id]||0):counts[item.id]||0,counter=document.createElement('div');counter.className='dhikr-counter';
-    const undo=document.createElement('button');undo.type='button';undo.className='dhikr-undo';undo.dataset.dhikrId=item.id;undo.dataset.delta='-1';undo.textContent='−';undo.disabled=count===0;undo.setAttribute('aria-label',translateText('Telling één terugzetten'));
-    const progress=document.createElement('span');progress.className='dhikr-count';progress.textContent=item.countTarget?`${count.toLocaleString(currentLanguage)} / ${item.countTarget.toLocaleString(currentLanguage)}`:count.toLocaleString(currentLanguage);
-    const increment=document.createElement('button');increment.type='button';increment.className='dhikr-tap';increment.dataset.dhikrId=item.id;increment.dataset.delta='1';increment.disabled=Boolean(item.countTarget&&count>=item.countTarget);increment.textContent=item.countTarget&&count>=item.countTarget?'✓':'+1';increment.setAttribute('aria-label',`${translateText('Tel één keer mee')}: ${translateText(item.title)}`);
-    counter.append(undo,progress,increment);
-    card.append(heading,phrase,arabic,meaning,time);if(virtue)card.append(virtue);card.append(reference,counter);
-        if(item.clicksPerAction){const note=document.createElement('p');note.className='dhikr-points-note';note.textContent=dhikrPointsNote(item.clicksPerAction);card.append(note)}
-        if(item.countTarget){const bar=document.createElement('div');bar.className='dhikr-progress';bar.setAttribute('role','progressbar');bar.setAttribute('aria-valuemin','0');bar.setAttribute('aria-valuemax',String(item.countTarget));bar.setAttribute('aria-valuenow',String(count));const fill=document.createElement('div');fill.style.width=`${Math.round(count/item.countTarget*100)}%`;bar.append(fill);card.append(bar)}
-   }else{
-    const complete=document.createElement('button');complete.type='button';complete.className='dhikr-complete';complete.dataset.dhikrId=item.id;
-    complete.setAttribute('aria-pressed',String((counts[item.id]||0)>0));complete.textContent=counts[item.id]?`✓ ${translateText('Afgerond vandaag · tik om ongedaan te maken')}`:translateText('Markeer afgerond');
-    card.append(heading,phrase,arabic,meaning,time);if(virtue)card.append(virtue);card.append(reference,complete);
-   }
+  card.append(heading,phrase,arabic,meaning,time);if(virtue)card.append(virtue);card.append(reference);
+  const status=document.createElement('p');status.className='dhikr-status-row';
+  const statusText=document.createElement('span');statusText.className='dhikr-count';statusText.textContent=dhikrStatusText(item,count);status.append(statusText);card.append(status);
+  if(item.countTarget){const bar=document.createElement('div');bar.className='dhikr-progress';bar.setAttribute('role','progressbar');bar.setAttribute('aria-valuemin','0');bar.setAttribute('aria-valuemax',String(item.countTarget));bar.setAttribute('aria-valuenow',String(Math.min(count,item.countTarget)));const fill=document.createElement('div');fill.style.width=`${Math.min(100,Math.round(count/item.countTarget*100))}%`;bar.append(fill);card.append(bar)}
+  if(counted&&item.clicksPerAction){const note=document.createElement('p');note.className='dhikr-points-note';note.textContent=dhikrPointsNote(item.clicksPerAction);card.append(note)}
+  if(!dhikrEditMode){const hint=document.createElement('p');hint.className='dhikr-open-hint';hint.textContent=translateText('Tik om te openen');card.append(hint)}
    grid.append(card);
   });
   content.append(grid);group.append(summary,content);container.append(group);
  });
+ if(!items.length){const empty=document.createElement('p');empty.className='deed-category-empty';empty.textContent=translateText('Er staan hier geen onderdelen. Zet bewerken aan om er een toe te voegen.');container.append(empty)}
 }
+const baseAdhkar=dailyAdhkar.map(item=>({...item}));
+const dhikrCategoryList=['Ochtendadhkār','Avondadhkār','Dhikr overdag','Na het gebed','Bedtijdadhkar','Istighfār'];
+const dhikrTextFields=['phrase','arabic','meaning','time','virtue','reference'];
+let appliedDhikrSignature=null,dhikrEditMode=false,removedDhikrItems=[],focusedDhikrId=null,dhikrFocusTimer=0,dhikrEditorTarget=null;
+const dhikrCustomKey=()=>`jannah-dhikr-custom-v1-${userStorageId()}`;
+function readDhikrCustom(raw){
+ const empty={added:[],edits:{},removed:[],order:[]};
+ try{
+  const data=JSON.parse(raw||'null');
+  if(!data||typeof data!=='object'||Array.isArray(data))return empty;
+  return {
+   added:Array.isArray(data.added)?data.added.filter(item=>item&&typeof item.id==='string'&&typeof item.title==='string'):[],
+   edits:data.edits&&typeof data.edits==='object'&&!Array.isArray(data.edits)?data.edits:{},
+   removed:Array.isArray(data.removed)?data.removed.filter(id=>typeof id==='string'):[],
+   order:Array.isArray(data.order)?data.order.filter(id=>typeof id==='string'):[]
+  };
+ }catch(error){console.error('De aangepaste dhikr-onderdelen konden niet worden gelezen.',error);return empty}
+}
+function finishDhikrItem(item,base){
+ const clean={...item};
+ clean.title=String(clean.title||'').trim()||'—';
+ dhikrTextFields.forEach(field=>{if(typeof clean[field]!=='string')clean[field]=''});
+ if(!dhikrCategoryList.includes(clean.category))clean.category='Dhikr overdag';
+ const target=Number(clean.countTarget);
+ if(Number.isSafeInteger(target)&&target>0){clean.countTarget=target;delete clean.countMode}
+ else{delete clean.countTarget;if(!base||base.countTarget||base.countMode==='unbounded')clean.countMode='unbounded';else delete clean.countMode}
+ if(clean.countTarget||clean.countMode==='unbounded'){const clicks=Number(clean.clicksPerAction);clean.clicksPerAction=Number.isSafeInteger(clicks)&&clicks>0?clicks:1}
+ else delete clean.clicksPerAction;
+ return clean;
+}
+function applyDhikrCustomizations(){
+ const raw=localStorage.getItem(dhikrCustomKey())||'',signature=`${userStorageId()}|${raw}`;
+ if(signature===appliedDhikrSignature)return;
+ appliedDhikrSignature=signature;
+ const custom=readDhikrCustom(raw),removed=new Set(custom.removed);
+ const everything=[
+  ...baseAdhkar.map(item=>custom.edits[item.id]?finishDhikrItem({...item,...custom.edits[item.id]},item):{...item}),
+  ...custom.added.map(item=>finishDhikrItem({...item,custom:true},null))
+ ];
+ removedDhikrItems=everything.filter(item=>removed.has(item.id));
+ const visible=everything.filter(item=>!removed.has(item.id)).map((item,index)=>({item,index,rank:custom.order.indexOf(item.id)}));
+ visible.sort((a,b)=>(a.rank<0?1e6+a.index:a.rank)-(b.rank<0?1e6+b.index:b.rank));
+ dailyAdhkar.length=0;
+ dailyAdhkar.push(...visible.map(entry=>entry.item));
+}
+function updateDhikrCustom(mutator){
+ const custom=readDhikrCustom(localStorage.getItem(dhikrCustomKey())||'');
+ mutator(custom);
+ try{localStorage.setItem(dhikrCustomKey(),JSON.stringify(custom))}
+ catch(error){deedStatus.textContent=translateText('Opslaan is niet gelukt. Controleer de opslagruimte en browserinstellingen.');return false}
+ applyDhikrCustomizations();
+ renderDeedCounter();
+ return true;
+}
+function renderDhikrEditBars(){
+ [['adhkarEditBar','adhkar'],['istighfarEditBar','istighfar']].forEach(([id,page])=>{
+  const bar=document.getElementById(id);
+  if(!bar)return;
+  bar.replaceChildren();
+  const makeButton=(label,attribute,value='')=>{const button=document.createElement('button');button.type='button';button.className='dhikr-edit-button';button.dataset[attribute]=value;button.textContent=label;return button};
+  const toggle=makeButton(dhikrEditMode?`✓ ${translateText('Klaar met bewerken')}`:`✎ ${translateText('Bewerken')}`,'dhikrEditToggle');
+  toggle.classList.add('primary');toggle.setAttribute('aria-pressed',String(dhikrEditMode));
+  bar.append(toggle);
+  if(dhikrEditMode){
+   bar.append(makeButton(`＋ ${translateText('Nieuw onderdeel')}`,'dhikrAdd',page));
+   if(removedDhikrItems.length)bar.append(makeButton(`↺ ${translateText('Verwijderde onderdelen herstellen')} (${removedDhikrItems.length})`,'dhikrRestore'));
+   const hint=document.createElement('p');hint.className='dhikr-edit-hint';hint.textContent=translateText('Sleep het ⠿-handvat om de volgorde te wijzigen. Wijzigingen worden lokaal bewaard en meegenomen in de SQL-export.');bar.append(hint);
+  }
+ });
+}
+function openDhikrEditor(id,defaultCategory='Dhikr overdag'){
+ const editor=document.getElementById('dhikrEditor'),form=document.getElementById('dhikrEditorForm'),fields=form.elements;
+ const item=id?dailyAdhkar.find(entry=>entry.id===id):null;
+ if(id&&!item)return;
+ dhikrEditorTarget={id};
+ const select=fields.namedItem('category');select.replaceChildren();
+ dhikrCategoryList.forEach(category=>{const option=document.createElement('option');option.value=category;option.textContent=translateText(category);select.append(option)});
+ form.reset();
+ document.getElementById('dhikrEditorTitle').textContent=translateText(item?'Onderdeel bewerken':'Nieuw onderdeel');
+ fields.namedItem('title').value=item?.title||'';
+ fields.namedItem('phrase').value=item?.phrase||'';
+ fields.namedItem('arabic').value=item?.arabic||'';
+ fields.namedItem('meaning').value=item?(item.meaning||adhkarMeanings[item.id]||''):'';
+ fields.namedItem('time').value=item?.time||'';
+ fields.namedItem('virtue').value=item?.virtue||'';
+ fields.namedItem('reference').value=item?.reference||'';
+ fields.namedItem('countTarget').value=item?.countTarget||'';
+ fields.namedItem('clicksPerAction').value=item?.clicksPerAction||'';
+ select.value=item?.category||defaultCategory;
+ const custom=readDhikrCustom(localStorage.getItem(dhikrCustomKey())||'');
+ document.getElementById('dhikrEditorReset').hidden=!(id&&custom.edits[id]);
+ editor.hidden=false;
+ translatePage();
+ fields.namedItem('title').focus();
+}
+function closeDhikrEditor(){document.getElementById('dhikrEditor').hidden=true;dhikrEditorTarget=null}
+function submitDhikrEditor(event){
+ event.preventDefault();
+ if(!dhikrEditorTarget)return;
+ const fields=event.currentTarget.elements,title=fields.namedItem('title').value.trim();
+ ['title','countTarget','clicksPerAction'].forEach(name=>fields.namedItem(name).setCustomValidity(''));
+ if(!title){fields.namedItem('title').setCustomValidity(translateText('Vul een titel in.'));fields.namedItem('title').reportValidity();return}
+ const parseCount=name=>{const raw=fields.namedItem(name).value.trim();if(!raw)return null;const value=Number(raw);return Number.isSafeInteger(value)&&value>=1&&value<=100000?value:NaN};
+ const target=parseCount('countTarget'),clicks=parseCount('clicksPerAction');
+ if(Number.isNaN(target)){fields.namedItem('countTarget').setCustomValidity(translateText('Vul een geheel getal van 1 of hoger in.'));fields.namedItem('countTarget').reportValidity();return}
+ if(Number.isNaN(clicks)){fields.namedItem('clicksPerAction').setCustomValidity(translateText('Vul een geheel getal van 1 of hoger in.'));fields.namedItem('clicksPerAction').reportValidity();return}
+ const values={title};
+ dhikrTextFields.forEach(field=>{values[field]=fields.namedItem(field).value.trim()});
+ values.category=fields.namedItem('category').value;values.countTarget=target;
+ if(clicks!==null)values.clicksPerAction=clicks;
+ const id=dhikrEditorTarget.id;
+ const saved=updateDhikrCustom(custom=>{
+  if(!id){custom.added.push({id:`custom-dhikr-${Date.now()}-${Math.random().toString(36).slice(2,8)}`,...values});return}
+  const added=custom.added.find(item=>item.id===id);
+  if(added)Object.assign(added,values);else custom.edits[id]={...values};
+ });
+ if(saved){openDhikrCategories.add(values.category);closeDhikrEditor();renderDailyDhikr()}
+}
+function deleteDhikrItem(id){
+ const item=dailyAdhkar.find(entry=>entry.id===id);
+ if(!item||!confirm(translateText('Dit onderdeel verwijderen? Je kunt het later herstellen; eerdere tellingen blijven in je totalen meetellen.')))return;
+ updateDhikrCustom(custom=>{if(!custom.removed.includes(id))custom.removed.push(id)});
+}
+function saveDhikrOrderFromGrid(grid,movedId){
+ const ids=[...grid.querySelectorAll(':scope > .adhkar-card')].map(card=>card.dataset.dhikrId),slots=new Set(ids);
+ let index=0;
+ const full=dailyAdhkar.map(item=>item.id).map(id=>slots.has(id)?ids[index++]:id);
+ updateDhikrCustom(custom=>{custom.order=full});
+ if(movedId)document.querySelector(`.adhkar-card[data-dhikr-id="${CSS.escape(movedId)}"] .dhikr-drag-handle`)?.focus();
+}
+function openDhikrFocus(id){
+ const item=findDhikrItem(id);
+ if(!item)return;
+ const overlay=document.getElementById('dhikrFocus'),body=document.getElementById('dhikrFocusBody'),isImam=id.startsWith('imam-hasan-'),counted=Boolean(item.countTarget||item.countMode==='unbounded');
+ focusedDhikrId=id;body.replaceChildren();
+ const make=(tag,className,text)=>{const element=document.createElement(tag);element.className=className;if(text!==undefined)element.textContent=text;return element};
+ const today=new Date().toLocaleDateString('sv-SE');
+ body.append(make('p','dhikr-focus-category',`${translateText(item.category||'Istighfār')}${deedDate.value===today?'':` · ${deedDate.value}`}`));
+ const title=make('h3','dhikr-focus-title',translateText(item.title));title.id='dhikrFocusTitle';body.append(title);
+ if(isImam){
+  const source=document.querySelector(`.imam-prayer[data-dhikr-id="${CSS.escape(id)}"]`),viewport=source?.querySelector('.imam-arabic-viewport'),translation=source?.querySelector('.imam-translation');
+  if(viewport){const clone=viewport.cloneNode(true);clone.classList.add('dhikr-focus-imam');clone.querySelector('img')?.setAttribute('loading','eager');body.append(clone)}
+  if(translation){const phrase=make('p','dhikr-focus-phrase',translation.textContent);phrase.lang='en';body.append(phrase)}
+ }else{
+  if(item.arabic){const arabic=make('p','adhkar-arabic dhikr-focus-arabic',normalizeArabicMarks(item.arabic));arabic.lang='ar';arabic.dir='rtl';body.append(arabic)}
+  if(item.phrase)body.append(make('p','dhikr-focus-phrase',translateText(item.phrase)));
+  const meaning=item.meaning||adhkarMeanings[item.id]||'';
+  if(meaning)body.append(make('p','dhikr-focus-meaning',translateText(meaning)));
+ }
+ const tap=make('button','dhikr-focus-tap');tap.type='button';tap.dataset.dhikrId=id;
+ if(counted){tap.classList.add('dhikr-tap');tap.dataset.delta='1';const number=make('span','dhikr-focus-number','0');number.id='dhikrFocusNumber';tap.append(number,make('span','dhikr-focus-tap-label','+1'));tap.setAttribute('aria-label',`${translateText('Tel één keer mee')}: ${translateText(item.title)}`)}
+ else{tap.classList.add('dhikr-complete');const number=make('span','dhikr-focus-number','✓');number.id='dhikrFocusNumber';tap.append(number,make('span','dhikr-focus-tap-label',''));tap.querySelector('.dhikr-focus-tap-label').id='dhikrFocusTapLabel'}
+ body.append(tap);
+ if(item.countTarget){const bar=make('div','dhikr-focus-progress');bar.id='dhikrFocusProgress';bar.setAttribute('role','progressbar');bar.setAttribute('aria-valuemin','0');bar.setAttribute('aria-valuemax',String(item.countTarget));bar.append(document.createElement('div'));body.append(bar)}
+ const count=make('p','dhikr-focus-count');count.id='dhikrFocusCount';count.setAttribute('aria-live','polite');body.append(count);
+ if(counted&&item.clicksPerAction)body.append(make('p','dhikr-points-note',dhikrPointsNote(item.clicksPerAction)));
+ if(counted){const undo=make('button','dhikr-undo dhikr-focus-undo',`− ${translateText('Eén terug')}`);undo.type='button';undo.dataset.dhikrId=id;undo.dataset.delta='-1';undo.setAttribute('aria-label',translateText('Telling één terugzetten'));body.append(undo)}
+ clearTimeout(dhikrFocusTimer);
+ overlay.hidden=false;overlay.scrollTop=0;document.documentElement.classList.add('focus-open');
+ refreshDhikrFocus();
+ void overlay.offsetWidth;
+ requestAnimationFrame(()=>overlay.classList.add('open'));
+ document.getElementById('dhikrFocusClose').focus({preventScroll:true});
+}
+function refreshDhikrFocus(){
+ const overlay=document.getElementById('dhikrFocus');
+ if(!overlay||overlay.hidden||!focusedDhikrId)return;
+ const item=findDhikrItem(focusedDhikrId);
+ if(!item){closeDhikrFocus();return}
+ const count=readDeeds()[focusedDhikrId]||0,number=document.getElementById('dhikrFocusNumber'),label=document.getElementById('dhikrFocusCount');
+ if(item.countTarget||item.countMode==='unbounded'){
+  if(number)number.textContent=count.toLocaleString(currentLanguage);
+  const undo=overlay.querySelector('.dhikr-focus-undo');if(undo)undo.disabled=count===0;
+ }else{
+  const tapLabel=document.getElementById('dhikrFocusTapLabel');
+  if(number)number.textContent=count>0?'✓':'○';
+  if(tapLabel)tapLabel.textContent=translateText(count>0?'Tik om ongedaan te maken':'Markeer afgerond');
+ }
+ if(label)label.textContent=dhikrStatusText(item,count);
+ const bar=document.getElementById('dhikrFocusProgress');
+ if(bar&&item.countTarget){bar.setAttribute('aria-valuenow',String(Math.min(count,item.countTarget)));bar.firstElementChild.style.width=`${Math.min(100,Math.round(count/item.countTarget*100))}%`}
+}
+function closeDhikrFocus(){
+ const overlay=document.getElementById('dhikrFocus');
+ if(!overlay||overlay.hidden)return;
+ overlay.classList.remove('open');document.documentElement.classList.remove('focus-open');focusedDhikrId=null;
+ clearTimeout(dhikrFocusTimer);
+ dhikrFocusTimer=setTimeout(()=>{if(!focusedDhikrId)overlay.hidden=true},340);
+}
+document.getElementById('dhikrEditorForm').addEventListener('submit',submitDhikrEditor);
+document.getElementById('dhikrEditorForm').addEventListener('input',event=>event.target.setCustomValidity?.(''));
+document.getElementById('dhikrEditorReset').addEventListener('click',()=>{
+ const id=dhikrEditorTarget?.id;
+ if(!id)return;
+ if(updateDhikrCustom(custom=>{delete custom.edits[id]}))closeDhikrEditor();
+});
+document.getElementById('dhikrFocusClose').addEventListener('click',closeDhikrFocus);
+document.addEventListener('keydown',event=>{
+ if(event.key==='Escape'){
+  if(!document.getElementById('dhikrEditor').hidden){closeDhikrEditor();return}
+  closeDhikrFocus();return;
+ }
+ const card=event.target.closest?.('.adhkar-card.is-tappable,.imam-prayer.is-tappable');
+ if(card&&card===event.target&&(event.key==='Enter'||event.key===' ')){event.preventDefault();openDhikrFocus(card.dataset.dhikrId)}
+ const handle=event.target.closest?.('.dhikr-drag-handle');
+ if(handle&&(event.key==='ArrowUp'||event.key==='ArrowDown')){
+  const card2=handle.closest('.adhkar-card'),sibling=event.key==='ArrowUp'?card2.previousElementSibling:card2.nextElementSibling;
+  if(!sibling)return;
+  event.preventDefault();
+  card2.parentElement.insertBefore(card2,event.key==='ArrowUp'?sibling:sibling.nextSibling);
+  saveDhikrOrderFromGrid(card2.parentElement,card2.dataset.dhikrId);
+ }
+});
+document.addEventListener('click',event=>{
+ const target=event.target;
+ if(target.closest('[data-dhikr-edit-toggle]')){dhikrEditMode=!dhikrEditMode;renderDailyDhikr();translatePage();return}
+ const add=target.closest('[data-dhikr-add]');
+ if(add){openDhikrEditor(null,add.dataset.dhikrAdd==='istighfar'?'Istighfār':'Dhikr overdag');return}
+ if(target.closest('[data-dhikr-restore]')){updateDhikrCustom(custom=>{custom.removed=[]});return}
+ const edit=target.closest('[data-dhikr-edit]');
+ if(edit){openDhikrEditor(edit.dataset.dhikrEdit);return}
+ const remove=target.closest('[data-dhikr-delete]');
+ if(remove){deleteDhikrItem(remove.dataset.dhikrDelete);return}
+ const cancel=target.closest('[data-dhikr-editor-cancel]');
+ if(cancel||target.id==='dhikrEditor'){closeDhikrEditor();return}
+ const card=target.closest('.adhkar-card.is-tappable,.imam-prayer.is-tappable');
+ if(card&&!target.closest('a,button,input,select,textarea')&&!(window.getSelection?.().toString()))openDhikrFocus(card.dataset.dhikrId);
+});
+let dhikrDrag=null;
+document.addEventListener('pointerdown',event=>{
+ const handle=event.target.closest('.dhikr-drag-handle');
+ if(!handle||event.button!==0)return;
+ const card=handle.closest('.adhkar-card');
+ if(!card)return;
+ dhikrDrag={card,grid:card.parentElement,pointerId:event.pointerId,moved:false};
+ card.classList.add('is-dragging');event.preventDefault();
+});
+document.addEventListener('pointermove',event=>{
+ if(!dhikrDrag||event.pointerId!==dhikrDrag.pointerId)return;
+ event.preventDefault();
+ const target=document.elementFromPoint(event.clientX,event.clientY)?.closest('.adhkar-card');
+ if(!target||target===dhikrDrag.card||target.parentElement!==dhikrDrag.grid)return;
+ const rect=target.getBoundingClientRect();
+ dhikrDrag.grid.insertBefore(dhikrDrag.card,event.clientY<rect.top+rect.height/2?target:target.nextSibling);dhikrDrag.moved=true;
+},{passive:false});
+const finishDhikrDrag=event=>{
+ if(!dhikrDrag||event.pointerId!==dhikrDrag.pointerId)return;
+ const {card,grid,moved}=dhikrDrag;dhikrDrag=null;card.classList.remove('is-dragging');
+ if(moved)saveDhikrOrderFromGrid(grid,card.dataset.dhikrId);
+};
+document.addEventListener('pointerup',finishDhikrDrag);document.addEventListener('pointercancel',finishDhikrDrag);
 function toggleDailyDhikr(id){
   const item=dailyAdhkar.find(dhikr=>dhikr.id===id);
   if(!item||item.countTarget||item.countMode==='unbounded')return;
@@ -1934,7 +2306,7 @@ function toggleDailyDhikr(id){
 function adjustDailyDhikrCount(id,delta){
   const item=findDhikrItem(id);
   if((!item?.countTarget&&item?.countMode!=='unbounded')||(delta!==1&&delta!==-1))return;
-  const counts=readDeeds(),previous=counts[id]||0,next=Math.max(0,Math.min(item.countTarget||Number.MAX_SAFE_INTEGER,previous+delta));
+  const counts=readDeeds(),previous=counts[id]||0,next=Math.max(0,previous+delta);
   if(next===0)delete counts[id];else counts[id]=next;
   if(saveDeeds(counts)){
    if(getGoodDeedActionCount(item,previous)===0&&getGoodDeedActionCount(item,next)>0){heartAnimation='good';homeShieldAnimation='good'}
@@ -1942,28 +2314,26 @@ function adjustDailyDhikrCount(id,delta){
    renderDeedCounter(true);
   }
 }
+function dhikrStatusText(item,count){
+ if(item.countTarget)return `${count.toLocaleString(currentLanguage)} / ${item.countTarget.toLocaleString(currentLanguage)}${count>=item.countTarget?' ✓':''}`;
+ if(item.countMode==='unbounded')return count.toLocaleString(currentLanguage);
+ return count>0?`✓ ${translateText('Afgerond vandaag')}`:translateText('Nog niet afgerond');
+}
 function updateDailyDhikrCard(id){
  const item=findDhikrItem(id);
- const card=document.querySelector(`[data-dhikr-id="${CSS.escape(id)}"]`)?.closest('.adhkar-card,.imam-prayer');
- if(!item||!card)return;
- const count=readDeeds()[id]||0;
- if(item.countTarget||item.countMode==='unbounded'){
-  const displayCount=item.countTarget?Math.min(item.countTarget,count):count;
-  const progress=card.querySelector('.dhikr-count');
-  if(progress)progress.textContent=item.countTarget?`${displayCount.toLocaleString(currentLanguage)} / ${item.countTarget.toLocaleString(currentLanguage)}`:displayCount.toLocaleString(currentLanguage);
-  const undo=card.querySelector('.dhikr-undo'),increment=card.querySelector('.dhikr-tap');
-  if(undo)undo.disabled=displayCount===0;
-  if(increment){increment.disabled=Boolean(item.countTarget&&displayCount>=item.countTarget);increment.textContent=item.countTarget&&displayCount>=item.countTarget?'✓':'+1'}
-  if(item.countTarget){
-   const bar=card.querySelector('.dhikr-progress');
-   if(bar){bar.setAttribute('aria-valuenow',String(displayCount));const fill=bar.querySelector('div');if(fill)fill.style.width=`${Math.round(displayCount/item.countTarget*100)}%`}
-  }
- }else{
-  const complete=card.querySelector('.dhikr-complete');
-  if(complete){complete.setAttribute('aria-pressed',String(count>0));complete.textContent=count?`✓ ${translateText('Afgerond vandaag · tik om ongedaan te maken')}`:translateText('Markeer afgerond')}
+ if(!item)return;
+ const count=readDeeds()[id]||0,card=document.querySelector(`.adhkar-card[data-dhikr-id="${CSS.escape(id)}"],.imam-prayer[data-dhikr-id="${CSS.escape(id)}"]`);
+ if(card){
+  const status=card.querySelector('.dhikr-count');
+  if(status)status.textContent=dhikrStatusText(item,count);
+  const bar=card.querySelector('.dhikr-progress');
+  if(bar&&item.countTarget){const percent=Math.min(100,Math.round(count/item.countTarget*100));bar.setAttribute('aria-valuenow',String(Math.min(count,item.countTarget)));const fill=bar.querySelector('div');if(fill)fill.style.width=`${percent}%`}
+  card.classList.toggle('is-done',item.countTarget?count>=item.countTarget:count>0);
  }
+ refreshDhikrFocus();
 }
 function renderDeedCounter(skipDailyDhikr=false){
+ applyDhikrCustomizations();
  const counts=readDeeds();
  const routineData=read();
  const routineActions=dailyGoodActionCount(routineData);
@@ -2040,10 +2410,12 @@ function normalizeArabicMarks(text){return String(text).replace(/([\u064B-\u0650
 const heartStainPositions=[[68,67,8],[105,58,7],[133,83,8],[78,105,7],[111,116,9],[143,113,6],[96,85,5]];
 function renderAllTimeDeedTotals(){
  try{
+  applyDhikrCustomizations();
   const totals={goodEvents:0,badEvents:0,notCheckedPrayers:0};
   const goodEventsByDate=new Map(),badEventsByDate=new Map();
   const allDeeds=[...getTrackedGoodDeeds().map(deed=>({...deed,kind:'good'})),...getDeeds('bad').map(deed=>({...deed,kind:'bad'}))];
   const knownIds=new Map(allDeeds.map(deed=>[deed.id,deed]));
+  removedDhikrItems.forEach(deed=>{if(!knownIds.has(deed.id))knownIds.set(deed.id,{...deed,kind:'good'})});
   dailyAdhkar.filter(deed=>deed.legacyId).forEach(deed=>knownIds.set(deed.legacyId,{...deed,legacyComplete:true}));
   const routineIds=new Set(groups.flatMap((group,groupIndex)=>group.items.map((_,itemIndex)=>`${groupIndex}-${itemIndex}`)));
   const prayerTrackedDates=new Set(),today=new Date().toLocaleDateString('sv-SE');
@@ -2080,6 +2452,8 @@ function renderAllTimeDeedTotals(){
   document.getElementById('allGoodPoints').textContent=(totals.goodEvents*10).toLocaleString('nl-NL');
   document.getElementById('allBadPoints').textContent=totals.badEvents.toLocaleString('nl-NL');
   currentDailyRankPoints=calculateDailyRankPoints(goodEventsByDate.get(today)||0,badEventsByDate.get(today)||0);
+  selectedDailyRankPoints=calculateDailyRankPoints(goodEventsByDate.get(deedDate.value)||0,badEventsByDate.get(deedDate.value)||0);
+  window.jannahDayEvents={good:goodEventsByDate,bad:badEventsByDate};
   let storedBest=0;
   try{
    const storedValue=JSON.parse(localStorage.getItem(`jannah-best-daily-score-v2-${userStorageId()}`)||'0');
@@ -2095,7 +2469,9 @@ function renderAllTimeDeedTotals(){
   const cleanDates=[...goodEventsByDate.keys()].filter(date=>goodEventsByDate.get(date)>=CLEAN_DAY_MIN_GOOD&&!badEventsByDate.get(date)).sort();
   const lastCleanDate=cleanDates.length?cleanDates[cleanDates.length-1]:'';
   const openStainActions=[...badEventsByDate.entries()].reduce((sum,[date,count])=>date>lastCleanDate?sum+count:sum,0);
-  renderHomeHeart(totals.goodEvents,totals.badEvents,totals.notCheckedPrayers,openStainActions);
+  window.homeHeartData={all:[totals.goodEvents,totals.badEvents,totals.notCheckedPrayers,openStainActions],today:[goodEventsByDate.get(today)||0,badEventsByDate.get(today)||0,0,badEventsByDate.get(today)||0]};
+  renderHomeHeartForMode();
+  renderHomeExtras();
  }catch(error){
   deedStatus.textContent='Het totaal van alle dagen kon niet worden berekend.';
  }
@@ -2105,6 +2481,19 @@ const homeHeartStainNodes=heartStainPositions.map(([x,y,radius],index)=>{
  stain.classList.add('heart-stain');stain.setAttribute('cx',x);stain.setAttribute('cy',y);stain.setAttribute('rx',radius);stain.setAttribute('ry',radius*0.68);stain.style.transitionDelay=`${index*90}ms`;
  document.getElementById('homeHeartStains').append(stain);
  return stain;
+});
+let homeHeartMode='today';
+function renderHomeHeartForMode(){
+ if(!window.homeHeartData)return;
+ renderHomeHeart(...window.homeHeartData[homeHeartMode]);
+ document.getElementById('homeHeartHeading').textContent=translateText(homeHeartMode==='today'?'Hart en Schild van Imaan · vandaag':'Hart en Schild van Imaan · alle dagen');
+ document.querySelectorAll('[data-heart-mode]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.heartMode===homeHeartMode)));
+}
+document.addEventListener('click',event=>{
+ const button=event.target.closest('[data-heart-mode]');
+ if(!button)return;
+ homeHeartMode=button.dataset.heartMode==='all'?'all':'today';
+ renderHomeHeartForMode();
 });
 function renderHomeHeart(goodActions,badActions,notCheckedPrayers,openStainActions=badActions){
  const visual=document.getElementById('homeHeartVisual');
@@ -2192,17 +2581,19 @@ function renderHomeHeart(goodActions,badActions,notCheckedPrayers,openStainActio
   return Math.max(0,goodEvents*10-badEvents);
  }
  function renderGrowthLevels(){
-  const points=currentDailyRankPoints,rankIndex=Math.floor(Math.sqrt(points/10));
-  const currentThreshold=rankIndex*rankIndex*10,nextThreshold=(rankIndex+1)*(rankIndex+1)*10;
   const rankName=index=>index<rankNames.length?translateText(rankNames[index]):`${translateText(rankNames[rankNames.length-1])} ${index+1}`;
-  const currentName=rankName(rankIndex),nextName=rankName(rankIndex+1);
-  const description=rankDescriptions[Math.min(rankIndex,rankDescriptions.length-1)];
-  const progress=Math.max(0,Math.min(100,Math.round((points-currentThreshold)/(nextThreshold-currentThreshold)*100)));
+  const selectedIsToday=deedDate.value===new Date().toLocaleDateString('sv-SE');
   [
    {name:'homeLevelName',description:'homeLevelDescription',bar:'homeLevelBar',track:'homeLevelBar',meta:'homeLevelMeta'},
    {name:'deedLevelName',description:'deedLevelDescription',bar:'deedLevelBar',track:'deedLevelBar',meta:'deedLevelMeta'}
   ].forEach(ids=>{
    const home=ids.name==='homeLevelName';
+   const points=home?currentDailyRankPoints:selectedDailyRankPoints,rankIndex=Math.floor(Math.sqrt(points/10));
+   const currentThreshold=rankIndex*rankIndex*10,nextThreshold=(rankIndex+1)*(rankIndex+1)*10;
+   const currentName=rankName(rankIndex),nextName=rankName(rankIndex+1);
+   const description=rankDescriptions[Math.min(rankIndex,rankDescriptions.length-1)];
+   const progress=Math.max(0,Math.min(100,Math.round((points-currentThreshold)/(nextThreshold-currentThreshold)*100)));
+   if(!home){const label=document.getElementById('deedCurrentScore').previousElementSibling;if(label)label.textContent=translateText(selectedIsToday?'Score vandaag':'Score van deze dag')}
    document.getElementById(ids.name).textContent=`${translateText('Dagelijkse rang')}: ${currentName}`;
    document.getElementById(ids.description).textContent=translateText(description);
    document.getElementById(home?'homeCurrentScore':'deedCurrentScore').textContent=points.toLocaleString(currentLanguage);
@@ -2311,7 +2702,7 @@ function applyHomeWidgetOrder(){
   const value=JSON.parse(localStorage.getItem(homeWidgetOrderKey())||'[]');
   if(Array.isArray(value))savedOrder=value.filter((id,index)=>knownIds.has(id)&&value.indexOf(id)===index);
  }catch(error){console.error('De opgeslagen indeling van het beginscherm kon niet worden gelezen.',error)}
- const defaultOrder=['heart','calendar','daily-quote','recommendation','score','intro','backup'];
+ const defaultOrder=['heart','calendar','daily-quote','recommendation','score','weekly','todo','intro','backup'];
  const baseOrder=savedOrder.length?savedOrder:defaultOrder;
  const order=[...baseOrder.filter(id=>knownIds.has(id)),...widgets.map(widget=>widget.dataset.homeWidget).filter(id=>!baseOrder.includes(id))];
  order.forEach(id=>container.append(widgets.find(widget=>widget.dataset.homeWidget===id)));
@@ -2436,7 +2827,11 @@ function render(){
    const input=document.createElement('input');input.type='checkbox';input.checked=!!data[id];if(isQuranPageItem)input.id=`routine-${id}`;input.addEventListener('change',()=>{const now=read();now[id]=input.checked;if(input.checked){heartAnimation='good';homeShieldAnimation='good'}save(now);updateCount(gi)});
    const content=document.createElement(isQuranPageItem?'label':'span');content.className='routine-item-content';if(isQuranPageItem)content.htmlFor=input.id;content.innerHTML=`<span class="label"></span><span class="detail"></span>`;content.querySelector('.label').textContent=it[0];content.querySelector('.detail').textContent=it[1];
    const points=document.createElement('span');points.className='routine-deed-points';points.dataset.routinePoints=id;points.textContent=data[id]===true?'Telt mee: +10 deedpunten':'Afvinken telt mee: +10 deedpunten';content.append(points);
-   item.append(input,content);if(isQuranPageItem)item.append(quranPageCounter);list.append(item);
+   item.append(input,content);if(isQuranPageItem)item.append(quranPageCounter);
+   const links=checklistLinks[it[0]];
+   if(links){const row=document.createElement('span');row.className='routine-links';links.forEach(link=>{const button=document.createElement('button');button.type='button';button.className='routine-link';button.dataset.linkPage=link.page||'adhkar';if(link.category)button.dataset.linkCategory=link.category;if(link.id)button.dataset.linkId=link.id;button.textContent=`→ ${translateText(link.label)}`;row.append(button)});content.append(row)}
+   list.append(item);
+   if(it[0]==='Een goede daad gedaan')list.append(buildGoodDeedNotesBlock());
   });
   head.addEventListener('click',()=>{list.hidden=!list.hidden;head.lastElementChild.textContent=list.hidden?'⌄':'⌃'});
   sec.append(head,list);
@@ -2448,6 +2843,195 @@ function updateCount(gi){const data=read();const done=groups[gi].items.reduce((n
 function renderProgress(){const data=read();const total=groups.reduce((n,g)=>n+g.items.length,0);const done=routineCompletionCount(data);const pct=Math.round(done/total*100);document.getElementById('progressNum').textContent=pct+'%';document.getElementById('progressBar').style.width=pct+'%';document.getElementById('progressText').textContent=done===0?'Begin met je checklist.':done===total?'Al je punten zijn afgevinkt. Alhamdulillah!':`${done} van ${total} punten afgevinkt.`;document.getElementById('quranPageCount').textContent=quranPagesRead(data).toLocaleString(currentLanguage);document.getElementById('quranPageUndo').disabled=quranPagesRead(data)===0;document.querySelectorAll('[data-routine-points]').forEach(points=>{const checked=data[points.dataset.routinePoints]===true;points.textContent=checked?'Telt mee: +10 deedpunten':'Afvinken telt mee: +10 deedpunten'});renderAllTimeDeedTotals();renderDeedCounter()}
 document.getElementById('reset').addEventListener('click',()=>{if(confirm('Alle vinkjes van deze datum wissen?')){localStorage.removeItem(keyFor(dateEl.value));render()}});
 document.getElementById('copy').addEventListener('click',async()=>{const data=read();let out=`Mijn Weg naar Jannah — ${dateEl.value}\n`;groups.forEach((g,gi)=>{out+='\n'+g.title+'\n';g.items.forEach((it,ii)=>out+=`${data[`${gi}-${ii}`]?'[x]':'[ ]'} ${it[0]}\n`)});try{await navigator.clipboard.writeText(out);alert('Dagoverzicht gekopieerd.')}catch(e){prompt('Kopieer je dagoverzicht:',out)}});
+const checklistLinks={
+ 'Ochtend- en avondadhkar':[{label:'Ochtendadhkār',category:'Ochtendadhkār'},{label:'Avondadhkār',category:'Avondadhkār'}],
+ 'Salawat over de Profeet ﷺ':[{label:'Ṣalawāt over de Profeet ﷺ',id:'dhikr-salawat-counter'}],
+ 'Dhikr gedaan':[{label:'Dhikr overdag',category:'Dhikr overdag'},{label:'Na het gebed',category:'Na het gebed'}],
+ 'Bedtijdadhkar gelezen':[{label:'Bedtijdadhkar',category:'Bedtijdadhkar'}],
+ 'Istighfar gedaan':[{label:'Istighfār',page:'istighfar'}]
+};
+function openAdhkarLink({page='adhkar',category='',id=''}){
+ showPage('routine');
+ selectedCombinedSection=page;
+ const item=id?findDhikrItem(id):null;
+ if(category)openDhikrCategories.add(category);
+ if(item?.category)openDhikrCategories.add(item.category);
+ renderCombinedSection();renderDailyDhikr();translatePage();
+ requestAnimationFrame(()=>{
+  const target=id?document.querySelector(`.adhkar-card[data-dhikr-id="${CSS.escape(id)}"]`):category?document.querySelector(`[data-dhikr-category="${CSS.escape(category)}"]`):null;
+  if(!target){window.scrollTo(0,0);return}
+  target.scrollIntoView({behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'});
+  target.classList.add('link-highlight');setTimeout(()=>target.classList.remove('link-highlight'),2400);
+ });
+}
+document.addEventListener('click',event=>{
+ const link=event.target.closest('.routine-link');
+ if(!link)return;
+ event.preventDefault();event.stopPropagation();
+ openAdhkarLink({page:link.dataset.linkPage,category:link.dataset.linkCategory||'',id:link.dataset.linkId||''});
+},true);
+const goodNotesKey=date=>`jannah-good-deed-notes-v1-${userStorageId()}-${date}`;
+function readGoodDeedNotes(date){
+ try{
+  const notes=JSON.parse(localStorage.getItem(goodNotesKey(date))||'[]');
+  return Array.isArray(notes)?notes.filter(note=>note&&typeof note.id==='string'&&typeof note.text==='string'):[];
+ }catch(error){return []}
+}
+function writeGoodDeedNotes(date,notes){
+ try{if(notes.length)localStorage.setItem(goodNotesKey(date),JSON.stringify(notes));else localStorage.removeItem(goodNotesKey(date));return true}
+ catch(error){document.getElementById('appStatus').textContent=translateText('Opslaan is niet gelukt. Controleer de opslagruimte en browserinstellingen.');return false}
+}
+function buildGoodDeedNotesBlock(){
+ const date=dateEl.value,block=document.createElement('div');block.className='good-deed-notes';
+ const heading=document.createElement('strong');heading.textContent=translateText('Wat heb je precies gedaan?');
+ const hint=document.createElement('small');hint.textContent=translateText('Noteer je goede daden; ze komen in de samenvatting van de afgelopen 7 dagen. Vink het item hierboven af om het mee te laten tellen.');
+ const list=document.createElement('ul');list.className='good-deed-note-list';
+ const form=document.createElement('form');form.className='good-deed-note-form';form.autocomplete='off';
+ const input=document.createElement('input');input.maxLength=200;input.required=true;input.placeholder=translateText('Bijv. buurman geholpen met boodschappen');input.setAttribute('aria-label',translateText('Wat heb je precies gedaan?'));
+ const add=document.createElement('button');add.type='submit';add.className='btn primary';add.textContent=translateText('Voeg toe');
+ form.append(input,add);
+ const renderList=()=>{
+  list.replaceChildren();
+  readGoodDeedNotes(date).forEach(note=>{
+   const row=document.createElement('li'),text=document.createElement('span'),remove=document.createElement('button');
+   text.textContent=note.text;remove.type='button';remove.className='note-remove';remove.textContent='×';remove.title=translateText('Verwijderen');remove.setAttribute('aria-label',`${translateText('Verwijderen')}: ${note.text}`);
+   remove.addEventListener('click',()=>{if(writeGoodDeedNotes(date,readGoodDeedNotes(date).filter(entry=>entry.id!==note.id))){renderList();renderWeeklySummary()}});
+   row.append(text,remove);list.append(row);
+  });
+ };
+ form.addEventListener('submit',event=>{
+  event.preventDefault();
+  const text=input.value.trim();if(!text)return;
+  const notes=readGoodDeedNotes(date);notes.push({id:`note-${Date.now()}-${Math.random().toString(36).slice(2,7)}`,text});
+  if(writeGoodDeedNotes(date,notes)){input.value='';renderList();renderWeeklySummary()}
+ });
+ block.append(heading,hint,list,form);renderList();
+ return block;
+}
+const todoKey=()=>`jannah-todos-v1-${userStorageId()}`;
+const defaultTodoCategories=['Qur’an','Gebeden inhalen','Leerdoelen','Overig'];
+function readTodos(){
+ try{
+  const list=JSON.parse(localStorage.getItem(todoKey())||'[]');
+  return Array.isArray(list)?list.filter(todo=>todo&&typeof todo.id==='string'&&typeof todo.text==='string').map(todo=>({id:todo.id,text:todo.text,category:typeof todo.category==='string'&&todo.category.trim()?todo.category.trim():'Overig',done:todo.done===true})):[];
+ }catch(error){return []}
+}
+function writeTodos(list){
+ try{localStorage.setItem(todoKey(),JSON.stringify(list));return true}
+ catch(error){document.getElementById('appStatus').textContent=translateText('Opslaan is niet gelukt. Controleer de opslagruimte en browserinstellingen.');return false}
+}
+function renderTodos(){
+ const container=document.getElementById('todoList'),todos=readTodos();
+ if(!container)return;
+ container.replaceChildren();
+ const datalist=document.getElementById('todoCategoryList');datalist.replaceChildren();
+ [...new Set([...defaultTodoCategories,...todos.map(todo=>todo.category)])].forEach(category=>{const option=document.createElement('option');option.value=translateText(category);datalist.append(option)});
+ document.getElementById('todoClearDone').hidden=!todos.some(todo=>todo.done);
+ if(!todos.length){const empty=document.createElement('p');empty.className='note';empty.textContent=translateText('Nog geen taken. Voeg er hierboven een toe.');container.append(empty);return}
+ const groupsByCategory=new Map();
+ todos.forEach(todo=>{if(!groupsByCategory.has(todo.category))groupsByCategory.set(todo.category,[]);groupsByCategory.get(todo.category).push(todo)});
+ groupsByCategory.forEach((items,category)=>{
+  const group=document.createElement('section');group.className='todo-group';
+  const heading=document.createElement('h4');heading.textContent=`${translateText(category)} · ${items.filter(todo=>!todo.done).length}/${items.length}`;
+  const ul=document.createElement('ul');
+  items.forEach(todo=>{
+   const row=document.createElement('li');row.className=todo.done?'is-done':'';
+   const label=document.createElement('label'),box=document.createElement('input'),text=document.createElement('span'),remove=document.createElement('button');
+   box.type='checkbox';box.checked=todo.done;box.dataset.todoToggle=todo.id;text.textContent=todo.text;
+   remove.type='button';remove.className='note-remove';remove.dataset.todoDelete=todo.id;remove.textContent='×';remove.title=translateText('Verwijderen');remove.setAttribute('aria-label',`${translateText('Verwijderen')}: ${todo.text}`);
+   label.append(box,text);row.append(label,remove);ul.append(row);
+  });
+  group.append(heading,ul);container.append(group);
+ });
+}
+document.getElementById('todoForm').addEventListener('submit',event=>{
+ event.preventDefault();
+ const form=event.currentTarget,text=form.elements.namedItem('text').value.trim();
+ if(!text)return;
+ const typed=form.elements.namedItem('category').value.trim(),known=defaultTodoCategories.find(category=>translateText(category).toLocaleLowerCase()===typed.toLocaleLowerCase());
+ const category=known||typed||'Overig';
+ const todos=readTodos();todos.push({id:`todo-${Date.now()}-${Math.random().toString(36).slice(2,7)}`,text,category,done:false});
+ if(writeTodos(todos)){form.elements.namedItem('text').value='';renderTodos();translatePage()}
+});
+document.getElementById('todoList').addEventListener('change',event=>{
+ const box=event.target.closest('[data-todo-toggle]');
+ if(!box)return;
+ if(writeTodos(readTodos().map(todo=>todo.id===box.dataset.todoToggle?{...todo,done:box.checked}:todo))){renderTodos();translatePage()}
+});
+document.getElementById('todoList').addEventListener('click',event=>{
+ const remove=event.target.closest('[data-todo-delete]');
+ if(remove&&writeTodos(readTodos().filter(todo=>todo.id!==remove.dataset.todoDelete))){renderTodos();translatePage()}
+});
+document.getElementById('todoClearDone').addEventListener('click',()=>{if(writeTodos(readTodos().filter(todo=>!todo.done))){renderTodos();translatePage()}});
+function readJsonObject(key){
+ try{const value=JSON.parse(localStorage.getItem(key)||'{}');return value&&typeof value==='object'&&!Array.isArray(value)?value:{}}
+ catch(error){return {}}
+}
+function collectDayStats(date,today){
+ const userId=userStorageId(),deeds=readJsonObject(`jannah-deed-counter-v1-${userId}-${date}`),checklist=readJsonObject(`jannah-checklist-v1-${userId}-${date}`);
+ const good=new Map(),bad=new Map(),add=(map,name,count)=>{if(count>0)map.set(name,(map.get(name)||0)+count)};
+ const goodDeeds=new Map([...getTrackedGoodDeeds(),...removedDhikrItems].map(deed=>[deed.id,deed]));
+ dailyAdhkar.filter(deed=>deed.legacyId).forEach(deed=>goodDeeds.set(deed.legacyId,{...deed,legacyComplete:true}));
+ const badDeeds=new Map(getDeeds('bad').map(deed=>[deed.id,deed]));
+ Object.entries(deeds).forEach(([id,count])=>{
+  if(!Number.isSafeInteger(count)||count<=0)return;
+  if(goodDeeds.has(id)){const deed=goodDeeds.get(id);add(good,deed.title,getGoodDeedActionCount(deed,count))}
+  else if(badDeeds.has(id))add(bad,badDeeds.get(id).title,count);
+ });
+ groups.forEach((group,groupIndex)=>group.items.forEach((item,itemIndex)=>{if(checklist[`${groupIndex}-${itemIndex}`]===true)add(good,item[0],1)}));
+ const pages=Number(checklist['quran-pages']);
+ if(Number.isSafeInteger(pages)&&pages>0)add(good,'Qur’an-bladzijden gelezen',pages);
+ const sum=map=>[...map.values()].reduce((total,count)=>total+count,0),goodTotal=sum(good),badTotal=sum(bad);
+ const prayerSummary=getPrayerCompletionSummary(checklist);
+ const missed=date<today&&prayerSummary.hasChecklistEntries?Math.max(0,prayerSummary.notChecked-(Number(deeds['missed-prayer'])||0)):0;
+ return {date,good,bad,goodTotal,badTotal,score:calculateDailyRankPoints(goodTotal,badTotal),notes:readGoodDeedNotes(date),missed,hasEntries:Object.keys(deeds).length>0||Object.keys(checklist).length>0};
+}
+function renderWeeklySummary(){
+ const details=document.getElementById('weeklySummary'),body=document.getElementById('weeklySummaryBody');
+ if(!details||!body||!details.open)return;
+ const today=new Date().toLocaleDateString('sv-SE'),days=[];
+ for(let offset=6;offset>=0;offset--){const day=new Date();day.setDate(day.getDate()-offset);days.push(collectDayStats(day.toLocaleDateString('sv-SE'),today))}
+ const make=(tag,className,text)=>{const element=document.createElement(tag);if(className)element.className=className;if(text!==undefined)element.textContent=text;return element};
+ const sumBy=key=>days.reduce((total,day)=>total+day[key],0),mergeMaps=key=>{const merged=new Map();days.forEach(day=>day[key].forEach((count,name)=>merged.set(name,(merged.get(name)||0)+count)));return [...merged.entries()].sort((a,b)=>b[1]-a[1])};
+ const goodTotal=sumBy('goodTotal'),badTotal=sumBy('badTotal'),missedTotal=sumBy('missed'),activeDays=days.filter(day=>day.hasEntries).length,totalScore=sumBy('score'),best=days.reduce((top,day)=>day.score>top.score?day:top,days[0]);
+ const topGood=mergeMaps('good').slice(0,5),topBad=mergeMaps('bad').slice(0,5);
+ body.replaceChildren();
+ const stats=make('div','weekly-stats');
+ [['Goede daden',goodTotal],['Misstappen',badTotal],['Gemiddelde dagscore',Math.round(totalScore/7)],['Dagen geregistreerd',`${activeDays}/7`]].forEach(([label,value])=>{const stat=make('div','weekly-stat');stat.append(make('small','',translateText(label)),make('strong','',typeof value==='number'?value.toLocaleString(currentLanguage):value));stats.append(stat)});
+ body.append(stats);
+ const maxScore=Math.max(1,...days.map(day=>day.score)),chart=make('div','weekly-chart');chart.setAttribute('role','img');chart.setAttribute('aria-label',translateText('Dagscores van de afgelopen 7 dagen'));
+ days.forEach(day=>{
+  const column=make('div','weekly-day'),bar=make('div','weekly-bar'),fill=make('div','weekly-bar-fill');fill.style.height=`${Math.round(day.score/maxScore*100)}%`;bar.append(fill);
+  const label=new Intl.DateTimeFormat(currentLanguage,{weekday:'short'}).format(new Date(`${day.date}T12:00:00`));
+  column.append(make('span','weekly-score',String(day.score)),bar,make('span','weekly-label',label));if(day.date===today)column.classList.add('is-today');chart.append(column);
+ });
+ body.append(chart);
+ if(best.score>0)body.append(make('p','note',`${translateText('Beste dag')}: ${new Intl.DateTimeFormat(currentLanguage,{weekday:'long',day:'numeric',month:'long'}).format(new Date(`${best.date}T12:00:00`))} · ${best.score.toLocaleString(currentLanguage)}`));
+ const section=(title,entries,formatter)=>{
+  const wrap=make('section','weekly-section');wrap.append(make('h4','',translateText(title)));
+  if(!entries.length)wrap.append(make('p','note',translateText('Niets geregistreerd.')));
+  else{const ul=make('ul');entries.forEach(entry=>ul.append(make('li','',formatter(entry))));wrap.append(ul)}
+  body.append(wrap);
+ };
+ section('Opvallende goede daden',topGood,([name,count])=>`${translateText(name)} · ${count.toLocaleString(currentLanguage)}×`);
+ section('Opvallende misstappen',topBad,([name,count])=>`${translateText(name)} · ${count.toLocaleString(currentLanguage)}×`);
+ const notes=days.flatMap(day=>day.notes.map(note=>({date:day.date,text:note.text}))).reverse();
+ section('Wat je zelf hebt gedaan',notes,note=>`${new Intl.DateTimeFormat(currentLanguage,{weekday:'short',day:'numeric',month:'short'}).format(new Date(`${note.date}T12:00:00`))}: ${note.text}`);
+ const tips=[],goodNames=days.flatMap(day=>[...day.good.keys()]);
+ const daysMatching=pattern=>days.filter(day=>[...day.good.keys()].some(name=>pattern.test(name))).length;
+ if(activeDays<=4)tips.push(translateText('Je hebt op {n} van de 7 dagen iets geregistreerd. Een korte registratie per dag houdt je overzicht eerlijk.').replace('{n}',activeDays));
+ if(missedTotal>0)tips.push(translateText('Er zijn {n} gebeden niet afgevinkt. Plan morgen elk gebed vooraf in en haal gemiste gebeden op tijd in.').replace('{n}',missedTotal));
+ if(topBad.length)tips.push(translateText('Je meest geregistreerde misstap was “{name}” ({n}×). Bedenk vooraf hoe je die morgen vermijdt, en vraag Allah om vergeving en herstel.').replace('{name}',translateText(topBad[0][0])).replace('{n}',topBad[0][1]));
+ if(daysMatching(/Qur’an|Quran/i)<4)tips.push(translateText('Plan morgen een kort moment voor de Qur’an, al zijn het maar een paar verzen.'));
+ if(daysMatching(/ochtend|avond|adhk|Dhikr|dhikr|Tasb|Istigh|Ṣalawāt|Salawat/i)<4)tips.push(translateText('Probeer morgen de ochtend- en avondadhkār vast te houden; tik op een kaart in de adhkār-pagina om te beginnen.'));
+ if(badTotal>goodTotal&&goodTotal>=0&&activeDays>0)tips.push(translateText('Er waren meer misstappen dan goede daden. Begin morgen met één kleine goede daad en bewaak je tong en blik.'));
+ if(!tips.length)tips.push(translateText('Alhamdulillah, je week ziet er sterk uit. Houd dit tempo vast en blijf oprecht in je intentie.'));
+ const tipSection=make('section','weekly-section weekly-tips');tipSection.append(make('h4','',translateText('Verbeterpunten voor morgen')));
+ const tipList=make('ul');tips.forEach(tip=>tipList.append(make('li','',tip)));tipSection.append(tipList);body.append(tipSection);
+ body.append(make('p','note',translateText('Alleen een persoonlijke reflectie op basis van je eigen invoer; geen religieus oordeel.')));
+}
+document.getElementById('weeklySummary').addEventListener('toggle',()=>{renderWeeklySummary();translatePage()});
+function renderHomeExtras(){renderWeeklySummary();renderTodos()}
 initializeCalendarCarousel();
 initializeDailyQuotes();
 setInterval(()=>{if(currentSession&&!homeView.hidden)renderIslamicCalendar()},30000);
@@ -2467,5 +3051,5 @@ initializeHomeWidgetReordering();
 initializeAuth();
 translatePage();
 </script>
-<footer class="app-version" id="appVersion" style="text-align:center;font-size:11px;color:#6b7280;padding:14px 0 22px">Appversie v59</footer>
+<footer class="app-version" id="appVersion" style="text-align:center;font-size:11px;color:#6b7280;padding:14px 0 22px">Appversie v60</footer>
 </body></html>

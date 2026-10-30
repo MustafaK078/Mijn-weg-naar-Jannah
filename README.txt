@@ -9,6 +9,13 @@ Openen:
 4. De installatie maakt een startscherm-app en kan de app-shell offline openen nadat die eenmaal geladen is. Persoonlijke voortgang wordt niet met andere apparaten gesynchroniseerd.
 - De app gebruikt de schermbreedte van het apparaat en houdt op telefoons rekening met de veilige schermranden. Formuliervelden blijven minimaal 16 px groot zodat iPhone/iPad niet automatisch inzoomt wanneer je een veld selecteert. Handmatig inzoomen is alleen beschikbaar op het Istighfār-onderdeel; op alle andere pagina’s is zoomen uitgeschakeld.
 
+Nieuw in versie 60:
+- Schild van Imaan & daden: de Voortgangslijst staat links boven en Daden registreren rechts boven. De datumkeuze toont nu de aantallen en de score van de gekozen dag.
+- Het hart op de startpagina schakelt tussen vandaag (standaard) en alle dagen.
+- In de Voortgangslijst staan klikbare links naar het juiste deel van de adhkār-pagina (ochtend/avond, ṣalawāt, dhikr overdag/na het gebed, bedtijd) en naar Istighfār. Onder "Een goede daad gedaan" kun je noteren wat je precies deed; dit komt in de weekoverzichten.
+- Adhkār- en Istighfār-kaarten openen met een tik schermvullend (grote telknop, voortgangsbalk, Arabisch, uitspraak). Je kunt na het doel doortellen. Met Bewerken voeg je onderdelen toe, verwijder/herstel je ze, sleep je ze en pas je bronnen en aantallen aan. Alles wordt lokaal bewaard (jannah-dhikr-custom-v1) en zit in de SQL-export.
+- Startpagina: uitklapbare samenvatting van de afgelopen 7 dagen en een verplaatsbare to-do lijst met categorieën (jannah-todos-v1, ook in de export).
+
 Opslag en persoonlijke back-up:
 - De app vraagt met **Bescherm lokale opslag** aan de browser om lokale gegevens niet automatisch op te ruimen. Ondersteuning verschilt per browser; dit voorkomt niet dat je gegevens verdwijnen wanneer je sitegegevens wist, de app verwijdert of van apparaat wisselt.
 - Kies **Maak persoonlijke back-up** op het beginscherm om alleen het ingelogde account en diens voortgang als SQL-bestand te downloaden. Bewaar dit bestand veilig; het bevat privé-invoer en een wachtwoordhash.
