@@ -67,16 +67,16 @@ struct Dhikr {
 };
 
 const Dhikr ADHKAR[] = {
-  {"Subhanallah", "Subhan Allah", "Gezegend is Allah", 33, 's'},
-  {"Alhamdulillah", "Alhamdu lillah", "Alle lof is voor Allah", 33, 'a'},
-  {"Allahu Akbar", "Allahu Akbar", "Allah is de Grootste", 34, 'k'},
-  {"Istighfar", "Astaghfirullah", "Ik zoek vergeving", 100, 'i'},
-  {"Tahlil", "La ilaha illallah", "Er is geen god dan Allah", 100, 't'},
-  {"Salawat", "Allahumma salli ala Muhammad", "Zegeningen over Profeet", 100, 'w'},
-  {"SubhanAllahi wa-b.", "SubhanAllahi wa-bihamdihi", "Verheven is Allah en lof", 100, 'b'},
-  {"SubhanAllahi l-Azim", "SubhanAllahi l-Azim wa-bihamdihi", "Verheven de Geweldige", 100, 'z'},
-  {"La hawla wa-la q.", "La hawla wa-la quwwata illa billah", "Geen kracht dan door Allah", 100, 'h'},
-  {"Tahlil Tam", "La ilaha illa Allah wahdahu...", "Alleen zonder deelgenoot", 100, 'u'},
+  {"Subhanallah", "Subhan Allah", "Verheven is Allah boven iedere tekortkoming", 33, 's'},
+  {"Alhamdulillah", "Alhamdu lillah", "Alle lof en dank behoort toe aan Allah", 33, 'a'},
+  {"Allahu Akbar", "Allahu Akbar", "Allah is de Grootste boven alles", 34, 'k'},
+  {"Istighfar", "Astaghfirullah wa-atubu ilayh", "Ik vraag Allah om vergeving en keer berouwvol tot Hem", 100, 'i'},
+  {"Tahlil", "La ilaha illallah", "Er is geen godheid die het recht heeft aanbeden te worden behalve Allah", 100, 't'},
+  {"Salawat", "Allahumma salli ala Muhammad wa ala ali Muhammad", "O Allah, schenk Uw zegeningen en vrede aan Muhammad en zijn familie", 100, 'w'},
+  {"SubhanAllah wa-b.", "SubhanAllahi wa-bihamdihi", "Verheven is Allah en alle lof behoort Hem toe - wist zonden als schuim van de zee", 100, 'b'},
+  {"SubhanAllah l-Azim", "SubhanAllahi l-Azim wa-bihamdihi", "Verheven is Allah de Geweldige, en aan Hem behoort alle lof", 100, 'z'},
+  {"La hawla wa-la q.", "La hawla wa-la quwwata illa billah", "Er is geen macht en geen kracht behalve door Allah - een schat uit het Paradijs", 100, 'h'},
+  {"Tahlil Tamm", "La ilaha illa Allah wahdahu la sharika lah, lahul-mulku wa-lahul-hamd, wa-huwa ala kulli shay'in qadir", "Niemand heeft het recht aanbeden te worden behalve Allah alleen, zonder deelgenoot. Aan Hem behoort het koninkrijk en alle lof, en Hij is over alles machtig", 100, 'u'},
 };
 const int N = sizeof(ADHKAR) / sizeof(ADHKAR[0]);
 
@@ -89,6 +89,7 @@ uint16_t counts[N] = {0};
 uint8_t brightness = 200;  // Helderheid 15..255
 bool liveSync = true;       // Live verzending wanneer verbonden
 int adhkarScrollY = 0;      // Scrollpositie voor de lijst met 10 adhkar
+bool touchActive = false;   // Vlag of scherm momenteel wordt aangeraakt
 Preferences prefs;
 bool dirty = true;
 
@@ -194,6 +195,64 @@ void incrementCurrentDhikr() {
 #endif
 }
 
+void drawMarqueeLine(const char *text, int y, uint16_t color, int offset) {
+  int16_t x1, y1;
+  uint16_t w, h;
+  gfx->setTextSize(1);
+  gfx->getTextBounds(text, 0, 0, &x1, &y1, &w, &h);
+
+  if (w <= 156) {
+    gfx->setTextColor(color);
+    gfx->setCursor((172 - w) / 2, y);
+    gfx->print(text);
+  } else {
+    int spacing = 36;
+    int totalSpan = w + spacing;
+    int shift = offset % totalSpan;
+    int x = 8 - shift;
+
+    gfx->setTextColor(color);
+    gfx->setCursor(x, y);
+    gfx->print(text);
+
+    if (x + w < 164) {
+      gfx->setCursor(x + w + 10, y);
+      gfx->print("*");
+      gfx->setCursor(x + totalSpan, y);
+      gfx->print(text);
+    }
+  }
+}
+
+void renderMarqueeArea(int offset) {
+  const Dhikr &d = ADHKAR[current];
+  gfx->fillRect(0, 222, 172, 60, C_BG);
+  drawMarqueeLine(d.phrase, 228, C_GOLD, offset);
+  drawMarqueeLine(d.meaning, 250, C_CREAM, offset);
+}
+
+void updateMarquee() {
+  if (page != TESBIH || dirty || touchActive) return;
+  static uint32_t lastMarqueeTime = 0;
+  static int lastCurrent = -1;
+  static int marqueeTicks = 0;
+  uint32_t now = millis();
+
+  if (current != lastCurrent) {
+    lastCurrent = current;
+    marqueeTicks = 0;
+  }
+
+  if (now - lastMarqueeTime < 35) return;
+  lastMarqueeTime = now;
+  marqueeTicks++;
+
+  int offset = (marqueeTicks > 35) ? (marqueeTicks - 35) : 0;
+
+  renderMarqueeArea(offset);
+  tft->draw16bitRGBBitmap(0, 222, gfx->getFramebuffer() + 222 * 172, 172, 60);
+}
+
 void drawTesbih() {
   drawFrame();
   const Dhikr &d = ADHKAR[current];
@@ -216,9 +275,8 @@ void drawTesbih() {
 
   updateTesbihCounter();
 
-  centerText(d.phrase, 230, 1, C_GOLD);
-  centerText(d.meaning, 248, 1, C_CREAM);
-  centerText("tik: +1  omhoog: BT sync", 290, 1, C_MUTED);
+  renderMarqueeArea(0);
+  centerText("tik: +1  omhoog: BT sync", 294, 1, C_MUTED);
 }
 
 void drawAdhkar() {
@@ -615,6 +673,7 @@ void handleTouch() {
   int x, y;
   uint32_t now = millis();
   if (readTouch(x, y)) {
+    touchActive = true;
     lastSeen = now;
     if (!down) {
       down = true;
@@ -650,6 +709,7 @@ void handleTouch() {
     }
   } else if (down && now - lastSeen > 60) {
     down = false;
+    touchActive = false;
     if (draggingSlider) {
       prefs.putUChar("bright", brightness);
       draggingSlider = false;
@@ -778,6 +838,8 @@ void loop() {
   if (dirty) {
     dirty = false;
     render();
+  } else {
+    updateMarquee();
   }
   delay(5);
 }
