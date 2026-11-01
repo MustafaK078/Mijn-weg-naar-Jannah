@@ -379,34 +379,24 @@ html.focus-open{overflow:hidden}
 <dialog class="esp32-modal" id="esp32SyncModal" aria-labelledby="esp32ModalTitle">
  <div class="esp32-modal-content">
   <div class="esp32-modal-header">
-   <h3 id="esp32ModalTitle">📲 ESP32 Tasbih Synchronisatie</h3>
+   <h3 id="esp32ModalTitle">📲 ESP32 Tasbih Bluetooth Synchronisatie</h3>
    <button type="button" class="esp32-modal-close" id="esp32ModalClose" aria-label="Sluiten">✕</button>
   </div>
   <div class="esp32-modal-body">
    <div class="esp32-section">
-    <h4>1. Draadloos overdragen via Bluetooth</h4>
-    <p class="note">Koppel eenmalig via <strong>Instellingen &gt; Bluetooth</strong> op je iPhone met <strong>"Jannah Tasbih"</strong>.</p>
-    <p class="note">Je ESP32 telt al je dhikr offline op en onthoudt deze veilig in zijn geheugen. Je telefoon kan gewoon vergrendeld blijven zonder storingen!</p>
-    <p class="note"><strong>Om over te dragen:</strong> Open deze webapp, veeg op je ESP32 naar pagina <strong>SYNC</strong> en tik op <strong>"STUUR VIA BT"</strong>. De tellingen worden meteen bijgeschreven op je dhikr-tellers en goede daden!</p>
-   </div>
-   <div class="esp32-section">
-    <h4>2. QR-code overdragen (Offline backup)</h4>
-    <p class="note">Veeg op je ESP32 naar de pagina <strong>SYNC</strong>. Richt je <strong>iPhone Camera</strong> op het scherm van de ESP32 om alle tellingen in één tik toe te voegen aan je goede daden.</p>
+    <h4>Draadloos overdragen via Bluetooth</h4>
+    <p class="note">1. Koppel eenmalig via <strong>Instellingen &gt; Bluetooth</strong> op je iPhone met <strong>"Jannah Tasbih"</strong>.</p>
+    <p class="note">2. Je ESP32 bewaart al je dhikr offline in het geheugen. Je telefoon kan gewoon vergrendeld in je zak blijven zonder ongewenste toetsaanslagen.</p>
+    <p class="note">3. <strong>Synchroniseren:</strong> Open deze webapp, veeg op je ESP32 naar pagina <strong>SYNC</strong> en tik op <strong>"STUUR VIA BT"</strong>.</p>
+    <p class="note">4. Alle tellingen worden direct overgedragen naar je dhikr en goede daden!</p>
     <div class="esp32-actions">
-     <button type="button" class="btn primary" id="esp32ScanCameraBtn">📷 Scan met camera in app</button>
      <button type="button" class="btn secondary" id="esp32ManualToggleBtn">⌨ Handmatige invoer</button>
     </div>
-    <div id="esp32CameraScanner" hidden>
-     <video id="esp32Video" playsinline style="width:100%;max-height:220px;border-radius:10px;background:#000;margin-top:8px;"></video>
-     <p class="note" id="esp32ScannerNote">Richt de camera op de QR-code van je ESP32...</p>
-     <button type="button" class="btn secondary" id="esp32StopCameraBtn">Camera stoppen</button>
-    </div>
     <div id="esp32ManualArea" hidden style="margin-top:8px;">
-     <input type="text" id="esp32ManualCode" placeholder="Plak link of code: s=33,a=33,k=34..." style="width:100%;box-sizing:border-box;padding:8px;border:1px solid var(--line);border-radius:8px;font:inherit;font-size:14px;margin-bottom:8px;">
+     <input type="text" id="esp32ManualCode" placeholder="Code: esp32 s33 a33 k34..." style="width:100%;box-sizing:border-box;padding:8px;border:1px solid var(--line);border-radius:8px;font:inherit;font-size:14px;margin-bottom:8px;">
      <button type="button" class="btn primary" id="esp32ApplyManualBtn">Tellingen toevoegen</button>
     </div>
    </div>
-   <p class="shield-notice" id="esp32SyncStatus">💡 Tip: Je kunt de QR-code ook direct met de standaard iPhone Camera-app scannen zonder deze app vooraf te openen.</p>
   </div>
  </div>
 </dialog>
@@ -2483,7 +2473,6 @@ function processEsp32SyncPayload(payload,source='url'){
  }
  return false;
 }
-let esp32MediaStream=null,esp32ScanInterval=0;
 function openEsp32SyncModal(){
  const modal=document.getElementById('esp32SyncModal');
  if(!modal)return;
@@ -2491,53 +2480,10 @@ function openEsp32SyncModal(){
 }
 function closeEsp32SyncModal(){
  const modal=document.getElementById('esp32SyncModal');
- stopEsp32Camera();
  if(!modal)return;
  if(typeof modal.close==='function')modal.close();else modal.hidden=true;
 }
-async function startEsp32Camera(){
- const video=document.getElementById('esp32Video'),container=document.getElementById('esp32CameraScanner'),note=document.getElementById('esp32ScannerNote');
- if(!video||!container)return;
- container.hidden=false;
- try{
-  esp32MediaStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'}});
-  video.srcObject=esp32MediaStream;
-  await video.play();
-  if('BarcodeDetector' in window){
-   const detector=new BarcodeDetector({formats:['qr_code']});
-   esp32ScanInterval=setInterval(async()=>{
-    try{
-     const barcodes=await detector.detect(video);
-     if(barcodes&&barcodes.length>0){
-      const raw=barcodes[0].rawValue;
-      if(raw&&(raw.includes('esp32:')||raw.includes('s='))){
-       stopEsp32Camera();
-       closeEsp32SyncModal();
-       processEsp32SyncPayload(raw,'camera');
-      }
-     }
-    }catch(err){}
-   },400);
-  }else{
-   if(note)note.textContent=translateText('Camera actief. Scan de QR-code met je iPhone Camera-app voor automatische overdracht, of voer de code hieronder handmatig in.');
-  }
- }catch(err){
-  container.hidden=true;
-  alert(translateText('Camera kon niet worden geopend. Geef toestemming of scan direct met de iPhone Camera app.'));
- }
-}
-function stopEsp32Camera(){
- clearInterval(esp32ScanInterval);
- if(esp32MediaStream){
-  esp32MediaStream.getTracks().forEach(track=>track.stop());
-  esp32MediaStream=null;
- }
- const container=document.getElementById('esp32CameraScanner');
- if(container)container.hidden=true;
-}
 document.getElementById('esp32ModalClose')?.addEventListener('click',closeEsp32SyncModal);
-document.getElementById('esp32ScanCameraBtn')?.addEventListener('click',startEsp32Camera);
-document.getElementById('esp32StopCameraBtn')?.addEventListener('click',stopEsp32Camera);
 document.getElementById('esp32ManualToggleBtn')?.addEventListener('click',()=>{
  const area=document.getElementById('esp32ManualArea');
  if(area)area.hidden=!area.hidden;
@@ -2551,14 +2497,6 @@ document.getElementById('esp32ApplyManualBtn')?.addEventListener('click',()=>{
   }
  }
 });
-window.addEventListener('hashchange',()=>{
- if(window.location.hash.includes('esp32:')){
-  processEsp32SyncPayload(window.location.hash,'url');
- }
-});
-if(window.location.hash.includes('esp32:')){
- setTimeout(()=>processEsp32SyncPayload(window.location.hash,'url'),500);
-}
 let dhikrDrag=null;
 document.addEventListener('pointerdown',event=>{
  const handle=event.target.closest('.dhikr-drag-handle');
@@ -3469,5 +3407,5 @@ initializeHomeWidgetReordering();
 initializeAuth();
 translatePage();
 </script>
-<footer class="app-version" id="appVersion" style="text-align:center;font-size:11px;color:#6b7280;padding:14px 0 22px">Appversie v66</footer>
+<footer class="app-version" id="appVersion" style="text-align:center;font-size:11px;color:#6b7280;padding:14px 0 22px">Appversie v67</footer>
 </body></html>

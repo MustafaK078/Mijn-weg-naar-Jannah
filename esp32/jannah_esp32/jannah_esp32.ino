@@ -13,10 +13,6 @@
 #include <Arduino_GFX_Library.h>
 #include <Preferences.h>
 #include <Wire.h>
-#include "qrcode.h"
-
-// Webapp URL voor de QR-code overdracht (pas aan indien nodig)
-const char *APP_SYNC_URL = "https://mustafak078.github.io/Mijn-weg-naar-Jannah/#esp32:";
 
 #include <BleKeyboard.h>
 #define HAS_BLE_KEYBOARD 1
@@ -252,79 +248,86 @@ void drawBrightness() {
   centerText("veeg voor sync", 295, 1, C_MUTED);
 }
 
-// Tekent de QR-code pagina voor synchronisatie naar de iPhone app
+// Tekent de Bluetooth sync pagina voor synchronisatie naar de iPhone app
 void drawSync() {
   drawFrame();
-  centerText("SYNC NAAR APP", 14, 1, C_GOLD);
-  centerText("Scan QR of stuur via BT", 28, 1, C_CREAM);
+  centerText("BLUETOOTH SYNC", 14, 1, C_GOLD);
+  centerText("Draag dhikr over naar app", 28, 1, C_CREAM);
 
-  char url[170];
-  snprintf(url, sizeof(url),
-           "%ss=%u,a=%u,k=%u,i=%u,t=%u,w=%u",
-           APP_SYNC_URL,
-           counts[0], counts[1], counts[2],
-           counts[3], counts[4], counts[5]);
+  // Kaart met overzicht van alle dhikr-tellingen
+  gfx->fillRoundRect(12, 42, 148, 134, 8, C_CARD);
+  gfx->drawRoundRect(12, 42, 148, 134, 8, C_GREEN2);
 
-  QRCode qrcode;
-  uint8_t qrcodeData[qrcode_getBufferSize(5)];
-  int8_t err = qrcode_initText(&qrcode, qrcodeData, 5, ECC_LOW, url);
+  const char *dhikrNames[] = {
+    "Subhanallah",
+    "Alhamdulillah",
+    "Allahu Akbar",
+    "Istighfar",
+    "Tahlil",
+    "Salawat"
+  };
 
-  if (err == 0) {
-    const uint8_t scale = 3;
-    const int qrW = qrcode.size * scale;   // 37 * 3 = 111 px
-    const int startX = (172 - qrW) / 2;
-    const int startY = 40;
+  char lineBuf[32];
+  for (int i = 0; i < N; i++) {
+    int rowY = 50 + i * 16;
+    gfx->setTextSize(1);
+    gfx->setTextColor(C_WHITE);
+    gfx->setCursor(20, rowY);
+    gfx->print(dhikrNames[i]);
 
-    // Witte achtergrondplaat met afgeronde hoeken
-    gfx->fillRoundRect(startX - 4, startY - 4, qrW + 8, qrW + 8, 6, C_WHITE);
-
-    // QR-modules tekenen
-    for (uint8_t y = 0; y < qrcode.size; y++) {
-      for (uint8_t x = 0; x < qrcode.size; x++) {
-        if (qrcode_getModule(&qrcode, x, y)) {
-          gfx->fillRect(startX + x * scale, startY + y * scale, scale, scale, 0x0000 /* zwart */);
-        }
-      }
-    }
-  } else {
-    centerText("QR genereren mislukt", 80, 1, C_GOLD);
+    snprintf(lineBuf, sizeof(lineBuf), "%u", counts[i]);
+    int16_t x1, y1; uint16_t w, h;
+    gfx->getTextBounds(lineBuf, 0, 0, &x1, &y1, &w, &h);
+    gfx->setTextColor(C_GOLD);
+    gfx->setCursor(150 - w, rowY);
+    gfx->print(lineBuf);
   }
 
+  // Scheidingslijn en totaal
+  gfx->drawLine(20, 148, 152, 148, C_GREEN2);
   uint32_t total = counts[0] + counts[1] + counts[2] + counts[3] + counts[4] + counts[5];
-  char sumBuf[32];
-  snprintf(sumBuf, sizeof(sumBuf), "Totaal: %u dhikr", total);
-  centerText(sumBuf, 160, 1, C_GOLD);
+  gfx->setTextSize(1);
+  gfx->setTextColor(C_WHITE);
+  gfx->setCursor(20, 156);
+  gfx->print("Totaal");
+
+  snprintf(lineBuf, sizeof(lineBuf), "%u", total);
+  int16_t x1, y1; uint16_t w, h;
+  gfx->getTextBounds(lineBuf, 0, 0, &x1, &y1, &w, &h);
+  gfx->setTextColor(C_GOLD);
+  gfx->setCursor(150 - w, 156);
+  gfx->print(lineBuf);
 
 #if HAS_BLE_KEYBOARD
   if (bleKeyboard.isConnected()) {
-    centerText("Bluetooth: Verbonden", 174, 1, C_WHITE);
+    centerText("Bluetooth: Verbonden", 184, 1, C_WHITE);
   } else {
-    centerText("Bluetooth: Niet verbonden", 174, 1, C_CREAM);
+    centerText("Bluetooth: Niet verbonden", 184, 1, C_CREAM);
   }
 #else
-  centerText("Klaar om te scannen", 174, 1, C_CREAM);
+  centerText("Bluetooth niet actief", 184, 1, C_CREAM);
 #endif
 
   // Knop 1: Stuur direct via Bluetooth naar de geopende webapp
-  gfx->fillRoundRect(12, 190, 148, 48, 10, C_BEIGE);
-  centerText("STUUR VIA BT", 202, 1, C_GREEN);
-  centerText("Naar geopende webapp", 220, 1, C_GREEN);
+  gfx->fillRoundRect(12, 198, 148, 48, 10, C_BEIGE);
+  centerText("STUUR VIA BT", 210, 1, C_GREEN);
+  centerText("Naar geopende webapp", 228, 1, C_GREEN);
 
   // Knop 2: Handmatig tellers legen
-  gfx->fillRoundRect(12, 246, 148, 38, 8, C_CARD);
-  gfx->drawRoundRect(12, 246, 148, 38, 8, C_GOLD);
-  centerText("RESET TELLERS", 256, 1, C_GOLD);
-  centerText("Zet tellers op 0", 270, 1, C_CREAM);
+  gfx->fillRoundRect(12, 252, 148, 38, 8, C_CARD);
+  gfx->drawRoundRect(12, 252, 148, 38, 8, C_GOLD);
+  centerText("RESET TELLERS", 262, 1, C_GOLD);
+  centerText("Zet tellers op 0", 276, 1, C_CREAM);
 
-  centerText("veeg voor home", 298, 1, C_MUTED);
+  centerText("veeg voor home", 302, 1, C_MUTED);
 }
 
 void sendBatchBle() {
 #if HAS_BLE_KEYBOARD
   if (!bleKeyboard.isConnected()) {
-    gfx->fillRect(10, 188, 152, 54, C_BG);
-    centerText("BT NIET VERBONDEN!", 202, 1, C_WHITE);
-    centerText("Koppel in iPhone BT", 218, 1, C_GOLD);
+    gfx->fillRect(10, 196, 152, 54, C_BG);
+    centerText("BT NIET VERBONDEN!", 210, 1, C_WHITE);
+    centerText("Koppel in iPhone BT", 226, 1, C_GOLD);
     delay(1400);
     drawSync();
     return;
@@ -334,9 +337,9 @@ void sendBatchBle() {
            counts[0], counts[1], counts[2], counts[3], counts[4], counts[5]);
   bleKeyboard.print(msg);
 
-  gfx->fillRoundRect(12, 190, 148, 48, 10, C_GOLD);
-  centerText("VERZONDEN!", 202, 1, C_GREEN);
-  centerText("Tellers geleegd naar 0", 220, 1, C_GREEN);
+  gfx->fillRoundRect(12, 198, 148, 48, 10, C_GOLD);
+  centerText("VERZONDEN!", 210, 1, C_GREEN);
+  centerText("Tellers geleegd naar 0", 228, 1, C_GREEN);
 
   for (int i = 0; i < N; i++) counts[i] = 0;
   save();
@@ -474,12 +477,12 @@ void onTap(int x, int y) {
     }
     case SYNC: {
       // Tik op "STUUR VIA BT" knop
-      if (y >= 190 && y <= 238) {
+      if (y >= 198 && y <= 248) {
         sendBatchBle();
         return;
       }
       // Tik op "RESET TELLERS" knop
-      if (y >= 246 && y <= 286) {
+      if (y >= 252 && y <= 292) {
         for (int i = 0; i < N; i++) counts[i] = 0;
         save();
         drawSync();
