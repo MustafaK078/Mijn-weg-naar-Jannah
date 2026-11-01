@@ -145,8 +145,10 @@ void updateTesbihCounter() {
   uint16_t c = counts[current];
   const int cx = 86, cy = 145, r = 62;
 
-  // 1. Gouden progressiestipjes op de buitenrand
-  float frac = min(1.0f, (float)c / d.target);
+  // 1. Gouden progressiestipjes op de buitenrand (voortgang van de huidige ronde)
+  uint16_t cyclePos = (d.target > 0) ? (c % d.target) : 0;
+  if (cyclePos == 0 && c > 0) cyclePos = d.target;
+  float frac = (d.target > 0) ? ((float)cyclePos / d.target) : 1.0f;
   int steps = (int)(frac * 60);
   gfx->drawCircle(cx, cy, r + 2, C_GREEN2);
   for (int i = 0; i < steps; i++) {
@@ -158,12 +160,12 @@ void updateTesbihCounter() {
   gfx->fillCircle(cx, cy, r - 6, C_BEIGE);
   gfx->drawCircle(cx, cy, r - 6, C_GOLD);
 
-  // 3. Tellergetal in diepgroen op de licht beige knop
+  // 3. Tellergetal in diepgroen op de licht beige knop (totale optelling)
   char buf[12];
   snprintf(buf, sizeof(buf), "%u", c);
   int16_t x1, y1;
   uint16_t w, h;
-  gfx->setTextSize(4);
+  gfx->setTextSize(c >= 1000 ? 3 : 4);
   gfx->getTextBounds(buf, 0, 0, &x1, &y1, &w, &h);
   gfx->setTextColor(C_GREEN);
   gfx->setCursor(cx - w / 2, cy - h / 2 - 4);
@@ -179,8 +181,7 @@ void updateTesbihCounter() {
 }
 
 void incrementCurrentDhikr() {
-  counts[current]++;
-  if (counts[current] > ADHKAR[current].target) counts[current] = 1;
+  if (counts[current] < 65535) counts[current]++;
   save();
   updateTesbihCounter();
   gfx->flush();
