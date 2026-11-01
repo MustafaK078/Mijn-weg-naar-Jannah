@@ -41,7 +41,7 @@ Op de **ADHKAR**-pagina kun je soepel verticaal door de hele lijst scrollen en e
 1. Open op je iPhone: **Instellingen > Bluetooth**.
 2. Zet Bluetooth aan en zoek naar **"Jannah Tasbih"**.
 3. Tik op **Verbind**.
-4. Zodra verbonden verschijnt rechtsboven `BT LIVE` (of `BT CACHE`).
+4. Zodra verbonden brandt er in de rechterbovenhoek een subtiel **blauw rondje** als statusindicatie, zonder de "TESBIH" titel te belemmeren.
 
 ---
 

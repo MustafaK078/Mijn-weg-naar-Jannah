@@ -2304,6 +2304,8 @@ document.getElementById('dhikrEditorReset').addEventListener('click',()=>{
 });
 document.getElementById('dhikrFocusClose').addEventListener('click',closeDhikrFocus);
 document.addEventListener('keydown',event=>{
+ if(event.target&&['INPUT','TEXTAREA','SELECT'].includes(event.target.tagName))return;
+
  if(event.key==='Escape'){
   const espModal=document.getElementById('esp32SyncModal');
   if(espModal&&(espModal.open||!espModal.hidden)){closeEsp32SyncModal();return}
@@ -2318,24 +2320,25 @@ document.addEventListener('keydown',event=>{
    esp32KeyBuffer='e';
    clearTimeout(esp32KeyTimeout);
    esp32KeyTimeout=setTimeout(()=>{esp32KeyBuffer=''},2500);
+   event.preventDefault();
+   event.stopPropagation();
+   return;
   }else if(esp32KeyBuffer){
    esp32KeyBuffer+=c;
    clearTimeout(esp32KeyTimeout);
    esp32KeyTimeout=setTimeout(()=>{esp32KeyBuffer=''},2500);
-   if(esp32KeyBuffer.startsWith('esp32')){
-    event.preventDefault();
-    event.stopPropagation();
-    if(c==='\n'||esp32KeyBuffer.includes('\n')){
-     const payload=esp32KeyBuffer.trim();
-     esp32KeyBuffer='';
+   event.preventDefault();
+   event.stopPropagation();
+   if(c==='\n'||esp32KeyBuffer.includes('\n')){
+    const payload=esp32KeyBuffer.trim();
+    esp32KeyBuffer='';
+    if(payload.toLowerCase().startsWith('esp32')){
      processEsp32SyncPayload(payload,'bluetooth');
-     return;
     }
    }
+   return;
   }
  }
-
- if(event.target&&['INPUT','TEXTAREA','SELECT'].includes(event.target.tagName))return;
 
  if(focusedDhikrId&&!document.getElementById('dhikrFocus').hidden){
   if(event.key===' '||event.key==='Enter'||event.key==='ArrowUp'||event.key==='+'){
@@ -3433,5 +3436,5 @@ initializeHomeWidgetReordering();
 initializeAuth();
 translatePage();
 </script>
-<footer class="app-version" id="appVersion" style="text-align:center;font-size:11px;color:#6b7280;padding:14px 0 22px">Appversie v68</footer>
+<footer class="app-version" id="appVersion" style="text-align:center;font-size:11px;color:#6b7280;padding:14px 0 22px">Appversie v69</footer>
 </body></html>

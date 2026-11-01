@@ -57,26 +57,26 @@ const uint16_t C_WHITE  = RGB(255, 255, 255);  // Helder zuiver wit
 const uint16_t C_CREAM  = RGB(242, 236, 222);  // Zacht crème voor subtiele tekst
 const uint16_t C_MUTED  = RGB(150, 185, 160);  // Zacht saliegrijs voor voetteksten
 const uint16_t C_GREEN  = RGB(20, 130, 25);      // Donkergroen voor tekst op de beige knop
+const uint16_t C_BLUE   = RGB(0, 150, 255);      // Helder Bluetooth-blauw statusicoon
 
 struct Dhikr {
   const char *title;
-  const char *phrase;
-  const char *meaning;
+  const char *desc;
   uint16_t target;
   char keyChar;
 };
 
 const Dhikr ADHKAR[] = {
-  {"Subhanallah", "Subhan Allah", "Verheven is Allah boven iedere tekortkoming", 33, 's'},
-  {"Alhamdulillah", "Alhamdu lillah", "Alle lof en dank behoort toe aan Allah", 33, 'a'},
-  {"Allahu Akbar", "Allahu Akbar", "Allah is de Grootste boven alles", 34, 'k'},
-  {"Istighfar", "Astaghfirullah wa-atubu ilayh", "Ik vraag Allah om vergeving en keer berouwvol tot Hem", 100, 'i'},
-  {"Tahlil", "La ilaha illallah", "Er is geen godheid die het recht heeft aanbeden te worden behalve Allah", 100, 't'},
-  {"Salawat", "Allahumma salli ala Muhammad wa ala ali Muhammad", "O Allah, schenk Uw zegeningen en vrede aan Muhammad en zijn familie", 100, 'w'},
-  {"SubhanAllah wa-b.", "SubhanAllahi wa-bihamdihi", "Verheven is Allah en alle lof behoort Hem toe - wist zonden als schuim van de zee", 100, 'b'},
-  {"SubhanAllah l-Azim", "SubhanAllahi l-Azim wa-bihamdihi", "Verheven is Allah de Geweldige, en aan Hem behoort alle lof", 100, 'z'},
-  {"La hawla wa-la q.", "La hawla wa-la quwwata illa billah", "Er is geen macht en geen kracht behalve door Allah - een schat uit het Paradijs", 100, 'h'},
-  {"Tahlil Tamm", "La ilaha illa Allah wahdahu la sharika lah, lahul-mulku wa-lahul-hamd, wa-huwa ala kulli shay'in qadir", "Niemand heeft het recht aanbeden te worden behalve Allah alleen, zonder deelgenoot. Aan Hem behoort het koninkrijk en alle lof, en Hij is over alles machtig", 100, 'u'},
+  {"Subhanallah", "Geprezen is Allah", 33, 's'},
+  {"Alhamdulillah", "Alle lof is voor Allah", 33, 'a'},
+  {"Allahu Akbar", "Allah is de Grootste", 34, 'k'},
+  {"Istighfar", "Vergeving bij Allah", 100, 'i'},
+  {"Tahlil", "Geen god dan Allah", 100, 't'},
+  {"Salawat", "Zegeningen over Profeet", 100, 'w'},
+  {"SubhanAllah wa-b.", "Verheven is Allah en lof", 100, 'b'},
+  {"SubhanAllah l-Azim", "Verheven de Geweldige", 100, 'z'},
+  {"La hawla wa-la q.", "Kracht alleen door Allah", 100, 'h'},
+  {"Tahlil Tamm", "Alleen zonder deelgenoot", 100, 'u'},
 };
 const int N = sizeof(ADHKAR) / sizeof(ADHKAR[0]);
 
@@ -195,64 +195,6 @@ void incrementCurrentDhikr() {
 #endif
 }
 
-void drawMarqueeLine(const char *text, int y, uint16_t color, int offset) {
-  int16_t x1, y1;
-  uint16_t w, h;
-  gfx->setTextSize(1);
-  gfx->getTextBounds(text, 0, 0, &x1, &y1, &w, &h);
-
-  if (w <= 156) {
-    gfx->setTextColor(color);
-    gfx->setCursor((172 - w) / 2, y);
-    gfx->print(text);
-  } else {
-    int spacing = 36;
-    int totalSpan = w + spacing;
-    int shift = offset % totalSpan;
-    int x = 8 - shift;
-
-    gfx->setTextColor(color);
-    gfx->setCursor(x, y);
-    gfx->print(text);
-
-    if (x + w < 164) {
-      gfx->setCursor(x + w + 10, y);
-      gfx->print("*");
-      gfx->setCursor(x + totalSpan, y);
-      gfx->print(text);
-    }
-  }
-}
-
-void renderMarqueeArea(int offset) {
-  const Dhikr &d = ADHKAR[current];
-  gfx->fillRect(0, 222, 172, 60, C_BG);
-  drawMarqueeLine(d.phrase, 228, C_GOLD, offset);
-  drawMarqueeLine(d.meaning, 250, C_CREAM, offset);
-}
-
-void updateMarquee() {
-  if (page != TESBIH || dirty || touchActive) return;
-  static uint32_t lastMarqueeTime = 0;
-  static int lastCurrent = -1;
-  static int marqueeTicks = 0;
-  uint32_t now = millis();
-
-  if (current != lastCurrent) {
-    lastCurrent = current;
-    marqueeTicks = 0;
-  }
-
-  if (now - lastMarqueeTime < 35) return;
-  lastMarqueeTime = now;
-  marqueeTicks++;
-
-  int offset = (marqueeTicks > 35) ? (marqueeTicks - 35) : 0;
-
-  renderMarqueeArea(offset);
-  tft->draw16bitRGBBitmap(0, 222, gfx->getFramebuffer() + 222 * 172, 172, 60);
-}
-
 void drawTesbih() {
   drawFrame();
   const Dhikr &d = ADHKAR[current];
@@ -260,11 +202,8 @@ void drawTesbih() {
 
 #if HAS_BLE_KEYBOARD
   if (bleKeyboard.isConnected()) {
-    gfx->setTextSize(1);
-    gfx->setTextColor(C_GOLD);
-    gfx->setCursor(96, 18);
-    gfx->print(liveSync ? "BT LIVE" : "BT CACHE");
-    gfx->fillCircle(160, 21, 3, liveSync ? C_GOLD : C_MUTED);
+    // Alleen een blauw rondje in de rechterbovenhoek - belemmert de TESBIH tekst nooit
+    gfx->fillCircle(158, 20, 4, C_BLUE);
   }
 #endif
 
@@ -275,7 +214,8 @@ void drawTesbih() {
 
   updateTesbihCounter();
 
-  renderMarqueeArea(0);
+  // Enkele regel omschrijving, aangepast aan de 172px breedte van het scherm
+  centerText(d.desc, 246, 1, C_CREAM);
   centerText("tik: +1  omhoog: BT sync", 294, 1, C_MUTED);
 }
 
@@ -606,13 +546,6 @@ void onTap(int x, int y) {
       transitionTo(TESBIH, TRANS_LEFT);
       return;
     case TESBIH:
-      // Tik op de BT status knop rechtsboven (toggle live / cache)
-      if (y < 34 && x >= 90) {
-        liveSync = !liveSync;
-        drawTesbih();
-        gfx->flush();
-        return;
-      }
       onShortPress();
       return;
     case ADHKAR_LIST: {
@@ -782,6 +715,7 @@ void setup() {
   Serial.println("Jannah: scherm starten");
   tft->begin();
   gfx->begin();
+  gfx->setTextWrap(false);
   tft->startWrite();
   bus->writeCommand(0x36);
   bus->write(0x40 | (BGR_ORDER ? 0x08 : 0x00));
@@ -835,11 +769,18 @@ void loop() {
 
   handleTouch();
 
+#if HAS_BLE_KEYBOARD
+  static bool lastBtState = false;
+  bool btNow = bleKeyboard.isConnected();
+  if (btNow != lastBtState) {
+    lastBtState = btNow;
+    if (page == TESBIH) dirty = true;
+  }
+#endif
+
   if (dirty) {
     dirty = false;
     render();
-  } else {
-    updateMarquee();
   }
   delay(5);
 }
