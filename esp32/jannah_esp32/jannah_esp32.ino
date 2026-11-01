@@ -73,10 +73,10 @@ const Dhikr ADHKAR[] = {
   {"Istighfar", "Ik vraag Allah om vergeving en keer berouwvol tot Hem", 100, 'i'},
   {"Tahlil", "Er is geen godheid die het recht heeft aanbeden te worden behalve Allah", 100, 't'},
   {"Salawat", "O Allah, schenk Uw zegeningen en vrede aan Muhammad en zijn familie", 100, 'w'},
-  {"SubhanAllah wa-b.", "Verheven is Allah en alle lof behoort Hem toe - wist zonden als schuim van de zee", 100, 'b'},
-  {"SubhanAllah l-Azim", "Verheven is Allah de Geweldige, en aan Hem behoort alle lof", 100, 'z'},
-  {"La hawla wa-la q.", "Er is geen macht en geen kracht behalve door Allah - een schat uit het Paradijs", 100, 'h'},
-  {"Tahlil Tamm", "Niemand heeft het recht aanbeden te worden behalve Allah alleen, zonder deelgenoot. Aan Hem behoort het koninkrijk en alle lof, en Hij is over alles machtig", 100, 'u'},
+  {"SubhanAllah wa-bihamdihi", "Verheven is Allah en alle lof behoort Hem toe - wist zonden als schuim van de zee", 100, 'b'},
+  {"SubhanAllah l-Azim wa-bihamdihi", "Verheven is Allah de Geweldige, en aan Hem behoort alle lof", 100, 'z'},
+  {"La hawla wa-la quwwata illa billah", "Er is geen macht en geen kracht behalve door Allah - een schat uit het Paradijs", 100, 'h'},
+  {"La ilaha illa Allah wahdahu la sharika lah", "Niemand heeft het recht aanbeden te worden behalve Allah alleen, zonder deelgenoot. Aan Hem behoort het koninkrijk en alle lof, en Hij is over alles machtig", 100, 'u'},
 };
 const int N = sizeof(ADHKAR) / sizeof(ADHKAR[0]);
 
@@ -223,6 +223,45 @@ void renderMarqueeLine(int offset) {
   }
 }
 
+// Titel-regel: beweegt/scrollt soepel alleen als de titel breder is dan het scherm
+void renderTitleLine(int offset) {
+  const Dhikr &d = ADHKAR[current];
+  const char *text = d.title;
+  const int lineY = 34;
+  const int bandY = 30;
+  const int bandH = 24;
+
+  gfx->fillRect(0, bandY, 172, bandH, C_BG);
+  gfx->setTextSize(2);
+  gfx->setTextColor(C_WHITE);
+  gfx->setTextWrap(false);
+
+  int16_t x1, y1;
+  uint16_t tw, th;
+  gfx->getTextBounds(text, 0, 0, &x1, &y1, &tw, &th);
+
+  if (tw <= 156) {
+    int x = (172 - tw) / 2;
+    gfx->setCursor(x, lineY);
+    gfx->print(text);
+  } else {
+    int gap = 36;
+    int totalSpan = tw + gap;
+    int shift = offset % totalSpan;
+    int startX = 8 - shift;
+
+    gfx->setCursor(startX, lineY);
+    gfx->print(text);
+
+    if (startX + tw < 164) {
+      gfx->setCursor(startX + tw + 10, lineY);
+      gfx->print("*");
+      gfx->setCursor(startX + totalSpan, lineY);
+      gfx->print(text);
+    }
+  }
+}
+
 void updateMarquee() {
   if (page != TESBIH || dirty || touchActive) return;
   static uint32_t lastMarqueeTime = 0;
@@ -241,13 +280,24 @@ void updateMarquee() {
 
   int offset = (marqueeTicks > 35) ? (marqueeTicks - 35) : 0;
 
+  // 1. Beschrijving marquee (beneden)
   renderMarqueeLine(offset);
   tft->draw16bitRGBBitmap(0, 238, gfx->getFramebuffer() + 238 * 172, 172, 20);
+
+  // 2. Titel marquee (boven) - beweegt alleen als titel breder is dan 156px
+  const Dhikr &d = ADHKAR[current];
+  int16_t x1, y1;
+  uint16_t tw, th;
+  gfx->setTextSize(2);
+  gfx->getTextBounds(d.title, 0, 0, &x1, &y1, &tw, &th);
+  if (tw > 156) {
+    renderTitleLine(offset);
+    tft->draw16bitRGBBitmap(0, 30, gfx->getFramebuffer() + 30 * 172, 172, 24);
+  }
 }
 
 void drawTesbih() {
   drawFrame();
-  const Dhikr &d = ADHKAR[current];
   centerText("TESBIH", 18, 1, C_GOLD);
 
 #if HAS_BLE_KEYBOARD
@@ -257,7 +307,7 @@ void drawTesbih() {
   }
 #endif
 
-  centerText(d.title, 34, 2, C_WHITE);
+  renderTitleLine(0);
 
   const int cx = 86, cy = 145, r = 62;
   gfx->drawCircle(cx, cy, r + 2, C_GREEN2);
@@ -282,7 +332,15 @@ void drawAdhkar() {
     gfx->setTextSize(1);
     gfx->setTextColor(sel ? C_GREEN : C_GOLD);
     gfx->setCursor(16, y + 8);
-    gfx->print(ADHKAR[i].title);
+    char cardTitle[24];
+    strncpy(cardTitle, ADHKAR[i].title, 20);
+    cardTitle[20] = '\0';
+    if (strlen(ADHKAR[i].title) > 20) {
+      cardTitle[17] = '.';
+      cardTitle[18] = '.';
+      cardTitle[19] = '.';
+    }
+    gfx->print(cardTitle);
     gfx->setTextColor(sel ? C_GREEN : C_CREAM);
     gfx->setCursor(16, y + 22);
     gfx->print(counts[i]);
@@ -534,9 +592,9 @@ void onShortPress() {
 
 void powerOff() {
   gfx->fillScreen(C_BG);
-  centerText("Mijn weg naar Jannah", 125, 1, C_CREAM);
-  centerText("Uitschakelen...", 150, 1, C_GOLD);
-  centerText("Druk BOOT om in te schakelen", 178, 1, C_MUTED);
+  centerText("Mijn weg naar Jannah", 110, 1, C_CREAM);
+  centerText("Uitschakelen", 136, 2, C_GOLD);
+  centerText("Druk BOOT om in te schakelen", 175, 1, C_MUTED);
   gfx->flush();
   save();
   delay(1200);
