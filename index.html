@@ -386,14 +386,14 @@ html.focus-open{overflow:hidden}
    <div class="esp32-section">
     <h4>Draadloos overdragen via Bluetooth</h4>
     <p class="note">1. Koppel eenmalig via <strong>Instellingen &gt; Bluetooth</strong> op je iPhone met <strong>"Jannah Tasbih"</strong>.</p>
-    <p class="note">2. Je ESP32 bewaart al je dhikr offline in het geheugen. Je telefoon kan gewoon vergrendeld in je zak blijven zonder ongewenste toetsaanslagen.</p>
-    <p class="note">3. <strong>Synchroniseren:</strong> Open deze webapp, veeg op je ESP32 naar pagina <strong>SYNC</strong> en tik op <strong>"STUUR VIA BT"</strong>.</p>
-    <p class="note">4. Alle tellingen worden direct overgedragen naar je dhikr en goede daden!</p>
+    <p class="note">2. <strong>Live Sync (app open):</strong> Terwijl je deze webapp open hebt, worden al je tasbih-tikken direct live geteld en zie je het hart en de tellers meteen oplichten!</p>
+    <p class="note">3. <strong>Offline / Vergrendeld:</strong> Is je scherm uit of de app dicht? Je ESP32 bewaart alle tellingen veilig in het geheugen zonder per ongeluk je toegangscode in te toetsen. Open de webapp, veeg omhoog naar <strong>SYNC</strong> en tik op <strong>"STUUR VIA BT"</strong>.</p>
+    <p class="note">4. <strong>10 Adhkar ondersteund:</strong> Subhanallah, Alhamdulillah, Allahu Akbar, Istighfar, Tahlil, Salawat, SubḥānAllāhi wa-biḥamdihī, SubḥānAllāhi l-ʿAẓīm, Lā ḥawla wa-lā quwwata illā bi-llāh en Tahlil Tamm.</p>
     <div class="esp32-actions">
      <button type="button" class="btn secondary" id="esp32ManualToggleBtn">⌨ Handmatige invoer</button>
     </div>
     <div id="esp32ManualArea" hidden style="margin-top:8px;">
-     <input type="text" id="esp32ManualCode" placeholder="Code: esp32 s33 a33 k34..." style="width:100%;box-sizing:border-box;padding:8px;border:1px solid var(--line);border-radius:8px;font:inherit;font-size:14px;margin-bottom:8px;">
+     <input type="text" id="esp32ManualCode" placeholder="Code: esp32 s33 a33 k34 b100..." style="width:100%;box-sizing:border-box;padding:8px;border:1px solid var(--line);border-radius:8px;font:inherit;font-size:14px;margin-bottom:8px;">
      <button type="button" class="btn primary" id="esp32ApplyManualBtn">Tellingen toevoegen</button>
     </div>
    </div>
@@ -2362,7 +2362,11 @@ document.addEventListener('keydown',event=>{
   '3':{id:'dhikr-four-100-takbir',fallbackId:'dhikr-jannah-plants',title:'Allahu Akbar'},
   '4':{id:'dhikr-istighfar100-v2',title:'Istighfar'},
   '5':{id:'dhikr-four-100-tahlil',fallbackId:'dhikr-tahlil100-v2',title:'Tahlil'},
-  '6':{id:'dhikr-salawat-counter',title:'Salawat'}
+  '6':{id:'dhikr-salawat-counter',title:'Salawat'},
+  '7':{id:'dhikr-tasbih100-v2',title:'SubḥānAllāhi wa-biḥamdihī'},
+  '8':{id:'dhikr-azim100',title:'SubḥānAllāhi l-ʿAẓīm wa-biḥamdihī'},
+  '9':{id:'dhikr-hawqala',title:'Lā ḥawla wa-lā quwwata illā bi-llāh'},
+  '0':{id:'dhikr-tahlil100-v2',title:'Lā ilāha illa Allāh waḥdahu lā sharīka lah'}
  };
  if(espDhikrKeys[event.key]){
   event.preventDefault();
@@ -2429,10 +2433,32 @@ function processEsp32SyncPayload(payload,source='url'){
   k:{id:'dhikr-four-100-takbir',fallbackId:'dhikr-jannah-plants',title:'Allahu Akbar'},
   i:{id:'dhikr-istighfar100-v2',title:'Istighfar'},
   t:{id:'dhikr-four-100-tahlil',fallbackId:'dhikr-tahlil100-v2',title:'Tahlil'},
-  w:{id:'dhikr-salawat-counter',title:'Salawat'}
+  w:{id:'dhikr-salawat-counter',title:'Salawat'},
+  b:{id:'dhikr-tasbih100-v2',title:'SubḥānAllāhi wa-biḥamdihī'},
+  z:{id:'dhikr-azim100',title:'SubḥānAllāhi l-ʿAẓīm wa-biḥamdihī'},
+  h:{id:'dhikr-hawqala',title:'Lā ḥawla wa-lā quwwata illā bi-llāh'},
+  u:{id:'dhikr-tahlil100-v2',title:'Lā ilāha illa Allāh waḥdahu lā sharīka lah'}
  };
+
+ const liveMatch=String(payload).match(/esp32\s+live\s+([sakituwbzhu])/i);
+ if(liveMatch){
+  const k=liveMatch[1].toLowerCase();
+  const def=keyMap[k];
+  if(def){
+   const targetItem=dailyAdhkar.find(i=>i.id===def.id)||(def.fallbackId?dailyAdhkar.find(i=>i.id===def.fallbackId):null)||{id:def.id,title:def.title};
+   adjustDailyDhikrCount(targetItem.id,1);
+   updateDailyDhikrCard(targetItem.id);
+   if(focusedDhikrId===targetItem.id)refreshDhikrFocus();
+   heartAnimation='good';
+   homeShieldAnimation='good';
+   renderDeedCounter(true);
+   showEsp32Toast(translateText(targetItem.title||def.title),1);
+   return true;
+  }
+ }
+
  const parsedCounts={};
- for(const m of dataStr.matchAll(/([sakituw])[:= ]?(\d+)/gi)){
+ for(const m of dataStr.matchAll(/([sakituwbzhu])[:= ]?(\d+)/gi)){
   parsedCounts[m[1].toLowerCase()]=parseInt(m[2],10);
  }
  const imported=[];
@@ -3407,5 +3433,5 @@ initializeHomeWidgetReordering();
 initializeAuth();
 translatePage();
 </script>
-<footer class="app-version" id="appVersion" style="text-align:center;font-size:11px;color:#6b7280;padding:14px 0 22px">Appversie v67</footer>
+<footer class="app-version" id="appVersion" style="text-align:center;font-size:11px;color:#6b7280;padding:14px 0 22px">Appversie v68</footer>
 </body></html>

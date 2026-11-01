@@ -13,6 +13,7 @@
 #include <Arduino_GFX_Library.h>
 #include <Preferences.h>
 #include <Wire.h>
+#include <esp_sleep.h>
 
 #include <BleKeyboard.h>
 #define HAS_BLE_KEYBOARD 1
@@ -62,15 +63,20 @@ struct Dhikr {
   const char *phrase;
   const char *meaning;
   uint16_t target;
+  char keyChar;
 };
 
 const Dhikr ADHKAR[] = {
-  {"Subhanallah", "Subhan Allah", "Gezegend is Allah", 33},
-  {"Alhamdulillah", "Alhamdu lillah", "Alle lof is voor Allah", 33},
-  {"Allahu Akbar", "Allahu Akbar", "Allah is de Grootste", 34},
-  {"Istighfar", "Astaghfirullah", "Ik zoek vergeving bij Allah", 100},
-  {"Tahlil", "La ilaha illallah", "Er is geen god dan Allah", 100},
-  {"Salawat", "Allahumma salli ala Muhammad", "O Allah, zegen Muhammad", 100},
+  {"Subhanallah", "Subhan Allah", "Gezegend is Allah", 33, 's'},
+  {"Alhamdulillah", "Alhamdu lillah", "Alle lof is voor Allah", 33, 'a'},
+  {"Allahu Akbar", "Allahu Akbar", "Allah is de Grootste", 34, 'k'},
+  {"Istighfar", "Astaghfirullah", "Ik zoek vergeving", 100, 'i'},
+  {"Tahlil", "La ilaha illallah", "Er is geen god dan Allah", 100, 't'},
+  {"Salawat", "Allahumma salli ala Muhammad", "Zegeningen over Profeet", 100, 'w'},
+  {"SubhanAllahi wa-b.", "SubhanAllahi wa-bihamdihi", "Verheven is Allah en lof", 100, 'b'},
+  {"SubhanAllahi l-Azim", "SubhanAllahi l-Azim wa-bihamdihi", "Verheven de Geweldige", 100, 'z'},
+  {"La hawla wa-la q.", "La hawla wa-la quwwata illa billah", "Geen kracht dan door Allah", 100, 'h'},
+  {"Tahlil Tam", "La ilaha illa Allah wahdahu...", "Alleen zonder deelgenoot", 100, 'u'},
 };
 const int N = sizeof(ADHKAR) / sizeof(ADHKAR[0]);
 
@@ -81,6 +87,8 @@ Page lastPageBeforeSync = TESBIH;
 int current = 0;
 uint16_t counts[N] = {0};
 uint8_t brightness = 200;  // Helderheid 15..255
+bool liveSync = true;       // Live verzending wanneer verbonden
+int adhkarScrollY = 0;      // Scrollpositie voor de lijst met 10 adhkar
 Preferences prefs;
 bool dirty = true;
 
@@ -168,8 +176,22 @@ void updateTesbihCounter() {
   gfx->setTextColor(C_GREEN);
   gfx->setCursor(cx - w / 2, cy + 22);
   gfx->print(buf);
+}
 
+void incrementCurrentDhikr() {
+  counts[current]++;
+  if (counts[current] > ADHKAR[current].target) counts[current] = 1;
+  save();
+  updateTesbihCounter();
   gfx->flush();
+
+#if HAS_BLE_KEYBOARD
+  if (liveSync && bleKeyboard.isConnected()) {
+    char liveMsg[32];
+    snprintf(liveMsg, sizeof(liveMsg), "esp32 live %c\n", ADHKAR[current].keyChar);
+    bleKeyboard.print(liveMsg);
+  }
+#endif
 }
 
 void drawTesbih() {
@@ -181,9 +203,9 @@ void drawTesbih() {
   if (bleKeyboard.isConnected()) {
     gfx->setTextSize(1);
     gfx->setTextColor(C_GOLD);
-    gfx->setCursor(136, 18);
-    gfx->print("BT");
-    gfx->fillCircle(154, 21, 3, C_GOLD);
+    gfx->setCursor(96, 18);
+    gfx->print(liveSync ? "BT LIVE" : "BT CACHE");
+    gfx->fillCircle(160, 21, 3, liveSync ? C_GOLD : C_MUTED);
   }
 #endif
 
@@ -201,12 +223,14 @@ void drawTesbih() {
 
 void drawAdhkar() {
   drawFrame();
-  centerText("ADHKAR", 18, 1, C_GOLD);
+
   for (int i = 0; i < N; i++) {
-    int y = 36 + i * 44;
+    int y = 38 + i * 44 - adhkarScrollY;
+    if (y < -38 || y > 320) continue;
+
     bool sel = (i == current);
-    gfx->fillRoundRect(8, y, 156, 38, 10, sel ? C_BEIGE : C_CARD);
-    gfx->drawRoundRect(8, y, 156, 38, 10, sel ? C_GOLD : C_GREEN2);
+    gfx->fillRoundRect(8, y, 150, 38, 10, sel ? C_BEIGE : C_CARD);
+    gfx->drawRoundRect(8, y, 150, 38, 10, sel ? C_GOLD : C_GREEN2);
     gfx->setTextSize(1);
     gfx->setTextColor(sel ? C_GREEN : C_GOLD);
     gfx->setCursor(16, y + 8);
@@ -217,7 +241,21 @@ void drawAdhkar() {
     gfx->print(" / ");
     gfx->print(ADHKAR[i].target);
   }
-  centerText("tik: kies  omhoog: BT sync", 300, 1, C_MUTED);
+
+  // Scrollbar indicator
+  int maxScroll = max(1, N * 44 - 245);
+  int trackH = 245;
+  int barH = max(24, (245 * 245) / (N * 44));
+  int barY = 36 + (adhkarScrollY * (trackH - barH)) / maxScroll;
+  gfx->fillRoundRect(164, barY, 4, barH, 2, C_GOLD);
+
+  // Vaste koptekst
+  gfx->fillRect(0, 0, 172, 34, C_BG);
+  centerText("ADHKAR (10)", 18, 1, C_GOLD);
+
+  // Vaste voettekst
+  gfx->fillRect(0, 286, 172, 34, C_BG);
+  centerText("tik: kies  sleep: scroll", 298, 1, C_MUTED);
 }
 
 void updateBrightnessUI() {
@@ -240,8 +278,6 @@ void updateBrightnessUI() {
   kx = constrain(kx, tx + 13, tx + tw - 13);
   gfx->fillCircle(kx, ty + th / 2, 11, C_BEIGE);
   gfx->drawCircle(kx, ty + th / 2, 11, C_GOLD);
-
-  gfx->flush();
 }
 
 void drawBrightness() {
@@ -275,94 +311,74 @@ void drawSync() {
   centerText("BLUETOOTH SYNC", 14, 1, C_GOLD);
   centerText("Draag dhikr over naar app", 28, 1, C_CREAM);
 
-  // Kaart met overzicht van alle dhikr-tellingen
-  gfx->fillRoundRect(12, 42, 148, 134, 8, C_CARD);
-  gfx->drawRoundRect(12, 42, 148, 134, 8, C_GREEN2);
+  // Kaart met overzicht van alle 10 dhikr-tellingen
+  gfx->fillRoundRect(10, 36, 152, 152, 8, C_CARD);
+  gfx->drawRoundRect(10, 36, 152, 152, 8, C_GREEN2);
 
-  const char *dhikrNames[] = {
-    "Subhanallah",
-    "Alhamdulillah",
-    "Allahu Akbar",
-    "Istighfar",
-    "Tahlil",
-    "Salawat"
-  };
-
-  char lineBuf[32];
+  char lineBuf[24];
   for (int i = 0; i < N; i++) {
-    int rowY = 50 + i * 16;
+    int rowY = 39 + i * 14;
     gfx->setTextSize(1);
     gfx->setTextColor(C_WHITE);
-    gfx->setCursor(20, rowY);
-    gfx->print(dhikrNames[i]);
+    gfx->setCursor(14, rowY);
+    char shortName[16];
+    strncpy(shortName, ADHKAR[i].title, 13);
+    shortName[13] = '\0';
+    gfx->print(shortName);
 
     snprintf(lineBuf, sizeof(lineBuf), "%u", counts[i]);
     int16_t x1, y1; uint16_t w, h;
     gfx->getTextBounds(lineBuf, 0, 0, &x1, &y1, &w, &h);
     gfx->setTextColor(C_GOLD);
-    gfx->setCursor(150 - w, rowY);
+    gfx->setCursor(156 - w, rowY);
     gfx->print(lineBuf);
   }
 
-  // Scheidingslijn en totaal
-  gfx->drawLine(20, 148, 152, 148, C_GREEN2);
-  uint32_t total = counts[0] + counts[1] + counts[2] + counts[3] + counts[4] + counts[5];
-  gfx->setTextSize(1);
-  gfx->setTextColor(C_WHITE);
-  gfx->setCursor(20, 156);
-  gfx->print("Totaal");
-
-  snprintf(lineBuf, sizeof(lineBuf), "%u", total);
-  int16_t x1, y1; uint16_t w, h;
-  gfx->getTextBounds(lineBuf, 0, 0, &x1, &y1, &w, &h);
-  gfx->setTextColor(C_GOLD);
-  gfx->setCursor(150 - w, 156);
-  gfx->print(lineBuf);
-
 #if HAS_BLE_KEYBOARD
   if (bleKeyboard.isConnected()) {
-    centerText("Bluetooth: Verbonden", 184, 1, C_WHITE);
+    centerText("Bluetooth: Verbonden", 193, 1, C_WHITE);
   } else {
-    centerText("Bluetooth: Niet verbonden", 184, 1, C_CREAM);
+    centerText("Bluetooth: Niet verbonden", 193, 1, C_CREAM);
   }
 #else
-  centerText("Bluetooth niet actief", 184, 1, C_CREAM);
+  centerText("Bluetooth niet actief", 193, 1, C_CREAM);
 #endif
 
   // Knop 1: Stuur direct via Bluetooth naar de geopende webapp
-  gfx->fillRoundRect(12, 198, 148, 48, 10, C_BEIGE);
-  centerText("STUUR VIA BT", 210, 1, C_GREEN);
-  centerText("Naar geopende webapp", 228, 1, C_GREEN);
+  gfx->fillRoundRect(12, 206, 148, 44, 10, C_BEIGE);
+  centerText("STUUR VIA BT", 218, 1, C_GREEN);
+  centerText("Naar geopende webapp", 234, 1, C_GREEN);
 
   // Knop 2: Handmatig tellers legen
-  gfx->fillRoundRect(12, 252, 148, 38, 8, C_CARD);
-  gfx->drawRoundRect(12, 252, 148, 38, 8, C_GOLD);
-  centerText("RESET TELLERS", 262, 1, C_GOLD);
-  centerText("Zet tellers op 0", 276, 1, C_CREAM);
+  gfx->fillRoundRect(12, 256, 148, 32, 8, C_CARD);
+  gfx->drawRoundRect(12, 256, 148, 32, 8, C_GOLD);
+  centerText("RESET TELLERS", 267, 1, C_GOLD);
 
-  centerText("veeg omlaag = terug", 302, 1, C_MUTED);
+  centerText("veeg omlaag = terug", 298, 1, C_MUTED);
 }
 
 void sendBatchBle() {
 #if HAS_BLE_KEYBOARD
   if (!bleKeyboard.isConnected()) {
-    gfx->fillRect(10, 196, 152, 54, C_BG);
-    centerText("BT NIET VERBONDEN!", 210, 1, C_WHITE);
-    centerText("Koppel in iPhone BT", 226, 1, C_GOLD);
+    gfx->fillRect(10, 204, 152, 50, C_BG);
+    centerText("BT NIET VERBONDEN!", 218, 1, C_WHITE);
+    centerText("Koppel in iPhone BT", 234, 1, C_GOLD);
     gfx->flush();
     delay(1400);
     drawSync();
     gfx->flush();
     return;
   }
-  char msg[100];
-  snprintf(msg, sizeof(msg), "esp32 s%u a%u k%u i%u t%u w%u\n",
-           counts[0], counts[1], counts[2], counts[3], counts[4], counts[5]);
+  char msg[140];
+  snprintf(msg, sizeof(msg),
+           "esp32 s%u a%u k%u i%u t%u w%u b%u z%u h%u u%u\n",
+           counts[0], counts[1], counts[2], counts[3], counts[4],
+           counts[5], counts[6], counts[7], counts[8], counts[9]);
   bleKeyboard.print(msg);
 
-  gfx->fillRoundRect(12, 198, 148, 48, 10, C_GOLD);
-  centerText("VERZONDEN!", 210, 1, C_GREEN);
-  centerText("Tellers geleegd naar 0", 228, 1, C_GREEN);
+  gfx->fillRoundRect(12, 206, 148, 44, 10, C_GOLD);
+  centerText("VERZONDEN!", 218, 1, C_GREEN);
+  centerText("Tellers geleegd naar 0", 234, 1, C_GREEN);
   gfx->flush();
 
   for (int i = 0; i < N; i++) counts[i] = 0;
@@ -448,10 +464,7 @@ void onShortPress() {
       transitionTo(TESBIH, TRANS_LEFT);
       return;
     case TESBIH:
-      counts[current]++;
-      if (counts[current] > ADHKAR[current].target) counts[current] = 1;
-      save();
-      updateTesbihCounter();
+      incrementCurrentDhikr();
       return;
     case ADHKAR_LIST:
       current = (current + 1) % N;
@@ -462,6 +475,7 @@ void onShortPress() {
       brightness = (brightness > 180) ? 100 : 240;
       applyBrightness(brightness);
       updateBrightnessUI();
+      gfx->flush();
       prefs.putUChar("bright", brightness);
       return;
     case SYNC:
@@ -470,8 +484,27 @@ void onShortPress() {
   }
 }
 
-void onLongPress() {
-  transitionTo((Page)((page + 1) % NUM_PAGES), TRANS_LEFT);
+void powerOff() {
+  gfx->fillScreen(C_BG);
+  centerText("Mijn weg naar Jannah", 120, 1, C_CREAM);
+  centerText("Uitschakelen...", 145, 2, C_GOLD);
+  centerText("Druk BOOT om in te schakelen", 185, 1, C_MUTED);
+  gfx->flush();
+  save();
+  delay(1200);
+
+  digitalWrite(PIN_BL, LOW);
+  tft->startWrite();
+  bus->writeCommand(0x10); // ST7789 sleep in
+  tft->endWrite();
+
+  while (digitalRead(PIN_BTN) == LOW) {
+    delay(20);
+  }
+  delay(200);
+
+  esp_sleep_enable_ext1_wakeup(1ULL << PIN_BTN, ESP_EXT1_WAKEUP_ANY_LOW);
+  esp_deep_sleep_start();
 }
 
 // ---- Touch (AXS5106L, I2C) ----
@@ -515,10 +548,18 @@ void onTap(int x, int y) {
       transitionTo(TESBIH, TRANS_LEFT);
       return;
     case TESBIH:
+      // Tik op de BT status knop rechtsboven (toggle live / cache)
+      if (y < 34 && x >= 90) {
+        liveSync = !liveSync;
+        drawTesbih();
+        gfx->flush();
+        return;
+      }
       onShortPress();
       return;
     case ADHKAR_LIST: {
-      int i = (y - 36) / 44;
+      int clickedY = y - 38 + adhkarScrollY;
+      int i = clickedY / 44;
       if (i >= 0 && i < N) {
         current = i;
         save();
@@ -531,28 +572,31 @@ void onTap(int x, int y) {
         int newB = map(x, 20, 152, 15, 255);
         applyBrightness(newB);
         updateBrightnessUI();
+        gfx->flush();
         prefs.putUChar("bright", brightness);
       } else if (x >= 20 && x <= 80 && y >= 185 && y <= 237) {
         int newB = (brightness > 40) ? (brightness - 25) : 15;
         applyBrightness(newB);
         updateBrightnessUI();
+        gfx->flush();
         prefs.putUChar("bright", brightness);
       } else if (x >= 92 && x <= 152 && y >= 185 && y <= 237) {
         int newB = (brightness < 230) ? (brightness + 25) : 255;
         applyBrightness(newB);
         updateBrightnessUI();
+        gfx->flush();
         prefs.putUChar("bright", brightness);
       }
       return;
     }
     case SYNC: {
       // Tik op "STUUR VIA BT" knop
-      if (y >= 198 && y <= 248) {
+      if (y >= 206 && y <= 250) {
         sendBatchBle();
         return;
       }
       // Tik op "RESET TELLERS" knop
-      if (y >= 252 && y <= 292) {
+      if (y >= 256 && y <= 292) {
         for (int i = 0; i < N; i++) counts[i] = 0;
         save();
         drawSync();
@@ -565,8 +609,8 @@ void onTap(int x, int y) {
 }
 
 void handleTouch() {
-  static bool down = false, moved = false, draggingSlider = false;
-  static int sx, sy, lx, ly;
+  static bool down = false, moved = false, draggingSlider = false, scrollingList = false;
+  static int sx, sy, lx, ly, initialScrollY = 0;
   static uint32_t downAt = 0, lastSeen = 0;
   int x, y;
   uint32_t now = millis();
@@ -576,13 +620,15 @@ void handleTouch() {
       down = true;
       moved = false;
       draggingSlider = (page == BRIGHTNESS && y >= 120 && y <= 175);
+      scrollingList = (page == ADHKAR_LIST && y >= 35 && y <= 285);
+      initialScrollY = adhkarScrollY;
       sx = x;
       sy = y;
       downAt = now;
     }
     lx = x;
     ly = y;
-    if (abs(lx - sx) > 15 || abs(ly - sy) > 15) moved = true;
+    if (abs(lx - sx) > 12 || abs(ly - sy) > 12) moved = true;
 
     if (draggingSlider && page == BRIGHTNESS) {
       int newB = map(x, 20, 152, 15, 255);
@@ -590,6 +636,16 @@ void handleTouch() {
       if (newB != brightness) {
         applyBrightness(newB);
         updateBrightnessUI();
+        gfx->flush();
+      }
+    } else if (scrollingList && page == ADHKAR_LIST) {
+      int deltaY = ly - sy;
+      int maxScroll = max(0, N * 44 - 245);
+      int newScroll = constrain(initialScrollY - deltaY, 0, maxScroll);
+      if (newScroll != adhkarScrollY) {
+        adhkarScrollY = newScroll;
+        drawAdhkar();
+        gfx->flush();
       }
     }
   } else if (down && now - lastSeen > 60) {
@@ -598,6 +654,12 @@ void handleTouch() {
       prefs.putUChar("bright", brightness);
       draggingSlider = false;
       return;
+    }
+    if (scrollingList) {
+      scrollingList = false;
+      if (abs(ly - sy) > 15) {
+        return;
+      }
     }
     int dx = lx - sx, dy = ly - sy;
     int adx = abs(dx), ady = abs(dy);
@@ -633,6 +695,7 @@ void handleTouch() {
         counts[current] = 0;  // Lang vasthouden = teller resetten
         save();
         updateTesbihCounter();
+        gfx->flush();
       } else {
         onTap(sx, sy);
       }
@@ -646,7 +709,12 @@ void setup() {
   Serial.println("Jannah: start");
   pinMode(PIN_BTN, INPUT_PULLUP);
   prefs.begin("jannah", false);
-  if (prefs.getBytesLength("counts") == sizeof(counts)) prefs.getBytes("counts", counts, sizeof(counts));
+  size_t savedLen = prefs.getBytesLength("counts");
+  if (savedLen == sizeof(counts)) {
+    prefs.getBytes("counts", counts, sizeof(counts));
+  } else if (savedLen > 0 && savedLen < sizeof(counts)) {
+    prefs.getBytes("counts", counts, savedLen);
+  }
   current = constrain(prefs.getInt("cur", 0), 0, N - 1);
   brightness = prefs.getUChar("bright", 220);
   applyBrightness(brightness);
@@ -691,12 +759,18 @@ void loop() {
     down = true;
     longFired = false;
     downAt = now;
-  } else if (pressed && down && !longFired && now - downAt > 700) {
+  } else if (pressed && down && !longFired && now - downAt >= 3000) {
     longFired = true;
-    onLongPress();
+    powerOff(); // 3 seconden indrukken = uitschakelen naar deep sleep
   } else if (!pressed && down) {
     down = false;
-    if (!longFired && now - downAt > 30) onShortPress();
+    if (!longFired && now - downAt > 30) {
+      // Kort indrukken = Tesbih +1!
+      if (page != TESBIH) {
+        transitionTo(TESBIH, TRANS_LEFT);
+      }
+      incrementCurrentDhikr();
+    }
   }
 
   handleTouch();
