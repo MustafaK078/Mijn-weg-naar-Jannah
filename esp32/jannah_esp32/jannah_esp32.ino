@@ -27,8 +27,19 @@ BleKeyboard bleKeyboard("Jannah Tasbih", "Mustafa", 100);
 #define PIN_BTN  0
 
 Arduino_DataBus *bus = new Arduino_ESP32SPI(PIN_DC, PIN_CS, PIN_SCK, PIN_MOSI);
-Arduino_ST7789 *gfx = new Arduino_ST7789(bus, PIN_RST, 0 /* portrait */, false /* IPS false */,
+Arduino_ST7789 *tft = new Arduino_ST7789(bus, PIN_RST, 0 /* portrait */, false /* IPS false */,
                                          172, 320, 34, 0, 34, 0);
+Arduino_Canvas *gfx = new Arduino_Canvas(172, 320, tft);
+
+uint16_t *oldBuf = nullptr;
+
+enum TransitionDir {
+  TRANS_LEFT,   // Volgende pagina (veeg links, schuift naar links)
+  TRANS_RIGHT,  // Vorige pagina (veeg rechts, schuift naar rechts)
+  TRANS_UP,     // Omhoog vegen (schuift omhoog naar BT Sync)
+  TRANS_DOWN,   // Omlaag vegen (schuift omlaag terug vanaf BT Sync)
+  TRANS_NONE    // Direct / zonder animatie
+};
 
 #define RGB(r, g, b) (uint16_t)((((r) & 0xF8) << 8) | (((g) & 0xFC) << 3) | ((b) >> 3))
 
@@ -66,11 +77,17 @@ const int N = sizeof(ADHKAR) / sizeof(ADHKAR[0]);
 enum Page { HOME, TESBIH, ADHKAR_LIST, BRIGHTNESS, SYNC };
 const int NUM_PAGES = 5;
 Page page = HOME;
+Page lastPageBeforeSync = TESBIH;
 int current = 0;
 uint16_t counts[N] = {0};
 uint8_t brightness = 200;  // Helderheid 15..255
 Preferences prefs;
 bool dirty = true;
+
+void save() {
+  prefs.putBytes("counts", counts, sizeof(counts));
+  prefs.putInt("cur", current);
+}
 
 void applyBrightness(uint8_t b) {
   brightness = constrain(b, 15, 255);
@@ -151,6 +168,8 @@ void updateTesbihCounter() {
   gfx->setTextColor(C_GREEN);
   gfx->setCursor(cx - w / 2, cy + 22);
   gfx->print(buf);
+
+  gfx->flush();
 }
 
 void drawTesbih() {
@@ -177,7 +196,7 @@ void drawTesbih() {
 
   centerText(d.phrase, 230, 1, C_GOLD);
   centerText(d.meaning, 248, 1, C_CREAM);
-  centerText("tik: +1   veeg: pagina", 290, 1, C_MUTED);
+  centerText("tik: +1  omhoog: BT sync", 290, 1, C_MUTED);
 }
 
 void drawAdhkar() {
@@ -198,7 +217,7 @@ void drawAdhkar() {
     gfx->print(" / ");
     gfx->print(ADHKAR[i].target);
   }
-  centerText("tik: kies   veeg: pagina", 300, 1, C_MUTED);
+  centerText("tik: kies  omhoog: BT sync", 300, 1, C_MUTED);
 }
 
 void updateBrightnessUI() {
@@ -221,6 +240,8 @@ void updateBrightnessUI() {
   kx = constrain(kx, tx + 13, tx + tw - 13);
   gfx->fillCircle(kx, ty + th / 2, 11, C_BEIGE);
   gfx->drawCircle(kx, ty + th / 2, 11, C_GOLD);
+
+  gfx->flush();
 }
 
 void drawBrightness() {
@@ -319,7 +340,7 @@ void drawSync() {
   centerText("RESET TELLERS", 262, 1, C_GOLD);
   centerText("Zet tellers op 0", 276, 1, C_CREAM);
 
-  centerText("veeg voor home", 302, 1, C_MUTED);
+  centerText("veeg omlaag = terug", 302, 1, C_MUTED);
 }
 
 void sendBatchBle() {
@@ -328,8 +349,10 @@ void sendBatchBle() {
     gfx->fillRect(10, 196, 152, 54, C_BG);
     centerText("BT NIET VERBONDEN!", 210, 1, C_WHITE);
     centerText("Koppel in iPhone BT", 226, 1, C_GOLD);
+    gfx->flush();
     delay(1400);
     drawSync();
+    gfx->flush();
     return;
   }
   char msg[100];
@@ -340,15 +363,17 @@ void sendBatchBle() {
   gfx->fillRoundRect(12, 198, 148, 48, 10, C_GOLD);
   centerText("VERZONDEN!", 210, 1, C_GREEN);
   centerText("Tellers geleegd naar 0", 228, 1, C_GREEN);
+  gfx->flush();
 
   for (int i = 0; i < N; i++) counts[i] = 0;
   save();
   delay(1400);
   drawSync();
+  gfx->flush();
 #endif
 }
 
-void render() {
+void renderPageOnly() {
   switch (page) {
     case HOME: drawHome(); break;
     case TESBIH: drawTesbih(); break;
@@ -358,25 +383,69 @@ void render() {
   }
 }
 
-void transitionTo(Page next) {
-  if (next == page) return;
-  for (int y = 0; y < 320; y += 32) {
-    gfx->fillRect(0, y, 172, 32, C_CARD);
-    delay(8);
-  }
-  page = next;
-  render();
+void render() {
+  renderPageOnly();
+  gfx->flush();
 }
 
-void save() {
-  prefs.putBytes("counts", counts, sizeof(counts));
-  prefs.putInt("cur", current);
+void transitionTo(Page next, TransitionDir dir = TRANS_NONE) {
+  if (next == page && dir != TRANS_NONE) return;
+
+  uint16_t *currentFb = gfx->getFramebuffer();
+  if (dir == TRANS_NONE || !oldBuf || !currentFb) {
+    page = next;
+    render();
+    return;
+  }
+
+  // 1. Bewaar huidige schermweergave in transitiebuffer
+  memcpy(oldBuf, currentFb, 172 * 320 * sizeof(uint16_t));
+
+  // 2. Teken de nieuwe pagina in het canvasgeheugen
+  page = next;
+  renderPageOnly();
+  uint16_t *newBuf = gfx->getFramebuffer();
+
+  // 3. Vloeiende glijdende transitie (hardware-geclipt via draw16bitRGBBitmap)
+  if (dir == TRANS_LEFT) {
+    // Oud schuift naar links (-172), nieuw komt binnen vanaf rechts (172 -> 0)
+    const int steps[] = {25, 55, 95, 135, 160, 172};
+    for (int i = 0; i < 6; i++) {
+      int shift = steps[i];
+      tft->draw16bitRGBBitmap(-shift, 0, oldBuf, 172, 320);
+      tft->draw16bitRGBBitmap(172 - shift, 0, newBuf, 172, 320);
+    }
+  } else if (dir == TRANS_RIGHT) {
+    // Oud schuift naar rechts (+172), nieuw komt binnen vanaf links (-172 -> 0)
+    const int steps[] = {25, 55, 95, 135, 160, 172};
+    for (int i = 0; i < 6; i++) {
+      int shift = steps[i];
+      tft->draw16bitRGBBitmap(shift, 0, oldBuf, 172, 320);
+      tft->draw16bitRGBBitmap(-172 + shift, 0, newBuf, 172, 320);
+    }
+  } else if (dir == TRANS_UP) {
+    // Omhoog swipen naar BT Sync: oud schuift omhoog (-320), nieuw komt vanaf onder (320 -> 0)
+    const int steps[] = {35, 85, 150, 220, 275, 305, 320};
+    for (int i = 0; i < 7; i++) {
+      int shift = steps[i];
+      tft->draw16bitRGBBitmap(0, -shift, oldBuf, 172, 320);
+      tft->draw16bitRGBBitmap(0, 320 - shift, newBuf, 172, 320);
+    }
+  } else if (dir == TRANS_DOWN) {
+    // Omlaag swipen vanaf BT Sync: oud schuift omlaag (+320), nieuw komt vanaf boven (-320 -> 0)
+    const int steps[] = {35, 85, 150, 220, 275, 305, 320};
+    for (int i = 0; i < 7; i++) {
+      int shift = steps[i];
+      tft->draw16bitRGBBitmap(0, shift, oldBuf, 172, 320);
+      tft->draw16bitRGBBitmap(0, -320 + shift, newBuf, 172, 320);
+    }
+  }
 }
 
 void onShortPress() {
   switch (page) {
     case HOME:
-      transitionTo(TESBIH);
+      transitionTo(TESBIH, TRANS_LEFT);
       return;
     case TESBIH:
       counts[current]++;
@@ -402,7 +471,7 @@ void onShortPress() {
 }
 
 void onLongPress() {
-  transitionTo((Page)((page + 1) % NUM_PAGES));
+  transitionTo((Page)((page + 1) % NUM_PAGES), TRANS_LEFT);
 }
 
 // ---- Touch (AXS5106L, I2C) ----
@@ -435,14 +504,15 @@ void touchInit() {
   delay(60);
 }
 
-void changePage(int dir) {
-  transitionTo((Page)((page + NUM_PAGES + dir) % NUM_PAGES));
+void changePage(int dir, TransitionDir tdir = TRANS_NONE) {
+  Page next = (Page)((page + NUM_PAGES + dir) % NUM_PAGES);
+  transitionTo(next, tdir);
 }
 
 void onTap(int x, int y) {
   switch (page) {
     case HOME:
-      transitionTo(TESBIH);
+      transitionTo(TESBIH, TRANS_LEFT);
       return;
     case TESBIH:
       onShortPress();
@@ -452,7 +522,7 @@ void onTap(int x, int y) {
       if (i >= 0 && i < N) {
         current = i;
         save();
-        transitionTo(TESBIH);
+        transitionTo(TESBIH, TRANS_LEFT);
       }
       return;
     }
@@ -486,6 +556,7 @@ void onTap(int x, int y) {
         for (int i = 0; i < N; i++) counts[i] = 0;
         save();
         drawSync();
+        gfx->flush();
         return;
       }
       return;
@@ -511,7 +582,7 @@ void handleTouch() {
     }
     lx = x;
     ly = y;
-    if (abs(lx - sx) > 20 || abs(ly - sy) > 20) moved = true;
+    if (abs(lx - sx) > 15 || abs(ly - sy) > 15) moved = true;
 
     if (draggingSlider && page == BRIGHTNESS) {
       int newB = map(x, 20, 152, 15, 255);
@@ -529,9 +600,35 @@ void handleTouch() {
       return;
     }
     int dx = lx - sx, dy = ly - sy;
-    if (abs(dx) > 50 && abs(dx) > abs(dy)) {
-      changePage(dx < 0 ? 1 : -1);
-    } else if (!moved) {
+    int adx = abs(dx), ady = abs(dy);
+
+    // 1. VERTICAAL SWIPEN (adx is klein, ady > 35)
+    if (ady > 35 && ady > adx) {
+      if (dy < 0) {
+        // Omhoog swipen: direct naar de "stuur via BT" pagina (SYNC)!
+        if (page != SYNC) {
+          lastPageBeforeSync = page;
+          transitionTo(SYNC, TRANS_UP);
+        }
+      } else {
+        // Omlaag swipen: terug vanaf de BT Sync pagina naar vorige pagina
+        if (page == SYNC) {
+          transitionTo(lastPageBeforeSync, TRANS_DOWN);
+        }
+      }
+    }
+    // 2. HORIZONTAAL SWIPEN (ady is klein, adx > 35)
+    else if (adx > 35 && adx > ady) {
+      if (dx < 0) {
+        // Veeg links -> volgende pagina
+        changePage(1, TRANS_LEFT);
+      } else {
+        // Veeg rechts -> vorige pagina
+        changePage(-1, TRANS_RIGHT);
+      }
+    }
+    // 3. TIK OF LANG INGEDRUKT
+    else if (!moved) {
       if (page == TESBIH && now - downAt > 800) {
         counts[current] = 0;  // Lang vasthouden = teller resetten
         save();
@@ -555,11 +652,24 @@ void setup() {
   applyBrightness(brightness);
   Serial.println("Jannah: backlight gereed");
   Serial.println("Jannah: scherm starten");
+  tft->begin();
   gfx->begin();
-  gfx->startWrite();
+  tft->startWrite();
   bus->writeCommand(0x36);
   bus->write(0x40 | (BGR_ORDER ? 0x08 : 0x00));
-  gfx->endWrite();
+  tft->endWrite();
+
+  if (psramFound()) {
+    oldBuf = (uint16_t *)ps_malloc(172 * 320 * sizeof(uint16_t));
+  }
+  if (!oldBuf) {
+    oldBuf = (uint16_t *)malloc(172 * 320 * sizeof(uint16_t));
+  }
+  if (oldBuf) {
+    Serial.println("Jannah: transitie-buffer gealloceerd");
+  } else {
+    Serial.println("Jannah: WAARSCHUWING - geen geheugen voor transitie-buffer");
+  }
   Serial.println("Jannah: scherm klaar");
   touchInit();
 
