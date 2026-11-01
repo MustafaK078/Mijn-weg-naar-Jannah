@@ -109,6 +109,18 @@ html.focus-open{overflow:hidden}
 .routine-links{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}.routine-link{min-height:34px;padding:5px 10px;border:1px solid var(--green);border-radius:99px;background:white;color:var(--green);font:inherit;font-size:12px;font-weight:700;cursor:pointer}
 .link-highlight{animation:link-flash 2.2s ease}@keyframes link-flash{0%,60%{box-shadow:0 0 0 3px var(--gold)}100%{box-shadow:0 0 0 0 transparent}}
 @media(prefers-reduced-motion:reduce){.dhikr-focus,.dhikr-focus-tap,.dhikr-focus-progress div{transition:none}.link-highlight{animation:none}}
+.esp32-toast{position:fixed;top:18px;left:50%;transform:translateX(-50%) translateY(-25px);background:var(--green);color:white;padding:9px 20px;border-radius:24px;font-size:14px;font-weight:700;box-shadow:0 6px 20px rgba(0,0,0,.25);border:1px solid var(--gold);z-index:99999;opacity:0;pointer-events:none;transition:opacity .22s ease,transform .22s ease}
+.esp32-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.esp32-modal{border:0;border-radius:16px;padding:0;max-width:440px;width:92vw;background:var(--paper);box-shadow:0 12px 36px rgba(0,0,0,.3);color:var(--ink)}
+.esp32-modal::backdrop{background:rgba(23,40,31,.6);backdrop-filter:blur(3px)}
+.esp32-modal-content{padding:18px}
+.esp32-modal-header{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line);padding-bottom:10px;margin-bottom:12px}
+.esp32-modal-header h3{margin:0;color:var(--green);font-size:17px}
+.esp32-modal-close{min-width:36px;min-height:36px;border:1px solid var(--line);border-radius:50%;background:white;color:var(--green);font-size:16px;cursor:pointer}
+.esp32-section{margin-bottom:12px;padding:12px;background:#f8f6f0;border-radius:12px;border:1px solid var(--line)}
+.esp32-section h4{margin:0 0 6px;color:var(--green);font-size:14px}
+.esp32-key-list{margin:6px 0 0;padding-left:18px;font-size:12px;color:var(--ink);display:grid;grid-template-columns:1fr 1fr;gap:4px}
+.esp32-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
 </style>
 </head>
 <body>
@@ -364,6 +376,30 @@ html.focus-open{overflow:hidden}
   <div class="dhikr-focus-body" id="dhikrFocusBody"></div>
  </div>
 </div>
+<dialog class="esp32-modal" id="esp32SyncModal" aria-labelledby="esp32ModalTitle">
+ <div class="esp32-modal-content">
+  <div class="esp32-modal-header">
+   <h3 id="esp32ModalTitle">📲 ESP32 Tasbih Bluetooth Synchronisatie</h3>
+   <button type="button" class="esp32-modal-close" id="esp32ModalClose" aria-label="Sluiten">✕</button>
+  </div>
+  <div class="esp32-modal-body">
+   <div class="esp32-section">
+    <h4>Draadloos overdragen via Bluetooth</h4>
+    <p class="note">1. Koppel eenmalig via <strong>Instellingen &gt; Bluetooth</strong> op je iPhone met <strong>"Jannah Tasbih"</strong>.</p>
+    <p class="note">2. <strong>Live Sync (app open):</strong> Terwijl je deze webapp open hebt, worden al je tasbih-tikken direct live geteld en zie je het hart en de tellers meteen oplichten!</p>
+    <p class="note">3. <strong>Offline / Vergrendeld:</strong> Is je scherm uit of de app dicht? Je ESP32 bewaart alle tellingen veilig in het geheugen zonder per ongeluk je toegangscode in te toetsen. Open de webapp, veeg omhoog naar <strong>SYNC</strong> en tik op <strong>"STUUR VIA BT"</strong>.</p>
+    <p class="note">4. <strong>10 Adhkar ondersteund:</strong> Subhanallah, Alhamdulillah, Allahu Akbar, Istighfar, Tahlil, Salawat, SubḥānAllāhi wa-biḥamdihī, SubḥānAllāhi l-ʿAẓīm, Lā ḥawla wa-lā quwwata illā bi-llāh en Tahlil Tamm.</p>
+    <div class="esp32-actions">
+     <button type="button" class="btn secondary" id="esp32ManualToggleBtn">⌨ Handmatige invoer</button>
+    </div>
+    <div id="esp32ManualArea" hidden style="margin-top:8px;">
+     <input type="text" id="esp32ManualCode" placeholder="Code: esp32 s33 a33 k34 b100..." style="width:100%;box-sizing:border-box;padding:8px;border:1px solid var(--line);border-radius:8px;font:inherit;font-size:14px;margin-bottom:8px;">
+     <button type="button" class="btn primary" id="esp32ApplyManualBtn">Tellingen toevoegen</button>
+    </div>
+   </div>
+  </div>
+ </div>
+</dialog>
 <script src="./imam-hasan-arabic-sprite.js"></script>
 <script src="./imam-al-hasan-prayers.js"></script>
 <script>
@@ -2129,6 +2165,10 @@ function renderDhikrEditBars(){
   const toggle=makeButton(dhikrEditMode?`✓ ${translateText('Klaar met bewerken')}`:`✎ ${translateText('Bewerken')}`,'dhikrEditToggle');
   toggle.classList.add('primary');toggle.setAttribute('aria-pressed',String(dhikrEditMode));
   bar.append(toggle);
+  if(!dhikrEditMode&&id==='adhkarEditBar'){
+   const espBtn=makeButton(`📲 ${translateText('ESP32 Tasbih')}`,'esp32SyncOpen');
+   bar.append(espBtn);
+  }
   if(dhikrEditMode){
    bar.append(makeButton(`＋ ${translateText('Nieuw onderdeel')}`,'dhikrAdd',page));
    if(removedDhikrItems.length)bar.append(makeButton(`↺ ${translateText('Verwijderde onderdelen herstellen')} (${removedDhikrItems.length})`,'dhikrRestore'));
@@ -2263,11 +2303,86 @@ document.getElementById('dhikrEditorReset').addEventListener('click',()=>{
  if(updateDhikrCustom(custom=>{delete custom.edits[id]}))closeDhikrEditor();
 });
 document.getElementById('dhikrFocusClose').addEventListener('click',closeDhikrFocus);
+let esp32KeyBuffer='',esp32KeyTimeout=0;
 document.addEventListener('keydown',event=>{
+ if(event.target&&['INPUT','TEXTAREA','SELECT'].includes(event.target.tagName))return;
+
  if(event.key==='Escape'){
+  const espModal=document.getElementById('esp32SyncModal');
+  if(espModal&&(espModal.open||!espModal.hidden)){closeEsp32SyncModal();return}
   if(!document.getElementById('dhikrEditor').hidden){closeDhikrEditor();return}
   closeDhikrFocus();return;
  }
+
+ const k=event.key;
+ if(k&&(k.length===1||k==='Enter')){
+  const c=(k==='Enter')?'\n':k;
+  if(!esp32KeyBuffer&&(c==='e'||c==='E')){
+   esp32KeyBuffer=c;
+   clearTimeout(esp32KeyTimeout);
+   esp32KeyTimeout=setTimeout(()=>{esp32KeyBuffer=''},3000);
+   event.preventDefault();
+   event.stopPropagation();
+   return;
+  }else if(esp32KeyBuffer){
+   esp32KeyBuffer+=c;
+   clearTimeout(esp32KeyTimeout);
+   esp32KeyTimeout=setTimeout(()=>{esp32KeyBuffer=''},3000);
+   event.preventDefault();
+   event.stopPropagation();
+   if(c==='\n'||esp32KeyBuffer.includes('\n')){
+    const payload=esp32KeyBuffer.trim();
+    esp32KeyBuffer='';
+    if(payload.toLowerCase().startsWith('esp32')){
+     processEsp32SyncPayload(payload,'bluetooth');
+    }
+   }
+   return;
+  }
+ }
+
+ if(focusedDhikrId&&!document.getElementById('dhikrFocus').hidden){
+  if(event.key===' '||event.key==='Enter'||event.key==='ArrowUp'||event.key==='+'){
+   event.preventDefault();
+   adjustDailyDhikrCount(focusedDhikrId,1);
+   refreshDhikrFocus();
+   updateDailyDhikrCard(focusedDhikrId);
+   const item=findDhikrItem(focusedDhikrId);
+   showEsp32Toast(translateText(item?.title||'Dhikr'),1);
+   return;
+  }
+  if(event.key==='-'||event.key==='ArrowDown'){
+   event.preventDefault();
+   adjustDailyDhikrCount(focusedDhikrId,-1);
+   refreshDhikrFocus();
+   updateDailyDhikrCard(focusedDhikrId);
+   return;
+  }
+ }
+
+ const espDhikrKeys={
+  '1':{id:'dhikr-four-100-subhanallah',fallbackId:'dhikr-tasbih100-v2',title:'Subhanallah'},
+  '2':{id:'dhikr-four-100-hamd',fallbackId:'dhikr-hamd',title:'Alhamdulillah'},
+  '3':{id:'dhikr-four-100-takbir',fallbackId:'dhikr-jannah-plants',title:'Allahu Akbar'},
+  '4':{id:'dhikr-istighfar100-v2',title:'Istighfar'},
+  '5':{id:'dhikr-four-100-tahlil',fallbackId:'dhikr-tahlil100-v2',title:'Tahlil'},
+  '6':{id:'dhikr-salawat-counter',title:'Salawat'},
+  '7':{id:'dhikr-tasbih100-v2',title:'SubḥānAllāhi wa-biḥamdihī'},
+  '8':{id:'dhikr-azim100',title:'SubḥānAllāhi l-ʿAẓīm wa-biḥamdihī'},
+  '9':{id:'dhikr-hawqala',title:'Lā ḥawla wa-lā quwwata illā bi-llāh'},
+  '0':{id:'dhikr-tahlil100-v2',title:'Lā ilāha illa Allāh waḥdahu lā sharīka lah'}
+ };
+ if(espDhikrKeys[event.key]){
+  event.preventDefault();
+  const def=espDhikrKeys[event.key];
+  const targetItem=dailyAdhkar.find(i=>i.id===def.id)||(def.fallbackId?dailyAdhkar.find(i=>i.id===def.fallbackId):null)||{id:def.id,title:def.title};
+  adjustDailyDhikrCount(targetItem.id,1);
+  updateDailyDhikrCard(targetItem.id);
+  if(focusedDhikrId===targetItem.id)refreshDhikrFocus();
+  showEsp32Toast(translateText(targetItem.title||def.title),1);
+  return;
+ }
+
  const card=event.target.closest?.('.adhkar-card.is-tappable,.imam-prayer.is-tappable');
  if(card&&card===event.target&&(event.key==='Enter'||event.key===' ')){event.preventDefault();openDhikrFocus(card.dataset.dhikrId)}
  const handle=event.target.closest?.('.dhikr-drag-handle');
@@ -2281,6 +2396,7 @@ document.addEventListener('keydown',event=>{
 });
 document.addEventListener('click',event=>{
  const target=event.target;
+ if(target.closest('[data-esp32-sync-open]')){openEsp32SyncModal();return}
  if(target.closest('[data-dhikr-edit-toggle]')){dhikrEditMode=!dhikrEditMode;renderDailyDhikr();translatePage();return}
  const add=target.closest('[data-dhikr-add]');
  if(add){openDhikrEditor(null,add.dataset.dhikrAdd==='istighfar'?'Istighfār':'Dhikr overdag');return}
@@ -2293,6 +2409,109 @@ document.addEventListener('click',event=>{
  if(cancel||target.id==='dhikrEditor'){closeDhikrEditor();return}
  const card=target.closest('.adhkar-card.is-tappable,.imam-prayer.is-tappable');
  if(card&&!target.closest('a,button,input,select,textarea')&&!(window.getSelection?.().toString()))openDhikrFocus(card.dataset.dhikrId);
+});
+let esp32ToastTimer=0;
+function showEsp32Toast(title,delta=1){
+ let toast=document.getElementById('esp32Toast');
+ if(!toast){
+  toast=document.createElement('div');
+  toast.id='esp32Toast';
+  toast.className='esp32-toast';
+  document.body.appendChild(toast);
+ }
+ toast.textContent=`✨ ${title} +${delta}`;
+ toast.classList.remove('show');
+ void toast.offsetWidth;
+ toast.classList.add('show');
+ clearTimeout(esp32ToastTimer);
+ esp32ToastTimer=setTimeout(()=>{toast.classList.remove('show')},1600);
+}
+function processEsp32SyncPayload(payload,source='url'){
+ if(!payload)return false;
+ const dataMatch=String(payload).match(/(?:esp32[:=\s]+)(.*)/i);
+ const dataStr=dataMatch?dataMatch[1]:String(payload);
+ const keyMap={
+  s:{id:'dhikr-four-100-subhanallah',fallbackId:'dhikr-tasbih100-v2',title:'Subhanallah'},
+  a:{id:'dhikr-four-100-hamd',fallbackId:'dhikr-hamd',title:'Alhamdulillah'},
+  k:{id:'dhikr-four-100-takbir',fallbackId:'dhikr-jannah-plants',title:'Allahu Akbar'},
+  i:{id:'dhikr-istighfar100-v2',title:'Istighfar'},
+  t:{id:'dhikr-four-100-tahlil',fallbackId:'dhikr-tahlil100-v2',title:'Tahlil'},
+  w:{id:'dhikr-salawat-counter',title:'Salawat'},
+  b:{id:'dhikr-tasbih100-v2',title:'SubḥānAllāhi wa-biḥamdihī'},
+  z:{id:'dhikr-azim100',title:'SubḥānAllāhi l-ʿAẓīm wa-biḥamdihī'},
+  h:{id:'dhikr-hawqala',title:'Lā ḥawla wa-lā quwwata illā bi-llāh'},
+  u:{id:'dhikr-tahlil100-v2',title:'Lā ilāha illa Allāh waḥdahu lā sharīka lah'}
+ };
+
+ const parsedCounts={};
+ for(const m of dataStr.matchAll(/([sakituwbzhu])[:= ]?(\d+)/gi)){
+  parsedCounts[m[1].toLowerCase()]=parseInt(m[2],10);
+ }
+ const imported=[];
+ let totalAdded=0;
+ for(const [k,def] of Object.entries(keyMap)){
+  if(parsedCounts[k]!==undefined){
+   const count=parsedCounts[k];
+   if(!isNaN(count)&&count>0){
+    const targetItem=dailyAdhkar.find(i=>i.id===def.id)||(def.fallbackId?dailyAdhkar.find(i=>i.id===def.fallbackId):null)||{id:def.id,title:def.title};
+    imported.push({id:targetItem.id,title:translateText(targetItem.title||def.title),count});
+    totalAdded+=count;
+   }
+  }
+ }
+ if(imported.length===0){
+  if(source==='bluetooth'){
+   showEsp32Toast(translateText('Geen nieuwe tellingen om te synchroniseren (>0).'));
+  }else if(source!=='url'){
+   alert(translateText('Geen geldige tellingen gevonden in de ingevoerde code.'));
+  }
+  return false;
+ }
+ const summary=imported.map(item=>`• ${item.title}: +${item.count}`).join('\n');
+ const confirmMsg=`${translateText('ESP32 Tasbih tellingen ontvangen!')}\n\n${summary}\n\n${translateText('Wil je deze toevoegen aan je tellingen van vandaag?')}`;
+ if(source==='bluetooth'||confirm(confirmMsg)){
+  const counts=readDeeds();
+  imported.forEach(item=>{
+   counts[item.id]=(counts[item.id]||0)+item.count;
+   updateDailyDhikrCard(item.id);
+  });
+  saveDeeds(counts);
+  heartAnimation='good';
+  homeShieldAnimation='good';
+  renderDeedCounter(true);
+  showEsp32Toast(`✨ ${totalAdded} dhikr gesynchroniseerd!`);
+  if(source==='url'&&window.location.hash.includes('esp32:')){
+   try{
+    history.replaceState(null,'',window.location.pathname+window.location.search);
+   }catch(e){}
+  }
+  return true;
+ }
+ return false;
+}
+function openEsp32SyncModal(){
+ const modal=document.getElementById('esp32SyncModal');
+ if(!modal)return;
+ if(typeof modal.showModal==='function')modal.showModal();else modal.hidden=false;
+}
+function closeEsp32SyncModal(){
+ const modal=document.getElementById('esp32SyncModal');
+ if(!modal)return;
+ if(typeof modal.close==='function')modal.close();else modal.hidden=true;
+}
+document.getElementById('esp32ModalClose')?.addEventListener('click',closeEsp32SyncModal);
+document.getElementById('esp32ManualToggleBtn')?.addEventListener('click',()=>{
+ const area=document.getElementById('esp32ManualArea');
+ if(area)area.hidden=!area.hidden;
+});
+document.getElementById('esp32ApplyManualBtn')?.addEventListener('click',()=>{
+ const input=document.getElementById('esp32ManualCode');
+ if(input&&input.value.trim()){
+  if(processEsp32SyncPayload(input.value.trim(),'manual')){
+   input.value='';
+   closeEsp32SyncModal();
+  }
+ }
 });
 let dhikrDrag=null;
 document.addEventListener('pointerdown',event=>{
@@ -3204,5 +3423,5 @@ initializeHomeWidgetReordering();
 initializeAuth();
 translatePage();
 </script>
-<footer class="app-version" id="appVersion" style="text-align:center;font-size:11px;color:#6b7280;padding:14px 0 22px">Appversie v64</footer>
+<footer class="app-version" id="appVersion" style="text-align:center;font-size:11px;color:#6b7280;padding:14px 0 22px">Appversie v71</footer>
 </body></html>
