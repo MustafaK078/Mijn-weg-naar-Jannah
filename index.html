@@ -384,21 +384,14 @@ html.focus-open{overflow:hidden}
   </div>
   <div class="esp32-modal-body">
    <div class="esp32-section">
-    <h4>1. Live meetellen via Bluetooth</h4>
-    <p class="note">Verbind je ESP32 eenmalig via <strong>Instellingen &gt; Bluetooth</strong> op je iPhone met <strong>"Jannah Tasbih"</strong>.</p>
-    <p class="note">Elke klik op de ESP32 zendt direct de telling naar je geopende dhikr (Spatiebalk), of toetsen 1 t/m 6 voor:</p>
-    <ul class="esp32-key-list">
-     <li><strong>1</strong>: Subhanallah (33×)</li>
-     <li><strong>2</strong>: Alhamdulillah (33×)</li>
-     <li><strong>3</strong>: Allahu Akbar (34×)</li>
-     <li><strong>4</strong>: Istighfar (100×)</li>
-     <li><strong>5</strong>: Tahlil (100×)</li>
-     <li><strong>6</strong>: Salawat (100×)</li>
-    </ul>
+    <h4>1. Draadloos overdragen via Bluetooth</h4>
+    <p class="note">Koppel eenmalig via <strong>Instellingen &gt; Bluetooth</strong> op je iPhone met <strong>"Jannah Tasbih"</strong>.</p>
+    <p class="note">Je ESP32 telt al je dhikr offline op en onthoudt deze veilig in zijn geheugen. Je telefoon kan gewoon vergrendeld blijven zonder storingen!</p>
+    <p class="note"><strong>Om over te dragen:</strong> Open deze webapp, veeg op je ESP32 naar pagina <strong>SYNC</strong> en tik op <strong>"STUUR VIA BT"</strong>. De tellingen worden meteen bijgeschreven op je dhikr-tellers en goede daden!</p>
    </div>
    <div class="esp32-section">
     <h4>2. QR-code overdragen (Offline backup)</h4>
-    <p class="note">Veeg op je ESP32 naar de pagina <strong>SYNC</strong>. Richt je <strong>iPhone Camera</strong> op het scherm van de ESP32 om alle tellingen in één klik toe te voegen aan je goede daden.</p>
+    <p class="note">Veeg op je ESP32 naar de pagina <strong>SYNC</strong>. Richt je <strong>iPhone Camera</strong> op het scherm van de ESP32 om alle tellingen in één tik toe te voegen aan je goede daden.</p>
     <div class="esp32-actions">
      <button type="button" class="btn primary" id="esp32ScanCameraBtn">📷 Scan met camera in app</button>
      <button type="button" class="btn secondary" id="esp32ManualToggleBtn">⌨ Handmatige invoer</button>
@@ -2327,6 +2320,31 @@ document.addEventListener('keydown',event=>{
   if(!document.getElementById('dhikrEditor').hidden){closeDhikrEditor();return}
   closeDhikrFocus();return;
  }
+
+ const k=event.key;
+ if(k&&(k.length===1||k==='Enter')){
+  const c=(k==='Enter')?'\n':k;
+  if(!esp32KeyBuffer&&c==='e'){
+   esp32KeyBuffer='e';
+   clearTimeout(esp32KeyTimeout);
+   esp32KeyTimeout=setTimeout(()=>{esp32KeyBuffer=''},2500);
+  }else if(esp32KeyBuffer){
+   esp32KeyBuffer+=c;
+   clearTimeout(esp32KeyTimeout);
+   esp32KeyTimeout=setTimeout(()=>{esp32KeyBuffer=''},2500);
+   if(esp32KeyBuffer.startsWith('esp32')){
+    event.preventDefault();
+    event.stopPropagation();
+    if(c==='\n'||esp32KeyBuffer.includes('\n')){
+     const payload=esp32KeyBuffer.trim();
+     esp32KeyBuffer='';
+     processEsp32SyncPayload(payload,'bluetooth');
+     return;
+    }
+   }
+  }
+ }
+
  if(event.target&&['INPUT','TEXTAREA','SELECT'].includes(event.target.tagName))return;
 
  if(focusedDhikrId&&!document.getElementById('dhikrFocus').hidden){
@@ -2378,6 +2396,7 @@ document.addEventListener('keydown',event=>{
   saveDhikrOrderFromGrid(card2.parentElement,card2.dataset.dhikrId);
  }
 });
+let esp32KeyBuffer='',esp32KeyTimeout=0;
 document.addEventListener('click',event=>{
  const target=event.target;
  if(target.closest('[data-esp32-sync-open]')){openEsp32SyncModal();return}
@@ -2412,9 +2431,8 @@ function showEsp32Toast(title,delta=1){
 }
 function processEsp32SyncPayload(payload,source='url'){
  if(!payload)return false;
- const match=String(payload).match(/(?:#|\?|^)?esp32:?([^\s#?]+)/i);
- const dataStr=match?match[1]:payload;
- const params=new URLSearchParams(dataStr.replace(/,/g,'&'));
+ const dataMatch=String(payload).match(/(?:esp32[:=\s]+)(.*)/i);
+ const dataStr=dataMatch?dataMatch[1]:String(payload);
  const keyMap={
   s:{id:'dhikr-four-100-subhanallah',fallbackId:'dhikr-tasbih100-v2',title:'Subhanallah'},
   a:{id:'dhikr-four-100-hamd',fallbackId:'dhikr-hamd',title:'Alhamdulillah'},
@@ -2423,11 +2441,15 @@ function processEsp32SyncPayload(payload,source='url'){
   t:{id:'dhikr-four-100-tahlil',fallbackId:'dhikr-tahlil100-v2',title:'Tahlil'},
   w:{id:'dhikr-salawat-counter',title:'Salawat'}
  };
+ const parsedCounts={};
+ for(const m of dataStr.matchAll(/([sakituw])[:= ]?(\d+)/gi)){
+  parsedCounts[m[1].toLowerCase()]=parseInt(m[2],10);
+ }
  const imported=[];
  let totalAdded=0;
  for(const [k,def] of Object.entries(keyMap)){
-  if(params.has(k)){
-   const count=parseInt(params.get(k),10);
+  if(parsedCounts[k]!==undefined){
+   const count=parsedCounts[k];
    if(!isNaN(count)&&count>0){
     const targetItem=dailyAdhkar.find(i=>i.id===def.id)||(def.fallbackId?dailyAdhkar.find(i=>i.id===def.fallbackId):null)||{id:def.id,title:def.title};
     imported.push({id:targetItem.id,title:translateText(targetItem.title||def.title),count});
@@ -2436,12 +2458,12 @@ function processEsp32SyncPayload(payload,source='url'){
   }
  }
  if(imported.length===0){
-  if(source!=='url')alert(translateText('Geen geldige tellingen gevonden in de ingevoerde code.'));
+  if(source!=='url'&&source!=='bluetooth')alert(translateText('Geen geldige tellingen gevonden in de ingevoerde code.'));
   return false;
  }
  const summary=imported.map(item=>`• ${item.title}: +${item.count}`).join('\n');
  const confirmMsg=`${translateText('ESP32 Tasbih tellingen ontvangen!')}\n\n${summary}\n\n${translateText('Wil je deze toevoegen aan je tellingen van vandaag?')}`;
- if(confirm(confirmMsg)){
+ if(source==='bluetooth'||confirm(confirmMsg)){
   const counts=readDeeds();
   imported.forEach(item=>{
    counts[item.id]=(counts[item.id]||0)+item.count;
@@ -3447,5 +3469,5 @@ initializeHomeWidgetReordering();
 initializeAuth();
 translatePage();
 </script>
-<footer class="app-version" id="appVersion" style="text-align:center;font-size:11px;color:#6b7280;padding:14px 0 22px">Appversie v65</footer>
+<footer class="app-version" id="appVersion" style="text-align:center;font-size:11px;color:#6b7280;padding:14px 0 22px">Appversie v66</footer>
 </body></html>

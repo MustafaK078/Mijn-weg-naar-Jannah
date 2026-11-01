@@ -255,8 +255,8 @@ void drawBrightness() {
 // Tekent de QR-code pagina voor synchronisatie naar de iPhone app
 void drawSync() {
   drawFrame();
-  centerText("SYNC NAAR APP", 14, 2, C_GOLD);
-  centerText("Scan met iPhone camera", 34, 1, C_CREAM);
+  centerText("SYNC NAAR APP", 14, 1, C_GOLD);
+  centerText("Scan QR of stuur via BT", 28, 1, C_CREAM);
 
   char url[170];
   snprintf(url, sizeof(url),
@@ -270,13 +270,13 @@ void drawSync() {
   int8_t err = qrcode_initText(&qrcode, qrcodeData, 5, ECC_LOW, url);
 
   if (err == 0) {
-    const uint8_t scale = 4;
-    const int qrW = qrcode.size * scale;   // 37 * 4 = 148 px
-    const int startX = (172 - qrW) / 2;    // 12 px marge links/rechts
-    const int startY = 48;
+    const uint8_t scale = 3;
+    const int qrW = qrcode.size * scale;   // 37 * 3 = 111 px
+    const int startX = (172 - qrW) / 2;
+    const int startY = 40;
 
     // Witte achtergrondplaat met afgeronde hoeken
-    gfx->fillRoundRect(startX - 4, startY - 4, qrW + 8, qrW + 8, 8, C_WHITE);
+    gfx->fillRoundRect(startX - 4, startY - 4, qrW + 8, qrW + 8, 6, C_WHITE);
 
     // QR-modules tekenen
     for (uint8_t y = 0; y < qrcode.size; y++) {
@@ -287,31 +287,62 @@ void drawSync() {
       }
     }
   } else {
-    centerText("QR genereren mislukt", 100, 1, C_GOLD);
+    centerText("QR genereren mislukt", 80, 1, C_GOLD);
   }
 
   uint32_t total = counts[0] + counts[1] + counts[2] + counts[3] + counts[4] + counts[5];
   char sumBuf[32];
   snprintf(sumBuf, sizeof(sumBuf), "Totaal: %u dhikr", total);
-  centerText(sumBuf, 206, 1, C_GOLD);
+  centerText(sumBuf, 160, 1, C_GOLD);
 
 #if HAS_BLE_KEYBOARD
   if (bleKeyboard.isConnected()) {
-    centerText("Bluetooth: Verbonden", 222, 1, C_WHITE);
+    centerText("Bluetooth: Verbonden", 174, 1, C_WHITE);
   } else {
-    centerText("Bluetooth: Gereed voor koppeling", 222, 1, C_CREAM);
+    centerText("Bluetooth: Niet verbonden", 174, 1, C_CREAM);
   }
 #else
-  centerText("Klaar om te scannen", 222, 1, C_CREAM);
+  centerText("Klaar om te scannen", 174, 1, C_CREAM);
 #endif
 
-  // Knop om tellers te resetten na sync
-  gfx->fillRoundRect(16, 238, 140, 46, 10, C_CARD);
-  gfx->drawRoundRect(16, 238, 140, 46, 10, C_GOLD);
-  centerText("RESET TELLERS", 246, 1, C_GOLD);
-  centerText("Tik na sync om te legen", 262, 1, C_CREAM);
+  // Knop 1: Stuur direct via Bluetooth naar de geopende webapp
+  gfx->fillRoundRect(12, 190, 148, 48, 10, C_BEIGE);
+  centerText("STUUR VIA BT", 202, 1, C_GREEN);
+  centerText("Naar geopende webapp", 220, 1, C_GREEN);
+
+  // Knop 2: Handmatig tellers legen
+  gfx->fillRoundRect(12, 246, 148, 38, 8, C_CARD);
+  gfx->drawRoundRect(12, 246, 148, 38, 8, C_GOLD);
+  centerText("RESET TELLERS", 256, 1, C_GOLD);
+  centerText("Zet tellers op 0", 270, 1, C_CREAM);
 
   centerText("veeg voor home", 298, 1, C_MUTED);
+}
+
+void sendBatchBle() {
+#if HAS_BLE_KEYBOARD
+  if (!bleKeyboard.isConnected()) {
+    gfx->fillRect(10, 188, 152, 54, C_BG);
+    centerText("BT NIET VERBONDEN!", 202, 1, C_WHITE);
+    centerText("Koppel in iPhone BT", 218, 1, C_GOLD);
+    delay(1400);
+    drawSync();
+    return;
+  }
+  char msg[100];
+  snprintf(msg, sizeof(msg), "esp32 s%u a%u k%u i%u t%u w%u\n",
+           counts[0], counts[1], counts[2], counts[3], counts[4], counts[5]);
+  bleKeyboard.print(msg);
+
+  gfx->fillRoundRect(12, 190, 148, 48, 10, C_GOLD);
+  centerText("VERZONDEN!", 202, 1, C_GREEN);
+  centerText("Tellers geleegd naar 0", 220, 1, C_GREEN);
+
+  for (int i = 0; i < N; i++) counts[i] = 0;
+  save();
+  delay(1400);
+  drawSync();
+#endif
 }
 
 void render() {
@@ -349,12 +380,6 @@ void onShortPress() {
       if (counts[current] > ADHKAR[current].target) counts[current] = 1;
       save();
       updateTesbihCounter();
-#if HAS_BLE_KEYBOARD
-      if (bleKeyboard.isConnected()) {
-        // Verstuur '1'..'6' via BLE toetsenbord zodat de iPhone webapp meteen meetelt
-        bleKeyboard.write('1' + current);
-      }
-#endif
       return;
     case ADHKAR_LIST:
       current = (current + 1) % N;
@@ -368,6 +393,7 @@ void onShortPress() {
       prefs.putUChar("bright", brightness);
       return;
     case SYNC:
+      sendBatchBle();
       return;
   }
 }
@@ -447,11 +473,17 @@ void onTap(int x, int y) {
       return;
     }
     case SYNC: {
-      // Tik op de "RESET TELLERS" knop
-      if (x >= 16 && x <= 156 && y >= 238 && y <= 286) {
+      // Tik op "STUUR VIA BT" knop
+      if (y >= 190 && y <= 238) {
+        sendBatchBle();
+        return;
+      }
+      // Tik op "RESET TELLERS" knop
+      if (y >= 246 && y <= 286) {
         for (int i = 0; i < N; i++) counts[i] = 0;
         save();
         drawSync();
+        return;
       }
       return;
     }
