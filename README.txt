@@ -9,6 +9,21 @@ Openen:
 4. De installatie maakt een startscherm-app en kan de app-shell offline openen nadat die eenmaal geladen is. Persoonlijke voortgang wordt niet met andere apparaten gesynchroniseerd.
 - De app gebruikt de schermbreedte van het apparaat en houdt op telefoons rekening met de veilige schermranden. Formuliervelden blijven minimaal 16 px groot zodat iPhone/iPad niet automatisch inzoomt wanneer je een veld selecteert. Handmatig inzoomen is alleen beschikbaar op het Istighfār-onderdeel; op alle andere pagina’s is zoomen uitgeschakeld.
 
+Nieuw in versie 64:
+- Samenvatting van de afgelopen 7 dagen staat nu standaard automatisch geopend op de startpagina.
+- Bij het klikken op een dag binnen het weekoverzicht blijft de grafiek behouden in de DOM en scrolt deze direct en soepel naar de aangeklikte dag, zonder eerst naar de allereerste linker dag te springen.
+
+Nieuw in versie 63:
+- Samenvatting van de afgelopen 7 dagen: horizontaal scrollbare grafiek over meerdere weken (28+ dagen) met touch-swipe en navigatieknoppen (‹ 7d, Vandaag, 7d ›) om naar eerdere dagen te scrollen en soepel terug te keren naar vandaag.
+- Verplaatsknoppen op de startpagina (button.home-widget-handle) verkleind naar 28×28 px en de in-/uitklapknoppen (＋/−) van widgets voorzien van extra marge zodat ze op iPhones niet meer overlappen.
+- De opvouwbare categorie "Bedtijdadhkar" staat nu standaard dichtgeklapt.
+
+Nieuw in versie 62:
+- Arabische diakritische tekens gecorrigeerd op iOS/Apple-apparaten (Hawqalah en Sayyid al-Istighfar).
+
+Nieuw in versie 61:
+- Centrale datumselectie op de startpagina met synchronisatie, klikbare dagen in de weeksamenvatting en soepele hartovergangen met een natuurlijke grens voor schildgroei.
+
 Nieuw in versie 60:
 - Schild van Imaan & daden: de Voortgangslijst staat links boven en Daden registreren rechts boven. De datumkeuze toont nu de aantallen en de score van de gekozen dag.
 - Het hart op de startpagina schakelt tussen vandaag (standaard) en alle dagen.
