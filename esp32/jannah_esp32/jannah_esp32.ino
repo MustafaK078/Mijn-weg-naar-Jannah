@@ -87,7 +87,6 @@ Page lastPageBeforeSync = TESBIH;
 int current = 0;
 uint16_t counts[N] = {0};
 uint8_t brightness = 200;  // Helderheid 15..255
-bool liveSync = true;       // Live verzending wanneer verbonden
 int adhkarScrollY = 0;      // Scrollpositie voor de lijst met 10 adhkar
 bool touchActive = false;   // Vlag of scherm momenteel wordt aangeraakt
 Preferences prefs;
@@ -185,14 +184,6 @@ void incrementCurrentDhikr() {
   save();
   updateTesbihCounter();
   gfx->flush();
-
-#if HAS_BLE_KEYBOARD
-  if (liveSync && bleKeyboard.isConnected()) {
-    char liveMsg[32];
-    snprintf(liveMsg, sizeof(liveMsg), "esp32 live %c\n", ADHKAR[current].keyChar);
-    bleKeyboard.print(liveMsg);
-  }
-#endif
 }
 
 void renderMarqueeLine(int offset) {
@@ -543,9 +534,9 @@ void onShortPress() {
 
 void powerOff() {
   gfx->fillScreen(C_BG);
-  centerText("Mijn weg naar Jannah", 120, 1, C_CREAM);
-  centerText("Uitschakelen...", 145, 2, C_GOLD);
-  centerText("Druk BOOT om in te schakelen", 185, 1, C_MUTED);
+  centerText("Mijn weg naar Jannah", 125, 1, C_CREAM);
+  centerText("Uitschakelen...", 150, 1, C_GOLD);
+  centerText("Druk BOOT om in te schakelen", 178, 1, C_MUTED);
   gfx->flush();
   save();
   delay(1200);

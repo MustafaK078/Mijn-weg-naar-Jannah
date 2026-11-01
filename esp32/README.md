@@ -20,19 +20,16 @@ Op de **ADHKAR**-pagina kun je soepel verticaal door de hele lijst scrollen en e
 
 ---
 
-## Twee synchronisatiemodi (Live & Cache)
+## Offline tellen & Synchronisatie (Upload via BT)
 
-- **Live synchronisatie (Webapp geopend):**
-  - Standaard staat **BT LIVE** aan (te zien aan de gouden statusknop rechtsboven op het Tesbih-scherm).
-  - Elke tik verstuurt een commando (`esp32 live <sleutel>`).
-  - Omdat er geen losse cijfers worden verzonden, kan het toegangscodescherm van je iPhone nooit per ongeluk cijfers invoeren!
-  - In de webapp zie je de teller, het hart en de daden direct live oplopen.
-  - Tik op de **BT LIVE / BT CACHE** knop rechtsboven om te wisselen naar offline cache-modus.
-
-- **Batch synchronisatie (Telefoon vergrendeld of offline):**
-  - Tellingen worden altijd lokaal in flash (`Preferences`) opgeslagen.
-  - Zodra je de app opent: veeg eenvoudig omhoog vanaf elk scherm naar de **SYNC**-pagina en tik op **"STUUR VIA BT"**.
-  - Alle 10 tellingen worden in één keer verstuurd en de tellers op het apparaat worden gereset naar 0.
+- **Offline en batterijbesparend tellen:**
+  - Tellingen worden altijd lokaal in het permanente geheugen van de ESP32 (`Preferences` flash) bijgehouden.
+  - Er worden tijdens het tellen **geen live toetsaanslagen** verstuurd. Hierdoor kan het apparaat je iPhone nooit storen of ongewenst ontgrendelen/cijfers intypen.
+- **Synchroniseren naar de webapp:**
+  - Open de "Mijn weg naar Jannah" webapp op je iPhone.
+  - Zorg dat Bluetooth verbonden is (het blauwe rondje rechtsboven brandt).
+  - Veeg omhoog naar de **SYNC**-pagina en tik op **"STUUR VIA BT"**.
+  - Alle 10 tellingen worden in één keer verstuurd naar de webapp, waarna de tellers op het apparaat netjes worden gereset naar 0.
 
 ---
 
@@ -49,7 +46,7 @@ Op de **ADHKAR**-pagina kun je soepel verticaal door de hele lijst scrollen en e
 
 - **Veeg omhoog (vanaf elk scherm)**: Direct naar de **SYNC** pagina met de "STUUR VIA BT" knop!
 - **Veeg omlaag (op SYNC)**: Direct terug naar het vorige scherm.
-- **Veeg links / rechts**: Wisselen tussen pagina's met vloeiende hardware-accelerated animatie zonder flikkering.
+- **Veeg links / rechts**: Wisselen tussen pagina's met vloeiende animatie zonder flikkering.
 - **Scrollen op ADHKAR-pagina**: Veeg omhoog/omlaag over de lijst met 10 adhkar.
 - **Fysieke BOOT-knop (GPIO0)**:
   - **Kort indrukken**: Telt direct **+1** op bij de huidige Tesbih!
@@ -57,7 +54,7 @@ Op de **ADHKAR**-pagina kun je soepel verticaal door de hele lijst scrollen en e
   - **Inschakelen**: Druk kort op de BOOT-knop terwijl het apparaat uit staat om hem direct weer in te schakelen!
 - **Scherm tikken**:
   - Home: Starten
-  - Tesbih: +1 tellen (of aantikken van BT badge rechtsboven om live/cache te toggelen)
+  - Tesbih: +1 tellen
   - Lang vasthouden op Tesbih (0,8 sec): Reset huidige teller naar 0
   - Helderheid: Slider verslepen of tikken op `-` / `+`
   - Sync: Tik op "STUUR VIA BT" of "RESET TELLERS"
