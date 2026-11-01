@@ -67,16 +67,16 @@ struct Dhikr {
 };
 
 const Dhikr ADHKAR[] = {
-  {"Subhanallah", "Geprezen is Allah", 33, 's'},
-  {"Alhamdulillah", "Alle lof is voor Allah", 33, 'a'},
-  {"Allahu Akbar", "Allah is de Grootste", 34, 'k'},
-  {"Istighfar", "Vergeving bij Allah", 100, 'i'},
-  {"Tahlil", "Geen god dan Allah", 100, 't'},
-  {"Salawat", "Zegeningen over Profeet", 100, 'w'},
-  {"SubhanAllah wa-b.", "Verheven is Allah en lof", 100, 'b'},
-  {"SubhanAllah l-Azim", "Verheven de Geweldige", 100, 'z'},
-  {"La hawla wa-la q.", "Kracht alleen door Allah", 100, 'h'},
-  {"Tahlil Tamm", "Alleen zonder deelgenoot", 100, 'u'},
+  {"Subhanallah", "Verheven is Allah boven iedere tekortkoming", 33, 's'},
+  {"Alhamdulillah", "Alle lof en dank behoort toe aan Allah", 33, 'a'},
+  {"Allahu Akbar", "Allah is de Grootste boven alles", 34, 'k'},
+  {"Istighfar", "Ik vraag Allah om vergeving en keer berouwvol tot Hem", 100, 'i'},
+  {"Tahlil", "Er is geen godheid die het recht heeft aanbeden te worden behalve Allah", 100, 't'},
+  {"Salawat", "O Allah, schenk Uw zegeningen en vrede aan Muhammad en zijn familie", 100, 'w'},
+  {"SubhanAllah wa-b.", "Verheven is Allah en alle lof behoort Hem toe - wist zonden als schuim van de zee", 100, 'b'},
+  {"SubhanAllah l-Azim", "Verheven is Allah de Geweldige, en aan Hem behoort alle lof", 100, 'z'},
+  {"La hawla wa-la q.", "Er is geen macht en geen kracht behalve door Allah - een schat uit het Paradijs", 100, 'h'},
+  {"Tahlil Tamm", "Niemand heeft het recht aanbeden te worden behalve Allah alleen, zonder deelgenoot. Aan Hem behoort het koninkrijk en alle lof, en Hij is over alles machtig", 100, 'u'},
 };
 const int N = sizeof(ADHKAR) / sizeof(ADHKAR[0]);
 
@@ -195,6 +195,65 @@ void incrementCurrentDhikr() {
 #endif
 }
 
+void renderMarqueeLine(int offset) {
+  const Dhikr &d = ADHKAR[current];
+  const char *text = d.desc;
+  const int lineY = 246;
+  const int bandY = 238;
+  const int bandH = 20;
+
+  gfx->fillRect(0, bandY, 172, bandH, C_BG);
+  gfx->setTextSize(1);
+  gfx->setTextColor(C_CREAM);
+  gfx->setTextWrap(false);
+
+  int len = strlen(text);
+  int textPixelWidth = len * 6;
+
+  if (textPixelWidth <= 156) {
+    int x = (172 - textPixelWidth) / 2;
+    gfx->setCursor(x, lineY);
+    gfx->print(text);
+  } else {
+    int gap = 36;
+    int totalSpan = textPixelWidth + gap;
+    int shift = offset % totalSpan;
+    int startX = 8 - shift;
+
+    gfx->setCursor(startX, lineY);
+    gfx->print(text);
+
+    if (startX + textPixelWidth < 164) {
+      gfx->setCursor(startX + textPixelWidth + 10, lineY);
+      gfx->print("*");
+      gfx->setCursor(startX + totalSpan, lineY);
+      gfx->print(text);
+    }
+  }
+}
+
+void updateMarquee() {
+  if (page != TESBIH || dirty || touchActive) return;
+  static uint32_t lastMarqueeTime = 0;
+  static int lastCurrent = -1;
+  static int marqueeTicks = 0;
+  uint32_t now = millis();
+
+  if (current != lastCurrent) {
+    lastCurrent = current;
+    marqueeTicks = 0;
+  }
+
+  if (now - lastMarqueeTime < 35) return;
+  lastMarqueeTime = now;
+  marqueeTicks++;
+
+  int offset = (marqueeTicks > 35) ? (marqueeTicks - 35) : 0;
+
+  renderMarqueeLine(offset);
+  tft->draw16bitRGBBitmap(0, 238, gfx->getFramebuffer() + 238 * 172, 172, 20);
+}
+
 void drawTesbih() {
   drawFrame();
   const Dhikr &d = ADHKAR[current];
@@ -214,8 +273,8 @@ void drawTesbih() {
 
   updateTesbihCounter();
 
-  // Enkele regel omschrijving, aangepast aan de 172px breedte van het scherm
-  centerText(d.desc, 246, 1, C_CREAM);
+  // Enkele regel scrollende volledige omschrijving
+  renderMarqueeLine(0);
   centerText("tik: +1  omhoog: BT sync", 294, 1, C_MUTED);
 }
 
@@ -781,6 +840,8 @@ void loop() {
   if (dirty) {
     dirty = false;
     render();
+  } else {
+    updateMarquee();
   }
   delay(5);
 }
