@@ -14,6 +14,7 @@
 #include <Preferences.h>
 #include <Wire.h>
 #include <esp_sleep.h>
+#include <soc/usb_serial_jtag_struct.h>
 
 #include <BleKeyboard.h>
 #define HAS_BLE_KEYBOARD 1
@@ -26,6 +27,7 @@ BleKeyboard bleKeyboard("Jannah Tasbih", "Mustafa", 100);
 #define PIN_RST  40
 #define PIN_BL   46
 #define PIN_BTN  0
+#define PIN_BAT_ADC 12 // Batterijspanningsmeting via interne spanningsdeler (R19=200K, R21=100K)
 
 Arduino_DataBus *bus = new Arduino_ESP32SPI(PIN_DC, PIN_CS, PIN_SCK, PIN_MOSI);
 Arduino_ST7789 *tft = new Arduino_ST7789(bus, PIN_RST, 0 /* portrait */, false /* IPS false */,
@@ -58,6 +60,8 @@ const uint16_t C_CREAM  = RGB(242, 236, 222);  // Zacht crème voor subtiele tek
 const uint16_t C_MUTED  = RGB(150, 185, 160);  // Zacht saliegrijs voor voetteksten
 const uint16_t C_GREEN  = RGB(20, 130, 25);      // Donkergroen voor tekst op de beige knop
 const uint16_t C_BLUE   = RGB(0, 150, 255);      // Helder Bluetooth-blauw statusicoon
+const uint16_t C_BAT_GREEN = RGB(52, 215, 80);   // Apple oplaadgroen (#34C759)
+const uint16_t C_BAT_RED   = RGB(255, 60, 60);   // Apple laag-batterij rood (#FF3B30)
 
 struct Dhikr {
   const char *title;
@@ -89,8 +93,100 @@ uint16_t counts[N] = {0};
 uint8_t brightness = 200;  // Helderheid 15..255
 int adhkarScrollY = 0;      // Scrollpositie voor de lijst met 10 adhkar
 bool touchActive = false;   // Vlag of scherm momenteel wordt aangeraakt
+bool bleActive = false;     // Bluetooth staat standaard UIT om batterij te sparen
+bool screenSleeping = false;// Scherm-slaapmodus (2 minuten inactiviteit)
+uint32_t lastActivityTime = 0;
+const uint32_t SLEEP_TIMEOUT_MS = 120000; // 2 minuten (120 sec)
 Preferences prefs;
 bool dirty = true;
+
+// Leest de accuspanning van de LiPo via IO12 (R19=200K, R21=100K spanningsdeler, factor 3.0)
+float getBatteryVoltage() {
+  uint32_t sum = 0;
+  for (int i = 0; i < 8; i++) {
+    sum += analogReadMilliVolts(PIN_BAT_ADC);
+  }
+  float v_adc = (sum / 8.0f) / 1000.0f;
+  return v_adc * 3.0f;
+}
+
+int getBatteryPercent(float v) {
+  if (v >= 4.18f) return 100;
+  if (v <= 3.40f) return 0;
+  if (v > 3.90f) {
+    return 75 + (int)((v - 3.90f) / (4.18f - 3.90f) * 25.0f);
+  } else if (v > 3.75f) {
+    return 35 + (int)((v - 3.75f) / (3.90f - 3.75f) * 40.0f);
+  } else {
+    return (int)((v - 3.40f) / (3.75f - 3.40f) * 35.0f);
+  }
+}
+
+bool isCharging() {
+  // 1. USB-Serial/JTAG host verbonden
+  if (USB_SERIAL_JTAG.int_raw.sof_int_raw) return true;
+  // 2. Of spanning is op laadniveau van de ETA6098
+  float v = getBatteryVoltage();
+  if (v >= 4.18f) return true;
+  return false;
+}
+
+// Apple-stijl batterij-indicator linksboven
+void drawBatteryIcon(bool updateToTft = false) {
+  if (screenSleeping) return;
+
+  float v = getBatteryVoltage();
+  int pct = getBatteryPercent(v);
+  pct = constrain(pct, 0, 100);
+  bool charging = isCharging();
+
+  uint16_t color = C_WHITE;
+  if (charging) {
+    color = C_BAT_GREEN; // Apple groen tijdens opladen
+  } else if (pct <= 20) {
+    color = C_BAT_RED;   // Apple rood bij laag batterijniveau (<= 20%)
+  }
+
+  const int bx = 8, by = 14;
+
+  // Maak batterijzone schoon
+  gfx->fillRect(bx, by - 2, 54, 14, C_BG);
+
+  // Apple-stijl batterijlichaam (afgeronde rechthoek)
+  gfx->drawRoundRect(bx, by, 18, 9, 2, color);
+  // Terminal / pluspool aan de rechterkant
+  gfx->fillRect(bx + 18, by + 2, 2, 5, color);
+
+  // Binnenste vulling volgens percentage
+  int fillW = map(pct, 0, 100, 0, 14);
+  fillW = constrain(fillW, 0, 14);
+  if (pct > 0 && fillW == 0) fillW = 1;
+
+  if (fillW > 0) {
+    gfx->fillRect(bx + 2, by + 2, fillW, 5, color);
+  }
+
+  // Als het oplaadt: klein Apple-bliksempje
+  if (charging) {
+    gfx->drawPixel(bx + 9, by + 2, C_BG);
+    gfx->drawPixel(bx + 8, by + 3, C_BG);
+    gfx->drawPixel(bx + 9, by + 4, C_BG);
+    gfx->drawPixel(bx + 8, by + 5, C_BG);
+    gfx->drawPixel(bx + 10, by + 4, C_BG);
+  }
+
+  // Percentage tekst (bijv. 85%)
+  char pbuf[8];
+  snprintf(pbuf, sizeof(pbuf), "%d%%", pct);
+  gfx->setTextSize(1);
+  gfx->setTextColor(color);
+  gfx->setCursor(bx + 23, by + 1);
+  gfx->print(pbuf);
+
+  if (updateToTft && page != BRIGHTNESS) {
+    tft->draw16bitRGBBitmap(0, 10, gfx->getFramebuffer() + 10 * 172, 64, 18);
+  }
+}
 
 void save() {
   prefs.putBytes("counts", counts, sizeof(counts));
@@ -123,6 +219,7 @@ void drawFrame() {
 
 void drawHome() {
   drawFrame();
+  drawBatteryIcon(false);
   centerText("Mijn weg", 45, 2, C_CREAM);
   centerText("naar", 68, 2, C_CREAM);
   centerText("Jannah", 92, 3, C_GOLD);
@@ -299,10 +396,11 @@ void updateMarquee() {
 
 void drawTesbih() {
   drawFrame();
+  drawBatteryIcon(false);
   centerText("TESBIH", 18, 1, C_GOLD);
 
 #if HAS_BLE_KEYBOARD
-  if (bleKeyboard.isConnected()) {
+  if (bleActive && bleKeyboard.isConnected()) {
     // Alleen een blauw rondje in de rechterbovenhoek - belemmert de TESBIH tekst nooit
     gfx->fillCircle(158, 20, 4, C_BLUE);
   }
@@ -358,6 +456,7 @@ void drawAdhkar() {
 
   // Vaste koptekst
   gfx->fillRect(0, 0, 172, 34, C_BG);
+  drawBatteryIcon(false);
   centerText("ADHKAR (10)", 18, 1, C_GOLD);
 
   // Vaste voettekst
@@ -389,6 +488,7 @@ void updateBrightnessUI() {
 
 void drawBrightness() {
   drawFrame();
+  drawBatteryIcon(false);
   centerText("HELDERHEID", 22, 1, C_GOLD);
   centerText("Schermverlichting", 40, 1, C_CREAM);
 
@@ -412,19 +512,63 @@ void drawBrightness() {
   centerText("veeg voor sync", 295, 1, C_MUTED);
 }
 
+void startBle() {
+#if HAS_BLE_KEYBOARD
+  if (!bleActive) {
+    bleKeyboard.begin();
+    bleActive = true;
+    Serial.println("Jannah: Bluetooth geactiveerd");
+  }
+#endif
+}
+
+void stopBle() {
+#if HAS_BLE_KEYBOARD
+  if (bleActive) {
+    bleKeyboard.end();
+    bleActive = false;
+    Serial.println("Jannah: Bluetooth uitgeschakeld voor batterijbesparing");
+  }
+#endif
+}
+
+void enterScreenSleep() {
+  if (screenSleeping) return;
+  screenSleeping = true;
+  digitalWrite(PIN_BL, LOW);
+  tft->startWrite();
+  bus->writeCommand(0x10); // ST7789 sleep mode
+  tft->endWrite();
+  Serial.println("Jannah: Scherm-slaapmodus actief (2 min inactiviteit)");
+}
+
+void wakeScreen() {
+  if (!screenSleeping) return;
+  tft->startWrite();
+  bus->writeCommand(0x11); // ST7789 sleep out
+  tft->endWrite();
+  delay(120);
+  applyBrightness(brightness);
+  screenSleeping = false;
+  lastActivityTime = millis();
+  dirty = true;
+  Serial.println("Jannah: Scherm ontwaakt via aanraking");
+}
+
 // Tekent de Bluetooth sync pagina voor synchronisatie naar de iPhone app
 void drawSync() {
   drawFrame();
-  centerText("BLUETOOTH SYNC", 14, 1, C_GOLD);
-  centerText("Draag dhikr over naar app", 28, 1, C_CREAM);
+  drawBatteryIcon(false);
+  centerText("SYNC", 14, 1, C_GOLD);
+  centerText("Draag dhikr over naar app", 26, 1, C_CREAM);
 
   // Kaart met overzicht van alle 10 dhikr-tellingen
-  gfx->fillRoundRect(10, 36, 152, 152, 8, C_CARD);
-  gfx->drawRoundRect(10, 36, 152, 152, 8, C_GREEN2);
+  gfx->fillRoundRect(10, 36, 152, 148, 8, C_CARD);
+  gfx->drawRoundRect(10, 36, 152, 148, 8, C_GREEN2);
 
   char lineBuf[24];
   for (int i = 0; i < N; i++) {
-    int rowY = 39 + i * 14;
+    int rowY = 38 + i * 14;
     gfx->setTextSize(1);
     gfx->setTextColor(C_WHITE);
     gfx->setCursor(14, rowY);
@@ -442,34 +586,63 @@ void drawSync() {
   }
 
 #if HAS_BLE_KEYBOARD
-  if (bleKeyboard.isConnected()) {
-    centerText("Bluetooth: Verbonden", 193, 1, C_WHITE);
+  if (!bleActive) {
+    centerText("Bluetooth: UIT (Besparing)", 188, 1, C_CREAM);
+
+    // Knop 1: Activeer Bluetooth
+    gfx->fillRoundRect(12, 202, 148, 44, 10, C_BEIGE);
+    gfx->drawRoundRect(12, 202, 148, 44, 10, C_GOLD);
+    centerText("BT AANZETTEN", 214, 1, C_GREEN);
+    centerText("Tik om te verbinden", 230, 1, C_GREEN);
+
+    // Knop 2: Reset tellers
+    gfx->fillRoundRect(12, 254, 148, 32, 8, C_CARD);
+    gfx->drawRoundRect(12, 254, 148, 32, 8, C_GOLD);
+    centerText("RESET TELLERS", 265, 1, C_GOLD);
   } else {
-    centerText("Bluetooth: Niet verbonden", 193, 1, C_CREAM);
+    if (bleKeyboard.isConnected()) {
+      centerText("Bluetooth: VERBONDEN", 188, 1, C_BAT_GREEN);
+    } else {
+      centerText("Bluetooth: Zoeken... (Koppel)", 188, 1, C_BLUE);
+    }
+
+    // Knop 1: Stuur direct via Bluetooth naar de geopende webapp
+    gfx->fillRoundRect(12, 202, 148, 42, 10, C_BEIGE);
+    gfx->drawRoundRect(12, 202, 148, 42, 10, C_GOLD);
+    centerText("STUUR VIA BT", 213, 1, C_GREEN);
+    centerText("Naar geopende webapp", 229, 1, C_GREEN);
+
+    // Knop 2: Bluetooth uitzetten (besparing)
+    gfx->fillRoundRect(12, 250, 148, 28, 8, C_CARD);
+    gfx->drawRoundRect(12, 250, 148, 28, 8, C_MUTED);
+    centerText("BT UITZETTEN", 259, 1, C_WHITE);
+
+    // Knop 3: Handmatig tellers legen
+    gfx->fillRoundRect(12, 282, 148, 22, 6, C_CARD);
+    centerText("RESET TELLERS", 288, 1, C_GOLD);
   }
 #else
-  centerText("Bluetooth niet actief", 193, 1, C_CREAM);
+  centerText("Bluetooth niet actief", 188, 1, C_CREAM);
+  gfx->fillRoundRect(12, 254, 148, 32, 8, C_CARD);
+  gfx->drawRoundRect(12, 254, 148, 32, 8, C_GOLD);
+  centerText("RESET TELLERS", 265, 1, C_GOLD);
 #endif
 
-  // Knop 1: Stuur direct via Bluetooth naar de geopende webapp
-  gfx->fillRoundRect(12, 206, 148, 44, 10, C_BEIGE);
-  centerText("STUUR VIA BT", 218, 1, C_GREEN);
-  centerText("Naar geopende webapp", 234, 1, C_GREEN);
-
-  // Knop 2: Handmatig tellers legen
-  gfx->fillRoundRect(12, 256, 148, 32, 8, C_CARD);
-  gfx->drawRoundRect(12, 256, 148, 32, 8, C_GOLD);
-  centerText("RESET TELLERS", 267, 1, C_GOLD);
-
-  centerText("veeg omlaag = terug", 298, 1, C_MUTED);
+  centerText("veeg omlaag = terug", 310, 1, C_MUTED);
 }
 
 void sendBatchBle() {
 #if HAS_BLE_KEYBOARD
+  if (!bleActive) {
+    startBle();
+    drawSync();
+    gfx->flush();
+    return;
+  }
   if (!bleKeyboard.isConnected()) {
-    gfx->fillRect(10, 204, 152, 50, C_BG);
-    centerText("BT NIET VERBONDEN!", 218, 1, C_WHITE);
-    centerText("Koppel in iPhone BT", 234, 1, C_GOLD);
+    gfx->fillRect(10, 200, 152, 48, C_BG);
+    centerText("BT NIET VERBONDEN!", 212, 1, C_WHITE);
+    centerText("Koppel in iPhone BT", 228, 1, C_GOLD);
     gfx->flush();
     delay(1400);
     drawSync();
@@ -483,14 +656,15 @@ void sendBatchBle() {
            counts[5], counts[6], counts[7], counts[8], counts[9]);
   bleKeyboard.print(msg);
 
-  gfx->fillRoundRect(12, 206, 148, 44, 10, C_GOLD);
-  centerText("VERZONDEN!", 218, 1, C_GREEN);
-  centerText("Tellers geleegd naar 0", 234, 1, C_GREEN);
+  gfx->fillRoundRect(12, 202, 148, 42, 10, C_GOLD);
+  centerText("VERZONDEN!", 213, 1, C_GREEN);
+  centerText("Tellers geleegd naar 0", 229, 1, C_GREEN);
   gfx->flush();
 
   for (int i = 0; i < N; i++) counts[i] = 0;
   save();
   delay(1400);
+  stopBle(); // Direct BT uitschakelen na verzenden om batterij te sparen
   drawSync();
   gfx->flush();
 #endif
@@ -512,6 +686,9 @@ void render() {
 }
 
 void transitionTo(Page next, TransitionDir dir = TRANS_NONE) {
+  if (page == SYNC && next != SYNC) {
+    stopBle(); // Automatisch Bluetooth uitschakelen om stroom te sparen
+  }
   if (next == page && dir != TRANS_NONE) return;
 
   uint16_t *currentFb = gfx->getFramebuffer();
@@ -586,7 +763,13 @@ void onShortPress() {
       prefs.putUChar("bright", brightness);
       return;
     case SYNC:
-      sendBatchBle();
+      if (!bleActive) {
+        startBle();
+        drawSync();
+        gfx->flush();
+      } else {
+        sendBatchBle();
+      }
       return;
   }
 }
@@ -690,18 +873,43 @@ void onTap(int x, int y) {
       return;
     }
     case SYNC: {
-      // Tik op "STUUR VIA BT" knop
-      if (y >= 206 && y <= 250) {
-        sendBatchBle();
-        return;
-      }
-      // Tik op "RESET TELLERS" knop
-      if (y >= 256 && y <= 292) {
-        for (int i = 0; i < N; i++) counts[i] = 0;
-        save();
-        drawSync();
-        gfx->flush();
-        return;
+      if (!bleActive) {
+        // Knop 1: "BT AANZETTEN"
+        if (y >= 200 && y <= 248) {
+          startBle();
+          drawSync();
+          gfx->flush();
+          return;
+        }
+        // Knop 2: "RESET TELLERS"
+        if (y >= 252 && y <= 292) {
+          for (int i = 0; i < N; i++) counts[i] = 0;
+          save();
+          drawSync();
+          gfx->flush();
+          return;
+        }
+      } else {
+        // Knop 1: "STUUR VIA BT"
+        if (y >= 200 && y <= 246) {
+          sendBatchBle();
+          return;
+        }
+        // Knop 2: "BT UITZETTEN"
+        if (y >= 248 && y <= 278) {
+          stopBle();
+          drawSync();
+          gfx->flush();
+          return;
+        }
+        // Knop 3: "RESET TELLERS"
+        if (y >= 280 && y <= 308) {
+          for (int i = 0; i < N; i++) counts[i] = 0;
+          save();
+          drawSync();
+          gfx->flush();
+          return;
+        }
       }
       return;
     }
@@ -717,6 +925,7 @@ void handleTouch() {
   if (readTouch(x, y)) {
     touchActive = true;
     lastSeen = now;
+    lastActivityTime = now;
     if (!down) {
       down = true;
       moved = false;
@@ -752,6 +961,7 @@ void handleTouch() {
   } else if (down && now - lastSeen > 60) {
     down = false;
     touchActive = false;
+    lastActivityTime = now;
     if (draggingSlider) {
       prefs.putUChar("bright", brightness);
       draggingSlider = false;
@@ -810,6 +1020,7 @@ void setup() {
   delay(1500);
   Serial.println("Jannah: start");
   pinMode(PIN_BTN, INPUT_PULLUP);
+  pinMode(PIN_BAT_ADC, INPUT);
   prefs.begin("jannah", false);
   size_t savedLen = prefs.getBytesLength("counts");
   if (savedLen == sizeof(counts)) {
@@ -843,22 +1054,50 @@ void setup() {
   }
   Serial.println("Jannah: scherm klaar");
   touchInit();
-
-#if HAS_BLE_KEYBOARD
-  bleKeyboard.begin();
-  Serial.println("Jannah: Bluetooth BLE Keyboard gestart ('Jannah Tasbih')");
-#else
-  Serial.println("Jannah: BLE Keyboard niet geladen (installeer 'ESP32 BLE Keyboard' via Library Manager)");
-#endif
+  lastActivityTime = millis();
+  Serial.println("Jannah: Batterijmeting en slaapmodus (120s) gereed");
+  Serial.println("Jannah: Bluetooth staat standaard UIT om batterij te sparen");
 }
 
 void loop() {
+  uint32_t now = millis();
+
+  // 1. Scherm-slaapmodus (zoals Apple iPhone):
+  // Als het scherm in slaapmodus staat, check alleen touch of BOOT-knop om te ontwaken
+  if (screenSleeping) {
+    int tx, ty;
+    if (readTouch(tx, ty)) {
+      wakeScreen();
+      // Wacht tot de vinger losgelaten wordt zodat er geen onbedoelde actie volgt
+      while (readTouch(tx, ty)) {
+        delay(20);
+      }
+      return;
+    }
+    if (digitalRead(PIN_BTN) == LOW) {
+      wakeScreen();
+      while (digitalRead(PIN_BTN) == LOW) {
+        delay(20);
+      }
+      return;
+    }
+    delay(40);
+    return;
+  }
+
+  // 2. Inactiviteitscontrole: na 2 minuten geen aanraking -> scherm in slaapstand
+  if (now - lastActivityTime >= SLEEP_TIMEOUT_MS) {
+    enterScreenSleep();
+    return;
+  }
+
+  // 3. Fysieke BOOT-knop afhandeling
   static uint32_t downAt = 0;
   static bool down = false, longFired = false;
   bool pressed = digitalRead(PIN_BTN) == LOW;
-  uint32_t now = millis();
 
   if (pressed && !down) {
+    lastActivityTime = now;
     down = true;
     longFired = false;
     downAt = now;
@@ -867,6 +1106,7 @@ void loop() {
     powerOff(); // 3 seconden indrukken = uitschakelen naar deep sleep
   } else if (!pressed && down) {
     down = false;
+    lastActivityTime = now;
     if (!longFired && now - downAt > 30) {
       // Kort indrukken = Tesbih +1!
       if (page != TESBIH) {
@@ -876,14 +1116,24 @@ void loop() {
     }
   }
 
+  // 4. Touchscreen afhandeling
   handleTouch();
 
+  // 5. Periodieke batterij-indicator update (elke 4 seconden)
+  static uint32_t lastBatteryCheck = 0;
+  if (now - lastBatteryCheck >= 4000) {
+    lastBatteryCheck = now;
+    drawBatteryIcon(true);
+  }
+
 #if HAS_BLE_KEYBOARD
-  static bool lastBtState = false;
-  bool btNow = bleKeyboard.isConnected();
-  if (btNow != lastBtState) {
-    lastBtState = btNow;
-    if (page == TESBIH) dirty = true;
+  if (bleActive) {
+    static bool lastBtState = false;
+    bool btNow = bleKeyboard.isConnected();
+    if (btNow != lastBtState) {
+      lastBtState = btNow;
+      if (page == TESBIH || page == SYNC) dirty = true;
+    }
   }
 #endif
 
