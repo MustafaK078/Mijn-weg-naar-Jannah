@@ -94,23 +94,24 @@ uint8_t brightness = 200;  // Helderheid 15..255
 int adhkarScrollY = 0;      // Scrollpositie voor de lijst met 10 adhkar
 bool touchActive = false;   // Vlag of scherm momenteel wordt aangeraakt
 bool bleActive = false;     // Bluetooth staat standaard UIT om batterij te sparen
-bool screenSleeping = false;// Scherm-slaapmodus (2 minuten inactiviteit)
 uint32_t lastActivityTime = 0;
-const uint32_t SLEEP_TIMEOUT_MS = 120000; // 2 minuten (120 sec)
+const uint32_t AUTO_OFF_TIMEOUT_MS = 120000; // Automatisch uitschakelen na 2 minuten inactiviteit (120 sec)
 Preferences prefs;
 bool dirty = true;
 
 // Leest de accuspanning van de LiPo via IO12 (R19=200K, R21=100K spanningsdeler, factor 3.0)
 float getBatteryVoltage() {
   uint32_t sum = 0;
-  for (int i = 0; i < 8; i++) {
+  for (int i = 0; i < 16; i++) {
     sum += analogReadMilliVolts(PIN_BAT_ADC);
+    delayMicroseconds(50);
   }
-  float v_adc = (sum / 8.0f) / 1000.0f;
+  float v_adc = (sum / 16.0f) / 1000.0f;
   return v_adc * 3.0f;
 }
 
 int getBatteryPercent(float v) {
+  if (v <= 2.50f) return 0;  // Geen batterij of leeg
   if (v >= 4.18f) return 100;
   if (v <= 3.40f) return 0;
   if (v > 3.90f) {
@@ -131,14 +132,29 @@ bool isCharging() {
   return false;
 }
 
+static float filteredBatteryV = 0.0f;
+static int lastDrawnBatteryPct = -1;
+static bool lastDrawnBatteryCharging = false;
+
 // Apple-stijl batterij-indicator linksboven
 void drawBatteryIcon(bool updateToTft = false) {
-  if (screenSleeping) return;
+  float rawV = getBatteryVoltage();
+  if (filteredBatteryV < 1.0f) {
+    filteredBatteryV = rawV;
+  } else {
+    filteredBatteryV = (filteredBatteryV * 0.85f) + (rawV * 0.15f); // Vloeiende filtering tegen ruis
+  }
 
-  float v = getBatteryVoltage();
-  int pct = getBatteryPercent(v);
+  int pct = getBatteryPercent(filteredBatteryV);
   pct = constrain(pct, 0, 100);
   bool charging = isCharging();
+
+  // Als we alleen een periodieke update doen en er is niets veranderd, niet hertekenen
+  if (updateToTft && pct == lastDrawnBatteryPct && charging == lastDrawnBatteryCharging) {
+    return;
+  }
+  lastDrawnBatteryPct = pct;
+  lastDrawnBatteryCharging = charging;
 
   uint16_t color = C_WHITE;
   if (charging) {
@@ -183,8 +199,9 @@ void drawBatteryIcon(bool updateToTft = false) {
   gfx->setCursor(bx + 23, by + 1);
   gfx->print(pbuf);
 
+  // PUSH NAAR TFT: met volledige breedte (172 pixels) zodat de framebuffer stride exact klopt en er NOOIT rare tekens/glitches ontstaan
   if (updateToTft && page != BRIGHTNESS) {
-    tft->draw16bitRGBBitmap(0, 10, gfx->getFramebuffer() + 10 * 172, 64, 18);
+    tft->draw16bitRGBBitmap(0, 10, gfx->getFramebuffer() + 10 * 172, 172, 18);
   }
 }
 
@@ -532,29 +549,6 @@ void stopBle() {
 #endif
 }
 
-void enterScreenSleep() {
-  if (screenSleeping) return;
-  screenSleeping = true;
-  digitalWrite(PIN_BL, LOW);
-  tft->startWrite();
-  bus->writeCommand(0x10); // ST7789 sleep mode
-  tft->endWrite();
-  Serial.println("Jannah: Scherm-slaapmodus actief (2 min inactiviteit)");
-}
-
-void wakeScreen() {
-  if (!screenSleeping) return;
-  tft->startWrite();
-  bus->writeCommand(0x11); // ST7789 sleep out
-  tft->endWrite();
-  delay(120);
-  applyBrightness(brightness);
-  screenSleeping = false;
-  lastActivityTime = millis();
-  dirty = true;
-  Serial.println("Jannah: Scherm ontwaakt via aanraking");
-}
-
 // Tekent de Bluetooth sync pagina voor synchronisatie naar de iPhone app
 void drawSync() {
   drawFrame();
@@ -775,6 +769,7 @@ void onShortPress() {
 }
 
 void powerOff() {
+  stopBle(); // Zorg dat Bluetooth volledig stopt vóór deep sleep
   gfx->fillScreen(C_BG);
   centerText("Mijn weg naar Jannah", 110, 1, C_CREAM);
   centerText("Uitschakelen", 136, 2, C_GOLD);
@@ -1055,43 +1050,21 @@ void setup() {
   Serial.println("Jannah: scherm klaar");
   touchInit();
   lastActivityTime = millis();
-  Serial.println("Jannah: Batterijmeting en slaapmodus (120s) gereed");
+  Serial.println("Jannah: Batterijmeting en auto-uitschakelen (120s) gereed");
   Serial.println("Jannah: Bluetooth staat standaard UIT om batterij te sparen");
 }
 
 void loop() {
   uint32_t now = millis();
 
-  // 1. Scherm-slaapmodus (zoals Apple iPhone):
-  // Als het scherm in slaapmodus staat, check alleen touch of BOOT-knop om te ontwaken
-  if (screenSleeping) {
-    int tx, ty;
-    if (readTouch(tx, ty)) {
-      wakeScreen();
-      // Wacht tot de vinger losgelaten wordt zodat er geen onbedoelde actie volgt
-      while (readTouch(tx, ty)) {
-        delay(20);
-      }
-      return;
-    }
-    if (digitalRead(PIN_BTN) == LOW) {
-      wakeScreen();
-      while (digitalRead(PIN_BTN) == LOW) {
-        delay(20);
-      }
-      return;
-    }
-    delay(40);
+  // 1. Automatisch uitschakelen na 2 minuten inactiviteit:
+  // Schakelt de ESP32 volledig uit (deep sleep). Inschakelen gebeurt weer via de BOOT-knop.
+  if (now - lastActivityTime >= AUTO_OFF_TIMEOUT_MS) {
+    powerOff();
     return;
   }
 
-  // 2. Inactiviteitscontrole: na 2 minuten geen aanraking -> scherm in slaapstand
-  if (now - lastActivityTime >= SLEEP_TIMEOUT_MS) {
-    enterScreenSleep();
-    return;
-  }
-
-  // 3. Fysieke BOOT-knop afhandeling
+  // 2. Fysieke BOOT-knop afhandeling
   static uint32_t downAt = 0;
   static bool down = false, longFired = false;
   bool pressed = digitalRead(PIN_BTN) == LOW;
@@ -1116,10 +1089,10 @@ void loop() {
     }
   }
 
-  // 4. Touchscreen afhandeling
+  // 3. Touchscreen afhandeling
   handleTouch();
 
-  // 5. Periodieke batterij-indicator update (elke 4 seconden)
+  // 4. Periodieke batterij-indicator update (elke 4 seconden)
   static uint32_t lastBatteryCheck = 0;
   if (now - lastBatteryCheck >= 4000) {
     lastBatteryCheck = now;
