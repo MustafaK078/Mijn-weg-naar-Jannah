@@ -93,7 +93,6 @@ uint16_t counts[N] = {0};
 uint8_t brightness = 200;  // Helderheid 15..255
 int adhkarScrollY = 0;      // Scrollpositie voor de lijst met 10 adhkar
 bool touchActive = false;   // Vlag of scherm momenteel wordt aangeraakt
-bool bleActive = false;     // Bluetooth staat standaard UIT om batterij te sparen
 uint32_t lastActivityTime = 0;
 const uint32_t AUTO_OFF_TIMEOUT_MS = 120000; // Automatisch uitschakelen na 2 minuten inactiviteit (120 sec)
 Preferences prefs;
@@ -417,7 +416,7 @@ void drawTesbih() {
   centerText("TESBIH", 18, 1, C_GOLD);
 
 #if HAS_BLE_KEYBOARD
-  if (bleActive && bleKeyboard.isConnected()) {
+  if (bleKeyboard.isConnected()) {
     // Alleen een blauw rondje in de rechterbovenhoek - belemmert de TESBIH tekst nooit
     gfx->fillCircle(158, 20, 4, C_BLUE);
   }
@@ -529,40 +528,20 @@ void drawBrightness() {
   centerText("veeg voor sync", 295, 1, C_MUTED);
 }
 
-void startBle() {
-#if HAS_BLE_KEYBOARD
-  if (!bleActive) {
-    bleKeyboard.begin();
-    bleActive = true;
-    Serial.println("Jannah: Bluetooth geactiveerd");
-  }
-#endif
-}
-
-void stopBle() {
-#if HAS_BLE_KEYBOARD
-  if (bleActive) {
-    bleKeyboard.end();
-    bleActive = false;
-    Serial.println("Jannah: Bluetooth uitgeschakeld voor batterijbesparing");
-  }
-#endif
-}
-
 // Tekent de Bluetooth sync pagina voor synchronisatie naar de iPhone app
 void drawSync() {
   drawFrame();
   drawBatteryIcon(false);
-  centerText("SYNC", 14, 1, C_GOLD);
-  centerText("Draag dhikr over naar app", 26, 1, C_CREAM);
+  centerText("BLUETOOTH SYNC", 14, 1, C_GOLD);
+  centerText("Draag dhikr over naar app", 28, 1, C_CREAM);
 
   // Kaart met overzicht van alle 10 dhikr-tellingen
-  gfx->fillRoundRect(10, 36, 152, 148, 8, C_CARD);
-  gfx->drawRoundRect(10, 36, 152, 148, 8, C_GREEN2);
+  gfx->fillRoundRect(10, 36, 152, 152, 8, C_CARD);
+  gfx->drawRoundRect(10, 36, 152, 152, 8, C_GREEN2);
 
   char lineBuf[24];
   for (int i = 0; i < N; i++) {
-    int rowY = 38 + i * 14;
+    int rowY = 39 + i * 14;
     gfx->setTextSize(1);
     gfx->setTextColor(C_WHITE);
     gfx->setCursor(14, rowY);
@@ -580,63 +559,35 @@ void drawSync() {
   }
 
 #if HAS_BLE_KEYBOARD
-  if (!bleActive) {
-    centerText("Bluetooth: UIT (Besparing)", 188, 1, C_CREAM);
-
-    // Knop 1: Activeer Bluetooth
-    gfx->fillRoundRect(12, 202, 148, 44, 10, C_BEIGE);
-    gfx->drawRoundRect(12, 202, 148, 44, 10, C_GOLD);
-    centerText("BT AANZETTEN", 214, 1, C_GREEN);
-    centerText("Tik om te verbinden", 230, 1, C_GREEN);
-
-    // Knop 2: Reset tellers
-    gfx->fillRoundRect(12, 254, 148, 32, 8, C_CARD);
-    gfx->drawRoundRect(12, 254, 148, 32, 8, C_GOLD);
-    centerText("RESET TELLERS", 265, 1, C_GOLD);
+  if (bleKeyboard.isConnected()) {
+    centerText("Bluetooth: Verbonden", 193, 1, C_BAT_GREEN);
   } else {
-    if (bleKeyboard.isConnected()) {
-      centerText("Bluetooth: VERBONDEN", 188, 1, C_BAT_GREEN);
-    } else {
-      centerText("Bluetooth: Zoeken... (Koppel)", 188, 1, C_BLUE);
-    }
-
-    // Knop 1: Stuur direct via Bluetooth naar de geopende webapp
-    gfx->fillRoundRect(12, 202, 148, 42, 10, C_BEIGE);
-    gfx->drawRoundRect(12, 202, 148, 42, 10, C_GOLD);
-    centerText("STUUR VIA BT", 213, 1, C_GREEN);
-    centerText("Naar geopende webapp", 229, 1, C_GREEN);
-
-    // Knop 2: Bluetooth uitzetten (besparing)
-    gfx->fillRoundRect(12, 250, 148, 28, 8, C_CARD);
-    gfx->drawRoundRect(12, 250, 148, 28, 8, C_MUTED);
-    centerText("BT UITZETTEN", 259, 1, C_WHITE);
-
-    // Knop 3: Handmatig tellers legen
-    gfx->fillRoundRect(12, 282, 148, 22, 6, C_CARD);
-    centerText("RESET TELLERS", 288, 1, C_GOLD);
+    centerText("Bluetooth: Niet verbonden", 193, 1, C_CREAM);
   }
 #else
-  centerText("Bluetooth niet actief", 188, 1, C_CREAM);
-  gfx->fillRoundRect(12, 254, 148, 32, 8, C_CARD);
-  gfx->drawRoundRect(12, 254, 148, 32, 8, C_GOLD);
-  centerText("RESET TELLERS", 265, 1, C_GOLD);
+  centerText("Bluetooth niet actief", 193, 1, C_CREAM);
 #endif
 
-  centerText("veeg omlaag = terug", 310, 1, C_MUTED);
+  // Knop 1: Stuur direct via Bluetooth naar de geopende webapp
+  gfx->fillRoundRect(12, 206, 148, 44, 10, C_BEIGE);
+  gfx->drawRoundRect(12, 206, 148, 44, 10, C_GOLD);
+  centerText("STUUR VIA BT", 218, 1, C_GREEN);
+  centerText("Naar geopende webapp", 234, 1, C_GREEN);
+
+  // Knop 2: Handmatig tellers legen
+  gfx->fillRoundRect(12, 256, 148, 32, 8, C_CARD);
+  gfx->drawRoundRect(12, 256, 148, 32, 8, C_GOLD);
+  centerText("RESET TELLERS", 267, 1, C_GOLD);
+
+  centerText("veeg omlaag = terug", 298, 1, C_MUTED);
 }
 
 void sendBatchBle() {
 #if HAS_BLE_KEYBOARD
-  if (!bleActive) {
-    startBle();
-    drawSync();
-    gfx->flush();
-    return;
-  }
   if (!bleKeyboard.isConnected()) {
-    gfx->fillRect(10, 200, 152, 48, C_BG);
-    centerText("BT NIET VERBONDEN!", 212, 1, C_WHITE);
-    centerText("Koppel in iPhone BT", 228, 1, C_GOLD);
+    gfx->fillRect(10, 204, 152, 50, C_BG);
+    centerText("BT NIET VERBONDEN!", 218, 1, C_WHITE);
+    centerText("Koppel in iPhone BT", 234, 1, C_GOLD);
     gfx->flush();
     delay(1400);
     drawSync();
@@ -650,15 +601,14 @@ void sendBatchBle() {
            counts[5], counts[6], counts[7], counts[8], counts[9]);
   bleKeyboard.print(msg);
 
-  gfx->fillRoundRect(12, 202, 148, 42, 10, C_GOLD);
-  centerText("VERZONDEN!", 213, 1, C_GREEN);
-  centerText("Tellers geleegd naar 0", 229, 1, C_GREEN);
+  gfx->fillRoundRect(12, 206, 148, 44, 10, C_GOLD);
+  centerText("VERZONDEN!", 218, 1, C_GREEN);
+  centerText("Tellers geleegd naar 0", 234, 1, C_GREEN);
   gfx->flush();
 
   for (int i = 0; i < N; i++) counts[i] = 0;
   save();
   delay(1400);
-  stopBle(); // Direct BT uitschakelen na verzenden om batterij te sparen
   drawSync();
   gfx->flush();
 #endif
@@ -680,9 +630,6 @@ void render() {
 }
 
 void transitionTo(Page next, TransitionDir dir = TRANS_NONE) {
-  if (page == SYNC && next != SYNC) {
-    stopBle(); // Automatisch Bluetooth uitschakelen om stroom te sparen
-  }
   if (next == page && dir != TRANS_NONE) return;
 
   uint16_t *currentFb = gfx->getFramebuffer();
@@ -757,19 +704,12 @@ void onShortPress() {
       prefs.putUChar("bright", brightness);
       return;
     case SYNC:
-      if (!bleActive) {
-        startBle();
-        drawSync();
-        gfx->flush();
-      } else {
-        sendBatchBle();
-      }
+      sendBatchBle();
       return;
   }
 }
 
 void powerOff() {
-  stopBle(); // Zorg dat Bluetooth volledig stopt vóór deep sleep
   gfx->fillScreen(C_BG);
   centerText("Mijn weg naar Jannah", 110, 1, C_CREAM);
   centerText("Uitschakelen", 136, 2, C_GOLD);
@@ -868,43 +808,18 @@ void onTap(int x, int y) {
       return;
     }
     case SYNC: {
-      if (!bleActive) {
-        // Knop 1: "BT AANZETTEN"
-        if (y >= 200 && y <= 248) {
-          startBle();
-          drawSync();
-          gfx->flush();
-          return;
-        }
-        // Knop 2: "RESET TELLERS"
-        if (y >= 252 && y <= 292) {
-          for (int i = 0; i < N; i++) counts[i] = 0;
-          save();
-          drawSync();
-          gfx->flush();
-          return;
-        }
-      } else {
-        // Knop 1: "STUUR VIA BT"
-        if (y >= 200 && y <= 246) {
-          sendBatchBle();
-          return;
-        }
-        // Knop 2: "BT UITZETTEN"
-        if (y >= 248 && y <= 278) {
-          stopBle();
-          drawSync();
-          gfx->flush();
-          return;
-        }
-        // Knop 3: "RESET TELLERS"
-        if (y >= 280 && y <= 308) {
-          for (int i = 0; i < N; i++) counts[i] = 0;
-          save();
-          drawSync();
-          gfx->flush();
-          return;
-        }
+      // Tik op "STUUR VIA BT" knop
+      if (y >= 206 && y <= 250) {
+        sendBatchBle();
+        return;
+      }
+      // Tik op "RESET TELLERS" knop
+      if (y >= 256 && y <= 292) {
+        for (int i = 0; i < N; i++) counts[i] = 0;
+        save();
+        drawSync();
+        gfx->flush();
+        return;
       }
       return;
     }
@@ -1051,7 +966,14 @@ void setup() {
   touchInit();
   lastActivityTime = millis();
   Serial.println("Jannah: Batterijmeting en auto-uitschakelen (120s) gereed");
-  Serial.println("Jannah: Bluetooth staat standaard UIT om batterij te sparen");
+
+#if HAS_BLE_KEYBOARD
+  bleKeyboard.begin();
+  bleKeyboard.setDelay(10);
+  Serial.println("Jannah: Bluetooth BLE Keyboard gestart ('Jannah Tasbih')");
+#else
+  Serial.println("Jannah: BLE Keyboard niet geladen (installeer 'ESP32 BLE Keyboard' via Library Manager)");
+#endif
 }
 
 void loop() {
@@ -1100,13 +1022,11 @@ void loop() {
   }
 
 #if HAS_BLE_KEYBOARD
-  if (bleActive) {
-    static bool lastBtState = false;
-    bool btNow = bleKeyboard.isConnected();
-    if (btNow != lastBtState) {
-      lastBtState = btNow;
-      if (page == TESBIH || page == SYNC) dirty = true;
-    }
+  static bool lastBtState = false;
+  bool btNow = bleKeyboard.isConnected();
+  if (btNow != lastBtState) {
+    lastBtState = btNow;
+    if (page == TESBIH || page == SYNC) dirty = true;
   }
 #endif
 
